@@ -265,6 +265,18 @@ html {
   border-radius: 50%;
 }
 
+.sf-hero::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 250px;
+  background: linear-gradient(to bottom, transparent, var(--sf-bg-dark));
+  pointer-events: none;
+  z-index: 2;
+}
+
 .sf-hero-content {
   position: relative;
   z-index: 10;

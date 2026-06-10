@@ -78,7 +78,7 @@ export default function StorefrontHome() {
     <>
       <section className="sf-hero" style={heroStyle}>
         {config.heroBackgroundImage && (
-          <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.6)', zIndex: 1 }}></div>
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(9, 13, 22, 0.4) 0%, rgba(9, 13, 22, 0.7) 100%)', zIndex: 1 }}></div>
         )}
         <div className="sf-container sf-hero-content" style={{ position: 'relative', zIndex: 2 }}>
           <h2 className="sf-hero-title">
