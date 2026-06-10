@@ -87,6 +87,11 @@ export default function StorefrontHome() {
           <p className="sf-hero-subtitle">
             {config.heroSubtitle || 'La mejor flota al mejor precio'}
           </p>
+          <div style={{ marginTop: '2.5rem' }}>
+            <Link to={`/booking/${slug}/fleet`} className="sf-btn" style={{ display: 'inline-flex', padding: '0.85rem 2rem', fontSize: '1.1rem', textDecoration: 'none' }}>
+              Réservez maintenant
+            </Link>
+          </div>
         </div>
       </section>
 
