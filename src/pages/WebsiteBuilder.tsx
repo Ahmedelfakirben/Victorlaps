@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
+import { useTranslation } from 'react-i18next';
 import { Layout, Globe, Palette, Phone, Save, AlertCircle } from 'lucide-react';
 import './WebsiteBuilder.css';
 
 export default function WebsiteBuilder() {
-  const [session, setSession] = useState<any>(null);
+  const { t, i18n } = useTranslation();
   const [companyId, setCompanyId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -24,7 +25,6 @@ export default function WebsiteBuilder() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
       if (session) {
         loadSettings(session.user.id);
       } else {
@@ -126,13 +126,13 @@ export default function WebsiteBuilder() {
         <div className="wb-header">
           <div className="wb-header-bg"></div>
           <div className="wb-header-content">
-            <h1 className="wb-title">Website Builder</h1>
-            <p className="wb-subtitle">Diseña y configura tu escaparate público en tiempo real.</p>
+            <h1 className="wb-title">{t('website_builder.title')}</h1>
+            <p className="wb-subtitle">{t('website_builder.subtitle')}</p>
           </div>
           {publicUrl && (
             <a href={publicUrl} target="_blank" rel="noopener noreferrer" className="wb-visit-btn">
               <Globe size={18} />
-              <span>Visitar mi Web</span>
+              <span>{t('website_builder.visit_website')}</span>
             </a>
           )}
         </div>
@@ -158,11 +158,11 @@ export default function WebsiteBuilder() {
               <div className="wb-card">
                 <h2 className="wb-card-title">
                   <Layout size={24} color="#3B82F6" />
-                  Configuración Básica
+                  {t('website_builder.basic_config')}
                 </h2>
                 <div className="wb-form-row">
                   <div className="wb-form-group">
-                    <label className="wb-label">Enlace Público (Slug)</label>
+                    <label className="wb-label">{t('website_builder.slug_label')}</label>
                     <div className="wb-input-wrapper">
                       <span className="wb-input-prefix">/booking/</span>
                       <input
@@ -171,12 +171,12 @@ export default function WebsiteBuilder() {
                         value={formData.slug}
                         onChange={e => setFormData({...formData, slug: e.target.value})}
                         className="wb-input"
-                        placeholder="mi-agencia"
+                        placeholder={t('website_builder.slug_placeholder')}
                       />
                     </div>
                   </div>
                   <div className="wb-form-group">
-                    <label className="wb-label">Color Principal</label>
+                    <label className="wb-label">{t('website_builder.theme_color')}</label>
                     <div className="wb-color-picker">
                       <input
                         type="color"
@@ -192,10 +192,10 @@ export default function WebsiteBuilder() {
               <div className="wb-card">
                 <h2 className="wb-card-title">
                   <Palette size={24} color="#10B981" />
-                  Textos y Apariencia
+                  {t('website_builder.appearance')}
                 </h2>
                 <div className="wb-form-group">
-                  <label className="wb-label">Título de Bienvenida</label>
+                  <label className="wb-label">{t('website_builder.hero_title')}</label>
                   <input
                     type="text"
                     required
@@ -205,7 +205,7 @@ export default function WebsiteBuilder() {
                   />
                 </div>
                 <div className="wb-form-group">
-                  <label className="wb-label">Subtítulo</label>
+                  <label className="wb-label">{t('website_builder.hero_subtitle')}</label>
                   <input
                     type="text"
                     value={formData.heroSubtitle}
@@ -214,13 +214,13 @@ export default function WebsiteBuilder() {
                   />
                 </div>
                 <div className="wb-form-group">
-                  <label className="wb-label">Sobre Nosotros</label>
+                  <label className="wb-label">{t('website_builder.about')}</label>
                   <textarea
                     rows={4}
                     value={formData.aboutText}
                     onChange={e => setFormData({...formData, aboutText: e.target.value})}
                     className="wb-input"
-                    placeholder="Escribe algo sobre la historia de tu agencia o tus valores..."
+                    placeholder={t('website_builder.about_placeholder')}
                   />
                 </div>
               </div>
@@ -228,11 +228,11 @@ export default function WebsiteBuilder() {
               <div className="wb-card">
                 <h2 className="wb-card-title">
                   <Phone size={24} color="#8B5CF6" />
-                  Contacto y Redes Sociales
+                  {t('website_builder.contact_social')}
                 </h2>
                 <div className="wb-form-row">
                   <div className="wb-form-group">
-                    <label className="wb-label">WhatsApp</label>
+                    <label className="wb-label">{t('website_builder.whatsapp')}</label>
                     <input
                       type="text"
                       value={formData.whatsapp}
@@ -242,7 +242,7 @@ export default function WebsiteBuilder() {
                     />
                   </div>
                   <div className="wb-form-group">
-                    <label className="wb-label">Instagram</label>
+                    <label className="wb-label">{t('website_builder.instagram')}</label>
                     <div className="wb-input-wrapper">
                       <span className="wb-input-prefix">@</span>
                       <input
@@ -250,26 +250,26 @@ export default function WebsiteBuilder() {
                         value={formData.instagram}
                         onChange={e => setFormData({...formData, instagram: e.target.value})}
                         className="wb-input"
-                        placeholder="tu_cuenta"
+                        placeholder={t('website_builder.instagram_placeholder')}
                       />
                     </div>
                   </div>
                 </div>
                 <div className="wb-form-group">
-                  <label className="wb-label">Facebook</label>
+                  <label className="wb-label">{t('website_builder.facebook')}</label>
                   <input
                     type="url"
                     value={formData.facebook}
                     onChange={e => setFormData({...formData, facebook: e.target.value})}
                     className="wb-input"
-                    placeholder="https://facebook.com/..."
+                    placeholder={t('website_builder.facebook_placeholder')}
                   />
                 </div>
               </div>
 
               <button type="submit" disabled={saving} className="wb-save-btn">
                 <Save size={20} />
-                {saving ? 'Guardando...' : 'Guardar y Publicar'}
+                {saving ? t('website_builder.saving') : t('website_builder.save')}
               </button>
             </form>
           </div>
@@ -277,7 +277,7 @@ export default function WebsiteBuilder() {
           <div className="wb-preview-col">
             <div className="wb-preview-header">
               <span className="wb-dot"></span>
-              Vista Previa en Vivo
+              {t('website_builder.live_preview')}
             </div>
             
             <div className="wb-phone-frame">
@@ -305,14 +305,14 @@ export default function WebsiteBuilder() {
                   )}
 
                   <div className="wb-phone-fleet">
-                    <h4>Flota Disponible</h4>
+                    <h4>{t('website_builder.preview_fleet')}</h4>
                     <div className="wb-phone-card">
                       <div className="wb-phone-card-img">📸</div>
                       <div className="wb-phone-card-info">
                         <div className="wb-phone-card-title"></div>
                         <div className="wb-phone-card-subtitle"></div>
                         <div className="wb-phone-card-btn" style={{ backgroundColor: formData.themeColor }}>
-                          Ver Detalles
+                          {t('website_builder.preview_details')}
                         </div>
                       </div>
                     </div>

@@ -142,7 +142,7 @@ const Layout = () => {
           </NavLink>
           <NavLink to="/website-builder" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>
             <div className="sidebar-icon"><Globe size={20} /></div>
-            <span>Website Builder</span>
+            <span>{t('sidebar.website_builder') || 'Website Builder'}</span>
           </NavLink>
 
           <div className="sidebar-separator" />

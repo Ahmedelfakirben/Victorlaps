@@ -13,7 +13,8 @@ const resources = {
         "crm": "Clients (CRM)",
         "finance": "Finances & Factures",
         "morocco": "Module Maroc",
-        "settings": "Paramètres"
+        "settings": "Paramètres",
+        "website_builder": "Créateur Web"
       },
       "dashboard": {
         "title": "Tableau de Bord",
@@ -50,6 +51,31 @@ const resources = {
         "title": "Paramètres",
         "save": "Sauvegarder",
         "settings_placeholder": "Les paramètres de l'application apparaîtront ici."
+      },
+      "website_builder": {
+        "title": "Website Builder",
+        "subtitle": "Concevez et configurez votre vitrine publique en temps réel.",
+        "visit_website": "Visiter mon site",
+        "basic_config": "Configuration de base",
+        "slug_label": "Lien public (Slug)",
+        "slug_placeholder": "mon-agence",
+        "theme_color": "Couleur principale",
+        "appearance": "Textes et Apparence",
+        "hero_title": "Titre de bienvenue",
+        "hero_subtitle": "Sous-titre",
+        "about": "À propos de nous",
+        "about_placeholder": "Écrivez quelque chose sur l'histoire de votre agence ou vos valeurs...",
+        "contact_social": "Contact et Réseaux Sociaux",
+        "whatsapp": "WhatsApp",
+        "instagram": "Instagram",
+        "instagram_placeholder": "votre_compte",
+        "facebook": "Facebook",
+        "facebook_placeholder": "https://facebook.com/...",
+        "save": "Enregistrer et publier",
+        "saving": "Enregistrement...",
+        "live_preview": "Aperçu en direct",
+        "preview_fleet": "Flotte disponible",
+        "preview_details": "Voir les détails"
       }
     }
   },
@@ -63,7 +89,8 @@ const resources = {
         "crm": "العملاء (إدارة العلاقات)",
         "finance": "المالية والفواتير",
         "morocco": "وحدة المغرب",
-        "settings": "الإعدادات"
+        "settings": "الإعدادات",
+        "website_builder": "منشئ المواقع"
       },
       "dashboard": {
         "title": "لوحة القيادة",
@@ -100,6 +127,31 @@ const resources = {
         "title": "الإعدادات",
         "save": "حفظ",
         "settings_placeholder": "ستظهر إعدادات التطبيق هنا."
+      },
+      "website_builder": {
+        "title": "منشئ المواقع",
+        "subtitle": "صمم وقم بإعداد واجهتك العامة في الوقت الفعلي.",
+        "visit_website": "زيارة موقعي",
+        "basic_config": "التكوين الأساسي",
+        "slug_label": "الرابط العام",
+        "slug_placeholder": "وكالتي",
+        "theme_color": "اللون الرئيسي",
+        "appearance": "النصوص والمظهر",
+        "hero_title": "عنوان الترحيب",
+        "hero_subtitle": "العنوان الفرعي",
+        "about": "معلومات عنا",
+        "about_placeholder": "اكتب شيئًا عن تاريخ وكالتك أو قيمك...",
+        "contact_social": "الاتصال ووسائل التواصل الاجتماعي",
+        "whatsapp": "واتساب",
+        "instagram": "إنستغرام",
+        "instagram_placeholder": "حسابك",
+        "facebook": "فيسبوك",
+        "facebook_placeholder": "https://facebook.com/...",
+        "save": "حفظ ونشر",
+        "saving": "جاري الحفظ...",
+        "live_preview": "معاينة مباشرة",
+        "preview_fleet": "الأسطول المتاح",
+        "preview_details": "عرض التفاصيل"
       }
     }
   }

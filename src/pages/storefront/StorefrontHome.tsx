@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { MessageCircle, Car, MapPin, Loader2 } from 'lucide-react';
+import { MessageCircle, Car, Loader2 } from 'lucide-react';
 
 export default function StorefrontHome() {
   const { slug } = useParams();

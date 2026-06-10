@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { ArrowLeft, Car, Calendar, Settings, Fuel, Users, Check, MessageCircle, Loader2 } from 'lucide-react';
+import { ArrowLeft, Car, Calendar, Settings, Fuel, Users, MessageCircle, Loader2 } from 'lucide-react';
 
 export default function StorefrontVehicle() {
   const { slug, id } = useParams();
