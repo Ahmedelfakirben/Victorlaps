@@ -9,7 +9,7 @@ if (!connectionString) {
   process.exit(1);
 }
 
-const pgClient = new Client({ connectionString });
+let pgClient;
 
 // Conexión SMTP desde variables de entorno
 const transporter = nodemailer.createTransport({
@@ -55,17 +55,23 @@ async function sendPendingEmails() {
 }
 
 async function start() {
-  try {
-    await pgClient.connect();
-    console.log("Conectado a PostgreSQL. Escuchando cola de correos...");
-    
-    // Polling cada 10 segundos
-    setInterval(sendPendingEmails, 10000);
-    // Ejecutar la primera vez de inmediato
-    sendPendingEmails();
-  } catch (err) {
-    console.error("Error conectando a la BD:", err.message);
-    process.exit(1);
+  let connected = false;
+  while (!connected) {
+    try {
+      // Create a new client instance each time to avoid "Client has already been connected" errors
+      pgClient = new Client({ connectionString });
+      await pgClient.connect();
+      connected = true;
+      console.log("Conectado a PostgreSQL. Escuchando cola de correos...");
+
+      // Polling cada 10 segundos
+      setInterval(sendPendingEmails, 10000);
+      // Ejecutar la primera vez de inmediato
+      sendPendingEmails();
+    } catch (err) {
+      console.error("Error conectando a la BD (reintentando en 10s):", err.message);
+      await new Promise(resolve => setTimeout(resolve, 10000));
+    }
   }
 }
 
