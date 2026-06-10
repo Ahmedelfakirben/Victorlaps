@@ -18,8 +18,12 @@ import Blog from './pages/public/Blog';
 import Tutorials from './pages/public/Tutorials';
 import ApiDocs from './pages/public/ApiDocs';
 import WebsiteBuilder from './pages/WebsiteBuilder';
+import StorefrontLayout from './pages/storefront/StorefrontLayout';
 import StorefrontHome from './pages/storefront/StorefrontHome';
 import StorefrontVehicle from './pages/storefront/StorefrontVehicle';
+import StorefrontFleet from './pages/storefront/StorefrontFleet';
+import StorefrontAbout from './pages/storefront/StorefrontAbout';
+import StorefrontContact from './pages/storefront/StorefrontContact';
 import Dashboard from './pages/Dashboard';
 import Fleet from './pages/Fleet';
 import VehicleDetail from './pages/VehicleDetail';
@@ -91,8 +95,13 @@ function App() {
         </Route>
 
         {/* Public Storefront Routes (Outside of normal layout) */}
-        <Route path="/booking/:slug" element={<StorefrontHome />} />
-        <Route path="/booking/:slug/vehicle/:id" element={<StorefrontVehicle />} />
+        <Route path="/booking/:slug" element={<StorefrontLayout />}>
+          <Route index element={<StorefrontHome />} />
+          <Route path="fleet" element={<StorefrontFleet />} />
+          <Route path="about" element={<StorefrontAbout />} />
+          <Route path="contact" element={<StorefrontContact />} />
+          <Route path="vehicle/:id" element={<StorefrontVehicle />} />
+        </Route>
 
         {/* Global Blocked Page */}
         <Route path="/expired" element={<Expired />} />

@@ -55,13 +55,30 @@ const Settings = () => {
   const fetchSettings = async () => {
     setLoading(true);
     try {
+      // Get current user's profile to know their company_id
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData?.user) throw new Error("No user found");
+      
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('company_id')
+        .eq('id', userData.user.id)
+        .single();
+        
+      if (!profileData?.company_id) throw new Error("No company assigned to user");
+
       const [compRes, userRes, branchRes] = await Promise.all([
-        supabase.from('companies').select('*').single(),
-        supabase.from('profiles').select('*, branches(name)'),
-        supabase.from('branches').select('*').order('created_at', { ascending: true })
+        supabase.from('companies').select('*').eq('id', profileData.company_id).single(),
+        supabase.from('profiles').select('*, branches(name)').eq('company_id', profileData.company_id),
+        supabase.from('branches').select('*').eq('company_id', profileData.company_id).order('created_at', { ascending: true })
       ]);
 
-      if (compRes.data) setCompany(compRes.data);
+      if (compRes.data) {
+        setCompany(compRes.data);
+      } else if (compRes.error) {
+        console.error("Error fetching company:", compRes.error);
+      }
+      
       setUsers(userRes.data || []);
       setBranches(branchRes.data || []);
     } catch (err) {
@@ -273,22 +290,22 @@ const Settings = () => {
                       </div>
                       <div className="input-group">
                         <label className="input-label">{isAr ? 'الهاتف' : 'Téléphone'}</label>
-                        <input className="input-field" value={company.phone}
+                        <input className="input-field" value={company.phone || ''}
                           onChange={e => setCompany({...company, phone: e.target.value})} />
                       </div>
                       <div className="input-group" style={{ gridColumn: 'span 2' }}>
                         <label className="input-label">{isAr ? 'العنوان' : 'Adresse'}</label>
-                        <input className="input-field" value={company.address}
+                        <input className="input-field" value={company.address || ''}
                           onChange={e => setCompany({...company, address: e.target.value})} />
                       </div>
                       <div className="input-group">
                         <label className="input-label">ICE</label>
-                        <input className="input-field" value={company.ice}
+                        <input className="input-field" value={company.ice || ''}
                           onChange={e => setCompany({...company, ice: e.target.value})} />
                       </div>
                       <div className="input-group">
                         <label className="input-label">TVA (%)</label>
-                        <input className="input-field" type="number" value={company.tva_default_rate}
+                        <input className="input-field" type="number" value={company.tva_default_rate || ''}
                           onChange={e => setCompany({...company, tva_default_rate: e.target.value})} />
                       </div>
                     </div>

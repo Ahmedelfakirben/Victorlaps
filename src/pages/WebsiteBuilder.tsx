@@ -1,8 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useTranslation } from 'react-i18next';
-import { Layout, Globe, Palette, Phone, Save, AlertCircle } from 'lucide-react';
+import { Layout, Globe, Palette, Phone, Save, AlertCircle, Image as ImageIcon } from 'lucide-react';
+import ImageUpload from '../components/common/ImageUpload';
 import './WebsiteBuilder.css';
+
+const COLOR_PALETTES = [
+  { name: 'Emerald Night', primary: '#10B981', secondary: '#0F172A' },
+  { name: 'Ocean Blue', primary: '#3B82F6', secondary: '#1E3A8A' },
+  { name: 'Sunset Orange', primary: '#F97316', secondary: '#431407' },
+  { name: 'Royal Purple', primary: '#8B5CF6', secondary: '#2E1065' },
+  { name: 'Ruby Red', primary: '#E11D48', secondary: '#4C0519' },
+  { name: 'Gold & Black', primary: '#EAB308', secondary: '#171717' },
+  { name: 'Mint & Slate', primary: '#14B8A6', secondary: '#334155' },
+  { name: 'Rose & Charcoal', primary: '#F43F5E', secondary: '#18181B' },
+];
 
 export default function WebsiteBuilder() {
   const { t } = useTranslation();
@@ -18,6 +30,7 @@ export default function WebsiteBuilder() {
     template: 'modern',
     themeColor: '#10b981',
     themeSecondary: '#0F172A',
+    heroBackgroundImage: '',
     whatsapp: '',
     instagram: '',
     facebook: '',
@@ -219,27 +232,32 @@ export default function WebsiteBuilder() {
                       />
                     </div>
                   </div>
-                  <div className="wb-form-group">
-                    <label className="wb-label">{t('website_builder.theme_primary') || 'Color Principal'}</label>
-                    <div className="wb-color-picker">
-                      <input
-                        type="color"
-                        value={formData.themeColor}
-                        onChange={e => setFormData({...formData, themeColor: e.target.value})}
-                      />
-                      <span className="wb-color-hex">{formData.themeColor}</span>
-                    </div>
-                  </div>
-                  <div className="wb-form-group">
-                    <label className="wb-label">{t('website_builder.theme_secondary') || 'Color Secundario'}</label>
-                    <div className="wb-color-picker">
-                      <input
-                        type="color"
-                        value={formData.themeSecondary}
-                        onChange={e => setFormData({...formData, themeSecondary: e.target.value})}
-                      />
-                      <span className="wb-color-hex">{formData.themeSecondary}</span>
-                    </div>
+                  <label className="wb-label">{t('website_builder.theme_color')} y Fondo</label>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1rem', marginTop: '0.5rem' }}>
+                    {COLOR_PALETTES.map((palette, idx) => (
+                      <div 
+                        key={idx}
+                        onClick={() => setFormData({ ...formData, themeColor: palette.primary, themeSecondary: palette.secondary })}
+                        style={{ 
+                          cursor: 'pointer', 
+                          border: formData.themeColor === palette.primary ? `2px solid ${palette.primary}` : '1px solid #E2E8F0',
+                          borderRadius: '0.75rem',
+                          padding: '0.5rem',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          gap: '0.5rem',
+                          backgroundColor: formData.themeColor === palette.primary ? '#F8FAFC' : 'white',
+                          transition: 'all 0.2s'
+                        }}
+                      >
+                        <div style={{ display: 'flex', width: '100%', height: '40px', borderRadius: '0.5rem', overflow: 'hidden' }}>
+                          <div style={{ flex: 1, backgroundColor: palette.primary }}></div>
+                          <div style={{ flex: 1, backgroundColor: palette.secondary }}></div>
+                        </div>
+                        <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#475569' }}>{palette.name}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -266,9 +284,43 @@ export default function WebsiteBuilder() {
                     value={formData.heroSubtitle}
                     onChange={e => setFormData({...formData, heroSubtitle: e.target.value})}
                     className="wb-input"
+                    placeholder="Tu agencia de confianza"
                   />
                 </div>
-                <div className="wb-form-group">
+
+                <div className="wb-form-group" style={{ marginTop: '1.5rem' }}>
+                  <label className="wb-label">Fondo de Pantalla (Hero)</label>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
+                    <div 
+                      onClick={() => setFormData({...formData, heroBackgroundImage: ''})}
+                      style={{ height: '80px', borderRadius: '0.5rem', cursor: 'pointer', border: formData.heroBackgroundImage === '' ? '2px solid #3B82F6' : '1px solid #E2E8F0', backgroundColor: formData.themeSecondary, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '0.8rem' }}
+                    >
+                      Sin Fondo (Color)
+                    </div>
+                    <div 
+                      onClick={() => setFormData({...formData, heroBackgroundImage: '/assets/storefront/contact-bg.jpg'})}
+                      style={{ height: '80px', borderRadius: '0.5rem', cursor: 'pointer', border: formData.heroBackgroundImage === '/assets/storefront/contact-bg.jpg' ? '2px solid #3B82F6' : '1px solid #E2E8F0', backgroundImage: 'url(/assets/storefront/contact-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+                    ></div>
+                    <div 
+                      onClick={() => setFormData({...formData, heroBackgroundImage: '/assets/storefront/flota.png'})}
+                      style={{ height: '80px', borderRadius: '0.5rem', cursor: 'pointer', border: formData.heroBackgroundImage === '/assets/storefront/flota.png' ? '2px solid #3B82F6' : '1px solid #E2E8F0', backgroundImage: 'url(/assets/storefront/flota.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+                    ></div>
+                  </div>
+                  <div style={{ marginTop: '1rem', padding: '1rem', backgroundColor: '#F8FAFC', borderRadius: '0.5rem', border: '1px dashed #CBD5E1' }}>
+                    <label className="wb-label" style={{ fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                      <ImageIcon size={14} /> Subir tu propia foto
+                    </label>
+                    <ImageUpload 
+                      bucket="storefront_assets"
+                      onUploadComplete={(url: string) => setFormData({ ...formData, heroBackgroundImage: url })}
+                    />
+                    {formData.heroBackgroundImage && formData.heroBackgroundImage.includes('supabase') && (
+                      <p style={{ fontSize: '0.75rem', color: '#10B981', marginTop: '0.5rem', marginBottom: 0 }}>✓ Foto cargada exitosamente</p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="wb-form-group" style={{ marginTop: '1.5rem' }}>
                   <label className="wb-label">{t('website_builder.about')}</label>
                   <textarea
                     rows={4}
@@ -343,16 +395,21 @@ export default function WebsiteBuilder() {
                 {formData.template === 'modern' && (
                   <>
                     <div style={{ backgroundColor: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(10px)', padding: '10px 15px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, zIndex: 10, borderBottom: '1px solid #E2E8F0' }}>
-                      <span style={{ fontWeight: 800, color: formData.themePrimary || formData.themeColor, fontSize: '0.9rem' }}>Logo</span>
+                      <span style={{ fontWeight: 800, color: formData.themeColor, fontSize: '0.9rem' }}>Logo</span>
                       <div style={{ display: 'flex', gap: '8px' }}>
                         <div style={{ width: 24, height: 24, borderRadius: '50%', backgroundColor: formData.themeSecondary, opacity: 0.1 }}></div>
                         <div style={{ width: 24, height: 24, borderRadius: '50%', backgroundColor: formData.themeSecondary, opacity: 0.1 }}></div>
                       </div>
                     </div>
                     
-                    <div style={{ backgroundColor: formData.themeSecondary, padding: '40px 20px', textAlign: 'center', color: 'white' }}>
-                      <h2 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '10px', lineHeight: 1.2 }}>{formData.heroTitle || 'Alquiler de Vehículos'}</h2>
-                      <p style={{ color: formData.themePrimary || formData.themeColor, fontSize: '0.9rem' }}>{formData.heroSubtitle || 'La mejor flota'}</p>
+                    <div style={{ backgroundColor: formData.themeSecondary, backgroundImage: formData.heroBackgroundImage ? `url(${formData.heroBackgroundImage})` : 'none', backgroundSize: 'cover', backgroundPosition: 'center', padding: '40px 20px', textAlign: 'center', color: 'white', position: 'relative' }}>
+                      {formData.heroBackgroundImage && (
+                        <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.6)' }}></div>
+                      )}
+                      <div style={{ position: 'relative', zIndex: 2 }}>
+                        <h2 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '10px', lineHeight: 1.2, color: formData.themeColor }}>{formData.heroTitle || 'Alquiler de Vehículos'}</h2>
+                        <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '0.9rem' }}>{formData.heroSubtitle || 'La mejor flota'}</p>
+                      </div>
                     </div>
 
                     <div style={{ padding: '20px 15px' }}>
@@ -402,10 +459,15 @@ export default function WebsiteBuilder() {
                       <span style={{ fontWeight: 800, color: '#1E293B', fontSize: '1.2rem', letterSpacing: '2px', textTransform: 'uppercase' }}>Logo</span>
                     </div>
                     
-                    <div style={{ backgroundColor: 'white', padding: '50px 20px', textAlign: 'center' }}>
-                      <h2 style={{ fontSize: '1.8rem', fontWeight: 300, marginBottom: '10px', color: '#1E293B' }}>{formData.heroTitle || 'Alquiler Premium'}</h2>
-                      <p style={{ color: '#64748B', fontSize: '0.9rem', letterSpacing: '1px' }}>{formData.heroSubtitle || 'EXPERIENCIA ÚNICA'}</p>
-                      <div style={{ width: '40px', height: '2px', backgroundColor: formData.themeColor, margin: '20px auto 0' }}></div>
+                    <div style={{ backgroundColor: 'white', padding: '50px 20px', textAlign: 'center', backgroundImage: formData.heroBackgroundImage ? `url(${formData.heroBackgroundImage})` : 'none', backgroundSize: 'cover', backgroundPosition: 'center', position: 'relative' }}>
+                      {formData.heroBackgroundImage && (
+                        <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(255,255,255,0.85)' }}></div>
+                      )}
+                      <div style={{ position: 'relative', zIndex: 2 }}>
+                        <h2 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '10px', color: formData.themeColor }}>{formData.heroTitle || 'Alquiler Premium'}</h2>
+                        <p style={{ color: '#64748B', fontSize: '0.9rem', letterSpacing: '1px' }}>{formData.heroSubtitle || 'EXPERIENCIA ÚNICA'}</p>
+                        <div style={{ width: '40px', height: '2px', backgroundColor: formData.themeColor, margin: '20px auto 0' }}></div>
+                      </div>
                     </div>
 
                     <div style={{ padding: '20px 15px', backgroundColor: '#F8FAFC' }}>

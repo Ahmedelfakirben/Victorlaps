@@ -1,110 +1,74 @@
-import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams, useOutletContext, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { ArrowLeft, Car, Calendar, Settings, Fuel, Users, MessageCircle, Loader2 } from 'lucide-react';
-import './Storefront.css';
+import { ArrowLeft, Car, Calendar, Settings, Fuel, Users, Loader2 } from 'lucide-react';
 
 export default function StorefrontVehicle() {
-  const { slug, id } = useParams();
-  const [agency, setAgency] = useState<any>(null);
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { agency, config } = useOutletContext<any>();
   const [vehicle, setVehicle] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  
+  // Date Picker State
+  const [pickupDate, setPickupDate] = useState('');
+  const [dropoffDate, setDropoffDate] = useState('');
 
   useEffect(() => {
-    async function loadVehicleDetails() {
+    async function loadVehicle() {
       try {
-        const { data: companies, error: agencyError } = await supabase
-          .from('companies')
-          .select('*')
-          .eq('slug', slug);
-
-        if (agencyError) throw agencyError;
-        if (!companies || companies.length === 0) {
-          throw new Error('Agencia no encontrada');
-        }
-
-        const currentAgency = companies[0];
-        setAgency(currentAgency);
-
-        const { data: fleet, error: fleetError } = await supabase
+        const { data, error } = await supabase
           .from('vehicles')
           .select('*')
           .eq('id', id)
-          .eq('company_id', currentAgency.id);
+          .single();
 
-        if (fleetError) throw fleetError;
-        if (!fleet || fleet.length === 0) {
-          throw new Error('Vehículo no encontrado');
-        }
-
-        setVehicle(fleet[0]);
-
-      } catch (err: any) {
+        if (error) throw error;
+        setVehicle(data);
+      } catch (err) {
         console.error('Error loading vehicle:', err);
-        setError(err.message || 'Error al cargar los detalles');
       } finally {
         setLoading(false);
       }
     }
 
-    if (slug && id) loadVehicleDetails();
-  }, [slug, id]);
+    if (id) loadVehicle();
+  }, [id]);
 
   if (loading) {
     return (
-      <div className="sf-body" style={{ alignItems: 'center', justifyContent: 'center' }}>
-        <Loader2 size={48} className="animate-spin" color="#10b981" />
+      <div style={{ alignItems: 'center', justifyContent: 'center', display: 'flex', height: '50vh' }}>
+        <Loader2 size={48} className="animate-spin" color="var(--sf-primary)" />
       </div>
     );
   }
 
-  if (error || !agency || !vehicle) {
+  if (!vehicle) {
     return (
-      <div className="sf-body" style={{ alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ textAlign: 'center' }}>
-          <h1 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Oops!</h1>
-          <p>{error || 'Página no encontrada'}</p>
-          <Link to={`/booking/${slug}`} style={{ color: '#10b981', textDecoration: 'underline', marginTop: '1rem', display: 'inline-block' }}>
-            Volver al inicio
-          </Link>
-        </div>
+      <div style={{ textAlign: 'center', padding: '4rem 2rem' }}>
+        <h2>Vehículo no encontrado</h2>
+        <button onClick={() => navigate(-1)} className="sf-btn" style={{ marginTop: '1rem' }}>Volver</button>
       </div>
     );
   }
 
-  const config = agency.storefront_config || {};
-  const themePrimary = config.themeColor || '#10b981';
-  const themeSecondary = config.themeSecondary || '#0F172A';
-  const templateName = config.template || 'modern';
-
-  const themeStyle = {
-    '--sf-primary': themePrimary,
-    '--sf-secondary': themeSecondary
-  } as React.CSSProperties;
-
-  // Generate WhatsApp message
+  // Generate WhatsApp message with Dates
   const whatsappNumber = config.whatsapp ? config.whatsapp.replace(/\+/g, '') : '';
-  const message = `Hola ${agency.name}, estoy interesado en alquilar el vehículo: ${vehicle.brand} ${vehicle.model} (${vehicle.year}). ¿Está disponible?`;
-  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+  let messageText = `Hola ${agency.name}, estoy interesado en alquilar el vehículo: ${vehicle.brand} ${vehicle.model} (${vehicle.year}).`;
+  if (pickupDate && dropoffDate) {
+    messageText += `\nFechas: Desde el ${pickupDate} hasta el ${dropoffDate}.`;
+  }
+  messageText += `\n¿Está disponible?`;
+  
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(messageText)}`;
 
   return (
-    <div className={`sf-body sf-template-${templateName}`} style={themeStyle}>
-      {/* Simple Header */}
-      <header className="sf-header">
-        <div className="sf-container sf-header-content">
-          <Link to={`/booking/${slug}`} className="sf-brand">
-            {agency.name}
-          </Link>
-        </div>
-      </header>
-
-      {/* Hero Detail */}
+    <main>
       <div className="sf-detail-hero">
         <div className="sf-container">
-          <Link to={`/booking/${slug}`} className="sf-back-btn">
+          <button onClick={() => navigate(-1)} className="sf-back-btn" style={{ background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '1rem', fontWeight: 600, padding: 0, marginBottom: '1rem' }}>
             <ArrowLeft size={20} /> Volver a la flota
-          </Link>
+          </button>
           <h1 className="sf-hero-title" style={{ margin: 0, textAlign: 'left' }}>
             {vehicle.brand} {vehicle.model}
           </h1>
@@ -114,9 +78,8 @@ export default function StorefrontVehicle() {
         </div>
       </div>
 
-      <main className="sf-container" style={{ flex: 1 }}>
+      <div className="sf-container" style={{ padding: '2rem 0' }}>
         <div className="sf-detail-grid">
-          {/* Image Gallery */}
           <div className="sf-detail-image">
             {vehicle.image_url ? (
               <img src={vehicle.image_url} alt={`${vehicle.brand} ${vehicle.model}`} />
@@ -125,14 +88,7 @@ export default function StorefrontVehicle() {
             )}
           </div>
 
-          {/* Info Sidebar */}
           <div className="sf-detail-info">
-            <div className="sf-detail-price">
-              {vehicle.daily_rate} MAD <span>/ día</span>
-            </div>
-
-            <div className="sf-divider" style={{ margin: '1.5rem 0', width: '100%' }}></div>
-
             <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1.5rem', color: 'var(--sf-secondary)' }}>
               Características
             </h3>
@@ -156,29 +112,55 @@ export default function StorefrontVehicle() {
               </div>
             </div>
 
-            {whatsappNumber ? (
-              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="sf-btn sf-btn-whatsapp">
-                <MessageCircle size={24} />
+            <div className="sf-detail-sidebar">
+              <div className="sf-detail-price">
+                <div className="sf-detail-price-amount">{vehicle.daily_rate} MAD</div>
+                <div className="sf-detail-price-label">Por día</div>
+              </div>
+
+              <div style={{ marginTop: '2rem', padding: '1.5rem', backgroundColor: '#F8FAFC', borderRadius: '1rem', border: '1px solid #E2E8F0' }}>
+                <h4 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', color: '#1E293B', fontWeight: 600 }}>
+                  <Calendar size={20} color="var(--sf-primary)" /> Fechas de Reserva
+                </h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.85rem', color: '#64748B', marginBottom: '0.25rem', fontWeight: 600 }}>Recogida</label>
+                    <input 
+                      type="date" 
+                      value={pickupDate}
+                      onChange={(e) => setPickupDate(e.target.value)}
+                      style={{ width: '100%', padding: '0.75rem', borderRadius: '0.5rem', border: '1px solid #CBD5E1', fontSize: '1rem' }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.85rem', color: '#64748B', marginBottom: '0.25rem', fontWeight: 600 }}>Devolución</label>
+                    <input 
+                      type="date" 
+                      value={dropoffDate}
+                      onChange={(e) => setDropoffDate(e.target.value)}
+                      min={pickupDate}
+                      style={{ width: '100%', padding: '0.75rem', borderRadius: '0.5rem', border: '1px solid #CBD5E1', fontSize: '1rem' }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <a 
+                href={whatsappUrl} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="sf-btn"
+                style={{ width: '100%', display: 'flex', justifyContent: 'center', fontSize: '1.1rem', marginTop: '1.5rem' }}
+              >
                 Solicitar Reserva por WhatsApp
               </a>
-            ) : (
-              <div style={{ textAlign: 'center', padding: '1rem', background: '#F8FAFC', borderRadius: '0.75rem', color: '#64748B' }}>
-                <p style={{ margin: 0 }}>La agencia no tiene WhatsApp configurado.</p>
-              </div>
-            )}
+              <p style={{ textAlign: 'center', fontSize: '0.85rem', color: '#64748B', marginTop: '1rem' }}>
+                Sin compromiso. El pago se realiza al recoger el vehículo.
+              </p>
+            </div>
           </div>
         </div>
-      </main>
-
-      {/* Footer */}
-      <footer className="sf-footer">
-        <div className="sf-container">
-          <div className="sf-footer-bottom" style={{ borderTop: 'none', paddingTop: 0 }}>
-            <div>&copy; {new Date().getFullYear()} {agency.name}. Todos los derechos reservados.</div>
-            <div style={{ color: 'var(--sf-primary)' }}>Powered by Vektorlaps OS</div>
-          </div>
-        </div>
-      </footer>
-    </div>
+      </div>
+    </main>
   );
 }

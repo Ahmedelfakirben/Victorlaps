@@ -3,7 +3,7 @@ import { Upload, X, Loader2 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
 interface ImageUploadProps {
-  bucket: 'vehicles' | 'documents' | 'clients' | 'temp';
+  bucket: 'vehicles' | 'documents' | 'clients' | 'temp' | 'storefront_assets';
   onUploadComplete: (url: string) => void;
   label?: string;
   currentImage?: string;
