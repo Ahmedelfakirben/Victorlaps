@@ -460,9 +460,23 @@
 .sf-about {
   padding: 6rem 0;
   text-align: center;
-  background: rgba(22, 28, 45, 0.2);
+  background: var(--sf-primary);
   border-top: 1px solid var(--sf-border-glass);
   border-bottom: 1px solid var(--sf-border-glass);
+}
+
+.sf-about .sf-about-title {
+  color: #090D16;
+}
+
+.sf-about .sf-about-text {
+  color: rgba(9, 13, 22, 0.85);
+  font-weight: 500;
+}
+
+.sf-about .sf-divider {
+  background: #090D16;
+  opacity: 0.3;
 }
 
 .sf-about-title {
