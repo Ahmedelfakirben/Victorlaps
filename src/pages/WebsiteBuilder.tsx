@@ -7,6 +7,7 @@ import './WebsiteBuilder.css';
 export default function WebsiteBuilder() {
   const { t } = useTranslation();
   const [companyId, setCompanyId] = useState<string | null>(null);
+  const [previewVehicles, setPreviewVehicles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -69,6 +70,18 @@ export default function WebsiteBuilder() {
           slug: data.slug || '',
           ...(data.storefront_config || {})
         });
+      }
+
+      // Fetch vehicles for the preview
+      const { data: fleet } = await supabase
+        .from('vehicles')
+        .select('*')
+        .eq('company_id', targetCompanyId)
+        .eq('status', 'available')
+        .limit(3);
+        
+      if (fleet) {
+        setPreviewVehicles(fleet);
       }
     } catch (err: any) {
       console.error('Error loading settings:', err);
@@ -356,21 +369,27 @@ export default function WebsiteBuilder() {
                       </h4>
                       
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                        {[1, 2].map(i => (
-                          <div key={i} style={{ backgroundColor: 'white', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
+                        {previewVehicles.length > 0 ? previewVehicles.slice(0, 2).map(v => (
+                          <div key={v.id} style={{ backgroundColor: 'white', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
                             <div style={{ height: '120px', backgroundColor: '#E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-                              <span style={{ fontSize: '2rem' }}>📸</span>
-                              <div style={{ position: 'absolute', top: '10px', right: '10px', backgroundColor: 'white', padding: '4px 8px', borderRadius: '12px', fontSize: '0.7rem', fontWeight: 800 }}>300 MAD</div>
+                              {v.image_url ? (
+                                <img src={v.image_url} alt={v.model} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                              ) : (
+                                <span style={{ fontSize: '2rem' }}>📸</span>
+                              )}
+                              <div style={{ position: 'absolute', top: '10px', right: '10px', backgroundColor: 'white', padding: '4px 8px', borderRadius: '12px', fontSize: '0.7rem', fontWeight: 800 }}>{v.daily_rate} MAD</div>
                             </div>
                             <div style={{ padding: '12px' }}>
-                              <h5 style={{ margin: 0, fontSize: '0.9rem', fontWeight: 800 }}>Audi A3</h5>
-                              <p style={{ margin: '0 0 10px 0', fontSize: '0.7rem', color: '#64748B' }}>Automático • Diesel</p>
+                              <h5 style={{ margin: 0, fontSize: '0.9rem', fontWeight: 800 }}>{v.brand} {v.model}</h5>
+                              <p style={{ margin: '0 0 10px 0', fontSize: '0.7rem', color: '#64748B' }}>{v.transmission} • {v.fuel}</p>
                               <div style={{ backgroundColor: formData.themeColor, color: 'white', textAlign: 'center', padding: '8px', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 700 }}>
                                 Ver Detalles
                               </div>
                             </div>
                           </div>
-                        ))}
+                        )) : (
+                          <p style={{ fontSize: '0.8rem', color: '#64748B', textAlign: 'center' }}>No hay vehículos disponibles.</p>
+                        )}
                       </div>
                     </div>
                   </>
@@ -395,20 +414,26 @@ export default function WebsiteBuilder() {
                       </h4>
                       
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                        {[1].map(i => (
-                          <div key={i} style={{ backgroundColor: 'white', overflow: 'hidden' }}>
+                        {previewVehicles.length > 0 ? previewVehicles.slice(0, 1).map(v => (
+                          <div key={v.id} style={{ backgroundColor: 'white', overflow: 'hidden' }}>
                             <div style={{ height: '180px', backgroundColor: '#E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                              <span style={{ fontSize: '2rem' }}>📸</span>
+                              {v.image_url ? (
+                                <img src={v.image_url} alt={v.model} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                              ) : (
+                                <span style={{ fontSize: '2rem' }}>📸</span>
+                              )}
                             </div>
                             <div style={{ padding: '15px', textAlign: 'center' }}>
-                              <h5 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 400, color: '#1E293B' }}>Range Rover Velar</h5>
-                              <div style={{ margin: '10px 0', fontSize: '0.9rem', fontWeight: 600, color: formData.themeColor }}>800 MAD / día</div>
+                              <h5 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 400, color: '#1E293B' }}>{v.brand} {v.model}</h5>
+                              <div style={{ margin: '10px 0', fontSize: '0.9rem', fontWeight: 600, color: formData.themeColor }}>{v.daily_rate} MAD / día</div>
                               <div style={{ border: `1px solid ${formData.themeColor}`, color: formData.themeColor, textAlign: 'center', padding: '8px', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
                                 Descubrir
                               </div>
                             </div>
                           </div>
-                        ))}
+                        )) : (
+                          <p style={{ fontSize: '0.8rem', color: '#64748B', textAlign: 'center' }}>Sin vehículos.</p>
+                        )}
                       </div>
                     </div>
                   </>
