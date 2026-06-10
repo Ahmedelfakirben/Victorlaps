@@ -84,6 +84,30 @@
   color: var(--gold);
 }
 
+.login-back-btn {
+  position: fixed;
+  top: 1.5rem;
+  left: 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+  z-index: 10;
+  backdrop-filter: blur(8px);
+}
+
+.login-back-btn:hover {
+  background: rgba(197, 160, 57, 0.2);
+  color: var(--gold);
+}
+
 /* Container */
 .login-container {
   display: grid;
