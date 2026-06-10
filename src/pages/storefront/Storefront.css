@@ -1,4 +1,8 @@
 /* Storefront Global Variables */
+html {
+  scroll-behavior: smooth;
+}
+
 :root {
   --sf-primary: #f97316;
   --sf-primary-glow: rgba(249, 115, 22, 0.2);
@@ -9,6 +13,19 @@
   --sf-bg-dark: #090D16;
   --sf-bg-card: rgba(255, 255, 255, 0.06);
   --sf-border-glass: rgba(255, 255, 255, 0.14);
+}
+
+/* Scroll Reveal Transitions */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+.reveal.reveal-active {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* Base Styles */

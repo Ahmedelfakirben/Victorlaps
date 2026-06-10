@@ -33,6 +33,32 @@ export default function StorefrontHome() {
     }
   }, [agency?.id]);
 
+  useEffect(() => {
+    if (loading) return;
+
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px 0px -100px 0px',
+      threshold: 0.05,
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('reveal-active');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    const revealElements = document.querySelectorAll('.reveal');
+    revealElements.forEach((el) => observer.observe(el));
+
+    return () => {
+      revealElements.forEach((el) => observer.unobserve(el));
+    };
+  }, [loading]);
+
   if (loading) {
     return (
       <div style={{ alignItems: 'center', justifyContent: 'center', display: 'flex', height: '50vh' }}>
@@ -66,7 +92,7 @@ export default function StorefrontHome() {
 
       <main className="sf-main-content">
         {/* Core Values Section */}
-        <section className="sf-values">
+        <section className="sf-values reveal">
           <div className="sf-container">
             <div className="sf-values-grid">
               <div className="sf-value-item">
@@ -95,7 +121,7 @@ export default function StorefrontHome() {
         </section>
 
         {/* Enriched Stats Section */}
-        <section className="sf-stats-section">
+        <section className="sf-stats-section reveal">
           <div className="sf-container">
             <div className="sf-stats-grid">
               <div className="sf-stat-card">
@@ -119,7 +145,7 @@ export default function StorefrontHome() {
         </section>
 
         {/* How it Works / Process Section */}
-        <section className="sf-process-section">
+        <section className="sf-process-section reveal">
           <div className="sf-container">
             <div className="sf-section-header">
               <h3 className="sf-section-title-center">Cómo Alquilar en 3 Pasos</h3>
@@ -147,7 +173,7 @@ export default function StorefrontHome() {
         </section>
 
         {/* Fleet Section */}
-        <section className="sf-fleet">
+        <section className="sf-fleet reveal">
           <div className="sf-container">
             <h3 className="sf-section-title">
               <Car size={36} />
@@ -205,7 +231,7 @@ export default function StorefrontHome() {
 
         {/* About Section */}
         {config.aboutText && (
-          <section className="sf-about" id="nosotros">
+          <section className="sf-about reveal" id="nosotros">
             <div className="sf-container">
               <h3 className="sf-about-title">Sobre Nosotros</h3>
               <div className="sf-divider"></div>
@@ -217,7 +243,7 @@ export default function StorefrontHome() {
         )}
 
         {/* Testimonials Section */}
-        <section className="sf-testimonials-section">
+        <section className="sf-testimonials-section reveal">
           <div className="sf-container">
             <div className="sf-section-header">
               <h3 className="sf-section-title-center">Opiniones de Nuestros Clientes</h3>
@@ -265,7 +291,7 @@ export default function StorefrontHome() {
         </section>
 
         {/* FAQs Section */}
-        <section className="sf-faqs-section">
+        <section className="sf-faqs-section reveal">
           <div className="sf-container">
             <div className="sf-section-header">
               <h3 className="sf-section-title-center">Preguntas Frecuentes</h3>
@@ -305,7 +331,7 @@ export default function StorefrontHome() {
         </section>
 
         {/* Contacto Section */}
-        <section id="contacto" className="sf-contact-section">
+        <section id="contacto" className="sf-contact-section reveal">
           <div className="sf-container">
             <h3 className="sf-section-title">
               <MessageCircle /> Contacto Directo
