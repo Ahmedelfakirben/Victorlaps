@@ -11,15 +11,34 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-# Etapa 2: Servidor Web (Nginx)
+# Etapa 2: Servidor Web (Nginx) y Worker de Correo (NodeJS)
 FROM nginx:alpine
 
-# Copiamos la configuración personalizada de Nginx
+# Instalar NodeJS y NPM en Alpine
+RUN apk add --no-cache nodejs npm
+
+WORKDIR /app
+
+# Copiar la configuración personalizada de Nginx
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copiamos los archivos compilados estáticos de React a Nginx
+# Copiar los archivos compilados estáticos de React a Nginx
 COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Copiar el código del servicio de correos y package.json
+COPY services/mailer /app/services/mailer
+COPY package.json package-lock.json* /app/
+
+# Instalar dependencias necesarias para el mailer en modo producción
+RUN npm install --only=production
+
+# Crear script de inicio para ejecutar Nginx y el Mailer en paralelo
+RUN echo '#!/bin/sh' > /app/entrypoint.sh && \
+    echo 'nginx -g "daemon on;"' >> /app/entrypoint.sh && \
+    echo 'echo "Starting Mailer Service..."' >> /app/entrypoint.sh && \
+    echo 'node /app/services/mailer/index.js' >> /app/entrypoint.sh && \
+    chmod +x /app/entrypoint.sh
 
 EXPOSE 80
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["/app/entrypoint.sh"]

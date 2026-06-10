@@ -386,9 +386,9 @@ BEGIN
     RAISE EXCEPTION 'Not authenticated';
   END IF;
 
-  -- Create company
-  INSERT INTO public.companies (name, status, trial_ends_at)
-  VALUES (agency_name, 'trial', NOW() + INTERVAL '48 hours')
+  -- Create company with 3 days trial and save email fields
+  INSERT INTO public.companies (name, status, trial_ends_at, admin_email, email)
+  VALUES (agency_name, 'trial', NOW() + INTERVAL '3 days', admin_email, admin_email)
   RETURNING id INTO new_company_id;
 
   -- Update profile (which was auto-created by trigger)

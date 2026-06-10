@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabase';
 import { 
   Loader2, ShieldCheck, PlayCircle, StopCircle, 
   RefreshCw, Building2, Activity, Clock, AlertTriangle, 
-  MoreVertical, CheckCircle2, UserCheck, HardDrive, DollarSign, Megaphone, LogOut
+  MoreVertical, CheckCircle2, UserCheck, HardDrive, DollarSign, Megaphone, LogOut, Mail, RotateCcw
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './SuperAdmin.css';
@@ -14,6 +14,7 @@ const SuperAdmin = () => {
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({ total: 0, active: 0, trial: 0, expired: 0, mrr: 0, storage: 0 });
   const [broadcastMsg, setBroadcastMsg] = useState('');
+  const [broadcasts, setBroadcasts] = useState<any[]>([]);
 
   const [selectedCompany, setSelectedCompany] = useState<any | null>(null);
   const [companyUsers, setCompanyUsers] = useState<any[]>([]);
@@ -23,12 +24,17 @@ const SuperAdmin = () => {
   const [replyMsg, setReplyMsg] = useState<any | null>(null);
   const [replyText, setReplyText] = useState('');
   const [sendingReply, setSendingReply] = useState(false);
+  
+  const [mailQueue, setMailQueue] = useState<any[]>([]);
+  const [retryingMailId, setRetryingMailId] = useState<string | null>(null);
 
   const fetchData = async () => {
     setLoading(true);
-    const [compRes, msgRes] = await Promise.all([
+    const [compRes, msgRes, broadcastRes, mailRes] = await Promise.all([
       supabase.from('companies').select('*').order('created_at', { ascending: false }),
-      supabase.from('contact_messages').select('*').order('created_at', { ascending: false })
+      supabase.from('contact_messages').select('*').order('created_at', { ascending: false }),
+      supabase.from('system_broadcasts').select('*').order('created_at', { ascending: false }),
+      supabase.from('mail_queue').select('*').order('created_at', { ascending: false }).limit(50)
     ]);
     
     if (!compRes.error && compRes.data) {
@@ -45,7 +51,30 @@ const SuperAdmin = () => {
     if (!msgRes.error && msgRes.data) {
       setMessages(msgRes.data);
     }
+    if (!broadcastRes.error && broadcastRes.data) {
+      setBroadcasts(broadcastRes.data);
+    }
+    if (!mailRes.error && mailRes.data) {
+      setMailQueue(mailRes.data);
+    }
     setLoading(false);
+  };
+
+  const handleRetryMail = async (id: string) => {
+    setRetryingMailId(id);
+    try {
+      const { error } = await supabase
+        .from('mail_queue')
+        .update({ status: 'pending', error_log: null, sent_at: null })
+        .eq('id', id);
+      if (error) throw error;
+      await fetchData();
+    } catch (err) {
+      console.error(err);
+      alert('Error al reintentar el correo');
+    } finally {
+      setRetryingMailId(null);
+    }
   };
 
   useEffect(() => {
@@ -68,7 +97,14 @@ const SuperAdmin = () => {
     if (!broadcastMsg) return;
     await supabase.from('system_broadcasts').insert([{ message: broadcastMsg, type: 'info', active: true }]);
     setBroadcastMsg('');
-    alert('Mensaje global publicado con éxito.');
+    fetchData();
+  };
+
+  const handleDeleteBroadcast = async (id: string) => {
+    if (confirm('¿Seguro que deseas eliminar este anuncio?')) {
+      await supabase.from('system_broadcasts').delete().eq('id', id);
+      fetchData();
+    }
   };
 
   const handleViewCompany = async (company: any) => {
@@ -186,7 +222,7 @@ const SuperAdmin = () => {
 
       <div className="card p-6 mb-6 animate-float-in" style={{ animationDelay: '0.6s' }}>
         <h3 className="flex items-center gap-2 mb-4 text-primary font-bold"><Megaphone size={20}/> Sistema de Anuncios Globales</h3>
-        <div className="flex gap-4">
+        <div className="flex gap-4 mb-6">
           <input 
             type="text" 
             className="input-field flex-1" 
@@ -198,6 +234,30 @@ const SuperAdmin = () => {
             Publicar Broadcast
           </button>
         </div>
+        
+        {broadcasts.length > 0 && (
+          <div className="broadcast-list" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <h4 style={{ fontSize: '0.875rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Anuncios Actuales</h4>
+            {broadcasts.map(b => (
+              <div key={b.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', backgroundColor: '#f8fafc', borderRadius: '0.5rem', borderLeft: b.active ? '4px solid #3b82f6' : '4px solid #94a3b8' }}>
+                <div>
+                  <p style={{ margin: 0, fontWeight: 500, color: '#334155' }}>{b.message}</p>
+                  <p style={{ margin: 0, fontSize: '0.75rem', color: '#94a3b8' }}>
+                    {new Date(b.created_at).toLocaleString()} • Estado: {b.active ? 'Activo' : 'Inactivo'}
+                  </p>
+                </div>
+                <button 
+                  onClick={() => handleDeleteBroadcast(b.id)}
+                  style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', padding: '0.5rem', borderRadius: '0.25rem' }}
+                  onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#fee2e2'}
+                  onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                >
+                  Eliminar
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="sa-table-container animate-float-in" style={{ animationDelay: '0.7s' }}>
@@ -329,6 +389,63 @@ const SuperAdmin = () => {
           </tbody>
         </table>
       </div>
+
+      <div className="sa-section mt-12 mb-12">
+        <h2 className="sa-section-title"><Mail size={24} className="text-gold" /> Monitor de Correos (Cola de Envíos)</h2>
+        <div className="sa-table-container">
+          <table className="sa-table">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Destinatario</th>
+                <th>Asunto</th>
+                <th>Estado</th>
+                <th className="text-right">Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+              {mailQueue.map(mail => (
+                <tr key={mail.id}>
+                  <td className="text-secondary whitespace-nowrap">{new Date(mail.created_at).toLocaleString()}</td>
+                  <td>
+                    <div className="font-bold">{mail.to_email}</div>
+                  </td>
+                  <td>
+                    <div className="text-sm font-medium">{mail.subject}</div>
+                    {mail.error_log && (
+                      <div className="text-xs text-error mt-1 bg-error-light p-1 rounded border border-error-border" style={{ color: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.05)', padding: '4px', borderRadius: '4px', maxWidth: '300px', wordBreak: 'break-all' }}>
+                        Error: {mail.error_log}
+                      </div>
+                    )}
+                  </td>
+                  <td>
+                    {mail.status === 'pending' && <span className="sa-badge trial" style={{ backgroundColor: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b' }}>Pendiente</span>}
+                    {mail.status === 'sent' && <span className="sa-badge active" style={{ backgroundColor: 'rgba(16, 185, 129, 0.1)', color: '#10b981' }}>Enviado</span>}
+                    {mail.status === 'error' && <span className="sa-badge expired" style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', color: '#ef4444' }}>Fallo</span>}
+                  </td>
+                  <td className="text-right">
+                    {mail.status === 'error' && (
+                      <button 
+                        className="btn btn-outline btn-sm flex items-center gap-1"
+                        style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', borderColor: 'var(--gold)', color: 'var(--gold)', padding: '4px 8px', fontSize: '0.8rem' }}
+                        disabled={retryingMailId === mail.id}
+                        onClick={() => handleRetryMail(mail.id)}
+                      >
+                        {retryingMailId === mail.id ? <Loader2 className="animate-spin" size={12} /> : <RotateCcw size={12} />}
+                        Reintentar
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+              {mailQueue.length === 0 && (
+                <tr><td colSpan={5} className="text-center p-8 text-secondary">No hay correos en la cola.</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
 
       {replyMsg && (
         <div className="modal-overlay" onClick={() => setReplyMsg(null)}>
