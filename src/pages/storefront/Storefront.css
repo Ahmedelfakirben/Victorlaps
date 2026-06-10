@@ -1030,11 +1030,22 @@ html {
 
 /* Footer */
 .sf-footer {
-  background: rgba(9, 13, 22, 0.95);
+  position: relative;
+  background: linear-gradient(180deg, rgba(249, 115, 22, 0.03) 0%, rgba(9, 13, 22, 0.98) 100%);
   color: var(--sf-text-muted);
   padding: 5rem 0 2.5rem 0;
   margin-top: auto;
-  border-top: 1px solid var(--sf-border-glass);
+}
+
+.sf-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, var(--sf-primary) 50%, transparent 100%);
+  opacity: 0.6;
 }
 
 .sf-footer-grid {
