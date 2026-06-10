@@ -405,3 +405,19 @@ BEGIN
   RETURN json_build_object('success', true, 'company_id', new_company_id);
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- ============================================
+-- DEFAULT TENANT ID FOR MULTI-TENANCY TABLES
+-- ============================================
+ALTER TABLE public.vehicles ALTER COLUMN company_id SET DEFAULT public.get_user_company_id();
+ALTER TABLE public.clients ALTER COLUMN company_id SET DEFAULT public.get_user_company_id();
+ALTER TABLE public.contracts ALTER COLUMN company_id SET DEFAULT public.get_user_company_id();
+ALTER TABLE public.transactions ALTER COLUMN company_id SET DEFAULT public.get_user_company_id();
+ALTER TABLE public.invoices ALTER COLUMN company_id SET DEFAULT public.get_user_company_id();
+ALTER TABLE public.maintenance ALTER COLUMN company_id SET DEFAULT public.get_user_company_id();
+ALTER TABLE public.vehicle_documents ALTER COLUMN company_id SET DEFAULT public.get_user_company_id();
+ALTER TABLE public.branches ALTER COLUMN company_id SET DEFAULT public.get_user_company_id();
+ALTER TABLE public.fines ALTER COLUMN company_id SET DEFAULT public.get_user_company_id();
+ALTER TABLE public.pricing_rules ALTER COLUMN company_id SET DEFAULT public.get_user_company_id();
+ALTER TABLE public.vehicle_damage_photos ALTER COLUMN company_id SET DEFAULT public.get_user_company_id();
+
