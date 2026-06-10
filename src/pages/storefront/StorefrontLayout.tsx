@@ -80,7 +80,7 @@ export default function StorefrontLayout() {
   if (loading) {
     return (
       <div className="sf-body" style={{ alignItems: 'center', justifyContent: 'center', height: '100vh', display: 'flex' }}>
-        <Loader2 size={48} className="animate-spin" color="#10b981" />
+        <Loader2 size={48} className="animate-spin" color="#f97316" />
       </div>
     );
   }
@@ -95,7 +95,7 @@ export default function StorefrontLayout() {
   }
 
   const config = agency.storefront_config || {};
-  const themePrimary = config.themeColor || '#10b981';
+  const themePrimary = config.themeColor || '#f97316';
   const themeSecondary = config.themeSecondary || '#0F172A';
   const templateName = config.template || 'modern';
 

@@ -1,7 +1,7 @@
 /* Storefront Global Variables */
 :root {
-  --sf-primary: #10b981;
-  --sf-primary-glow: rgba(16, 185, 129, 0.2);
+  --sf-primary: #f97316;
+  --sf-primary-glow: rgba(249, 115, 22, 0.2);
   --sf-secondary: #0F172A;
   --sf-text-dark: #F8FAFC;
   --sf-text-muted: #CBD5E1;
@@ -17,7 +17,7 @@
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background-color: var(--sf-bg-dark);
   background-image: 
-    radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.1) 0px, transparent 50%),
+    radial-gradient(at 0% 0%, rgba(249, 115, 22, 0.1) 0px, transparent 50%),
     radial-gradient(at 100% 100%, rgba(15, 23, 42, 0.8) 0px, transparent 50%),
     linear-gradient(180deg, #0b0f19 0%, #030712 100%);
   color: var(--sf-text-dark);
@@ -142,9 +142,9 @@
 }
 
 .sf-btn-contact {
-  background: rgba(16, 185, 129, 0.1) !important;
+  background: rgba(249, 115, 22, 0.1) !important;
   color: var(--sf-primary) !important;
-  border: 1px solid rgba(16, 185, 129, 0.4) !important;
+  border: 1px solid rgba(249, 115, 22, 0.4) !important;
   backdrop-filter: blur(5px);
   padding: 0.5rem 1.25rem;
   border-radius: 2rem;
@@ -161,7 +161,7 @@
 .sf-btn-contact:hover {
   background: var(--sf-primary) !important;
   color: #ffffff !important;
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.4) !important;
+  box-shadow: 0 0 20px rgba(249, 115, 22, 0.4) !important;
   transform: translateY(-2px);
 }
 
@@ -303,22 +303,22 @@
 
 .sf-value-item:hover {
   transform: translateY(-6px);
-  border-color: rgba(16, 185, 129, 0.3);
+  border-color: rgba(249, 115, 22, 0.3);
   background: rgba(22, 28, 45, 0.8);
-  box-shadow: 0 20px 40px -15px rgba(16, 185, 129, 0.1);
+  box-shadow: 0 20px 40px -15px rgba(249, 115, 22, 0.1);
 }
 
 .sf-value-icon {
   width: 4.5rem;
   height: 4.5rem;
   border-radius: 1rem;
-  background: rgba(16, 185, 129, 0.1);
+  background: rgba(249, 115, 22, 0.1);
   color: var(--sf-primary);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 1.5rem;
-  border: 1px solid rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(249, 115, 22, 0.2);
   transition: all 0.3s ease;
 }
 
@@ -326,7 +326,7 @@
   background: var(--sf-primary);
   color: #ffffff;
   transform: scale(1.05) rotate(4deg);
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 0 20px rgba(249, 115, 22, 0.3);
 }
 
 .sf-value-title {
@@ -438,7 +438,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 8px 20px rgba(249, 115, 22, 0.4);
   border: 4px solid var(--sf-bg-dark);
 }
 
@@ -529,8 +529,8 @@
 
 .sf-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 25px 45px -15px rgba(16, 185, 129, 0.25);
-  border-color: rgba(16, 185, 129, 0.4);
+  box-shadow: 0 25px 45px -15px rgba(249, 115, 22, 0.25);
+  border-color: rgba(249, 115, 22, 0.4);
 }
 
 .sf-card-image {
@@ -632,13 +632,13 @@
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   border: 1px solid transparent;
   cursor: pointer;
-  box-shadow: 0 8px 25px -5px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 8px 25px -5px rgba(249, 115, 22, 0.4);
   margin-top: auto;
 }
 
 .sf-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 30px -5px rgba(16, 185, 129, 0.6);
+  box-shadow: 0 12px 30px -5px rgba(249, 115, 22, 0.6);
   filter: brightness(110%);
 }
 
@@ -701,14 +701,14 @@
   width: 2.8rem;
   height: 2.8rem;
   border-radius: 50%;
-  background: rgba(16, 185, 129, 0.1);
+  background: rgba(249, 115, 22, 0.1);
   color: var(--sf-primary);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 800;
   font-size: 0.9rem;
-  border: 1px solid rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(249, 115, 22, 0.2);
 }
 
 .sf-author-name {
@@ -746,7 +746,7 @@
 }
 
 .sf-faq-item[open] {
-  border-color: rgba(16, 185, 129, 0.3);
+  border-color: rgba(249, 115, 22, 0.3);
 }
 
 .sf-faq-question {
