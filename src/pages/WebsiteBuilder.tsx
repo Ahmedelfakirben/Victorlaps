@@ -386,66 +386,75 @@ export default function WebsiteBuilder() {
               <span className="wb-dot"></span>
               {t('website_builder.live_preview')}
             </div>
-            
             <div className="wb-phone-frame" style={{ borderColor: formData.themeSecondary }}>
               <div className="wb-phone-notch" style={{ backgroundColor: formData.themeSecondary }}></div>
-              <div className="wb-phone-screen" style={{ backgroundColor: '#F8FAFC', overflowY: 'auto', display: 'block' }}>
+              <div 
+                className="wb-phone-screen" 
+                style={{ 
+                  backgroundColor: formData.template === 'modern' ? '#090D16' : '#F8FAFC', 
+                  overflowY: 'auto', 
+                  display: 'block' 
+                }}
+              >
                 
                 {/* Realistic Mobile Preview - Modern Template */}
                 {formData.template === 'modern' && (
                   <>
-                    <div style={{ backgroundColor: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(10px)', padding: '10px 15px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, zIndex: 10, borderBottom: '1px solid #E2E8F0' }}>
-                      <span style={{ fontWeight: 800, color: formData.themeColor, fontSize: '0.9rem' }}>Logo</span>
+                    <div style={{ backgroundColor: 'rgba(9, 13, 22, 0.85)', backdropFilter: 'blur(10px)', padding: '10px 15px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, zIndex: 10, borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                      <span style={{ fontWeight: 900, color: '#ffffff', fontSize: '0.9rem' }}>Logo</span>
                       <div style={{ display: 'flex', gap: '8px' }}>
-                        <div style={{ width: 24, height: 24, borderRadius: '50%', backgroundColor: formData.themeSecondary, opacity: 0.1 }}></div>
-                        <div style={{ width: 24, height: 24, borderRadius: '50%', backgroundColor: formData.themeSecondary, opacity: 0.1 }}></div>
+                        <div style={{ width: 24, height: 24, borderRadius: '50%', backgroundColor: 'white', opacity: 0.1 }}></div>
+                        <div style={{ width: 24, height: 24, borderRadius: '50%', backgroundColor: 'white', opacity: 0.1 }}></div>
                       </div>
                     </div>
                     
-                    <div style={{ backgroundColor: formData.themeSecondary, backgroundImage: formData.heroBackgroundImage ? `url(${formData.heroBackgroundImage})` : 'none', backgroundSize: 'cover', backgroundPosition: 'center', padding: '40px 20px', textAlign: 'center', color: 'white', position: 'relative' }}>
-                      {formData.heroBackgroundImage && (
-                        <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.6)' }}></div>
-                      )}
+                    <div style={{ backgroundColor: '#090D16', backgroundImage: formData.heroBackgroundImage ? `url(${formData.heroBackgroundImage})` : 'none', backgroundSize: 'cover', backgroundPosition: 'center', padding: '40px 20px', textAlign: 'center', color: 'white', position: 'relative' }}>
+                      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(9, 13, 22, 0.4) 0%, rgba(9, 13, 22, 0.95) 100%)', zIndex: 1 }}></div>
                       <div style={{ position: 'relative', zIndex: 2 }}>
-                        <h2 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '10px', lineHeight: 1.2, color: formData.themeColor }}>{formData.heroTitle || 'Alquiler de Vehículos'}</h2>
-                        <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '0.9rem' }}>{formData.heroSubtitle || 'La mejor flota'}</p>
+                        <h2 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '10px', lineHeight: 1.2, color: '#ffffff' }}>{formData.heroTitle || 'Alquiler de Vehículos'}</h2>
+                        <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.85rem' }}>{formData.heroSubtitle || 'La mejor flota'}</p>
+                        <div style={{ marginTop: '15px' }}>
+                          <span style={{ backgroundColor: formData.themeColor, color: 'white', padding: '6px 12px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 700 }}>
+                            Réservez maintenant
+                          </span>
+                        </div>
                       </div>
                     </div>
 
                     <div style={{ padding: '20px 15px' }}>
                       {formData.aboutText && (
-                        <div style={{ backgroundColor: 'white', padding: '15px', borderRadius: '12px', marginBottom: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
-                          <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: formData.themeSecondary, marginBottom: '8px' }}>Sobre Nosotros</h4>
-                          <div style={{ width: '30px', height: '3px', backgroundColor: formData.themeColor, marginBottom: '10px' }}></div>
-                          <p style={{ fontSize: '0.75rem', color: '#64748B', lineHeight: 1.5 }}>{formData.aboutText.substring(0, 100)}...</p>
+                        <div style={{ backgroundColor: formData.themeColor, padding: '15px', borderRadius: '12px', marginBottom: '20px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                          <h4 style={{ fontSize: '0.9rem', fontWeight: 800, color: '#090D16', marginBottom: '8px' }}>Sobre Nosotros</h4>
+                          <div style={{ width: '30px', height: '3px', backgroundColor: '#090D16', opacity: 0.3, marginBottom: '10px' }}></div>
+                          <p style={{ fontSize: '0.75rem', color: 'rgba(9, 13, 22, 0.85)', fontWeight: 500, lineHeight: 1.5 }}>{formData.aboutText.substring(0, 100)}...</p>
                         </div>
                       )}
 
-                      <h4 style={{ fontSize: '1rem', fontWeight: 800, color: formData.themeSecondary, marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                      <h4 style={{ fontSize: '1rem', fontWeight: 800, color: '#ffffff', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '5px' }}>
                         <span style={{ color: formData.themeColor }}>■</span> Nuestra Flota
                       </h4>
                       
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                         {previewVehicles.length > 0 ? previewVehicles.slice(0, 2).map(v => (
-                          <div key={v.id} style={{ backgroundColor: 'white', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
-                            <div style={{ height: '120px', backgroundColor: '#E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                          <div key={v.id} style={{ backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.14)' }}>
+                            <div style={{ height: '120px', backgroundColor: '#111827', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
                               {v.image_url ? (
                                 <img src={v.image_url} alt={v.model} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                               ) : (
                                 <span style={{ fontSize: '2rem' }}>📸</span>
                               )}
-                              <div style={{ position: 'absolute', top: '10px', right: '10px', backgroundColor: 'white', padding: '4px 8px', borderRadius: '12px', fontSize: '0.7rem', fontWeight: 800 }}>{v.daily_rate} MAD</div>
+                              <div style={{ position: 'absolute', top: '10px', right: '10px', backgroundColor: 'white', color: '#090D16', padding: '4px 8px', borderRadius: '12px', fontSize: '0.7rem', fontWeight: 800 }}>{v.daily_rate} MAD</div>
                             </div>
                             <div style={{ padding: '12px' }}>
-                              <h5 style={{ margin: 0, fontSize: '0.9rem', fontWeight: 800 }}>{v.brand} {v.model}</h5>
-                              <p style={{ margin: '0 0 10px 0', fontSize: '0.7rem', color: '#64748B' }}>{v.transmission} • {v.fuel}</p>
+                              <h5 style={{ margin: 0, fontSize: '0.9rem', fontWeight: 800, color: '#ffffff' }}>{v.brand} {v.model}</h5>
+                              <p style={{ margin: '0 0 10px 0', fontSize: '0.7rem', color: '#CBD5E1' }}>{v.transmission} • {v.fuel}</p>
                               <div style={{ backgroundColor: formData.themeColor, color: 'white', textAlign: 'center', padding: '8px', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 700 }}>
                                 Ver Detalles
                               </div>
                             </div>
                           </div>
                         )) : (
-                          <p style={{ fontSize: '0.8rem', color: '#64748B', textAlign: 'center' }}>No hay vehículos disponibles.</p>
+                          <p style={{ fontSize: '0.8rem', color: '#CBD5E1', textAlign: 'center' }}>No hay vehículos disponibles.</p>
                         )}
                       </div>
                     </div>
