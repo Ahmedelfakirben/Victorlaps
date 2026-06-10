@@ -64,7 +64,15 @@ export default function StorefrontVehicle() {
 
   return (
     <main>
-      <div className="sf-detail-hero">
+      <div 
+        className="sf-detail-hero" 
+        style={vehicle.image_url ? {
+          backgroundImage: `linear-gradient(to bottom, rgba(9, 13, 22, 0.4) 0%, rgba(9, 13, 22, 0.95) 100%), url(${vehicle.image_url})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center 40%',
+          padding: '8rem 0 5rem 0'
+        } : undefined}
+      >
         <div className="sf-container">
           <button onClick={() => navigate(-1)} className="sf-back-btn" style={{ background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '1rem', fontWeight: 600, padding: 0, marginBottom: '1rem' }}>
             <ArrowLeft size={20} /> Volver a la flota
