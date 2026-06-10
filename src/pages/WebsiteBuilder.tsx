@@ -5,7 +5,7 @@ import { Layout, Globe, Palette, Phone, Save, AlertCircle } from 'lucide-react';
 import './WebsiteBuilder.css';
 
 export default function WebsiteBuilder() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [companyId, setCompanyId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
