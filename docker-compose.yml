@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  # El Frontend (La web de React compilada y servida con Nginx)
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    restart: always
+    # Coolify puede inyectar estas variables en el build de Vite
+    environment:
+      - VITE_SUPABASE_URL=${VITE_SUPABASE_URL}
+      - VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY}
+
+  # El Backend (Microservicio de envío de correos)
+  mail-service:
+    build:
+      context: ./services/mailer
+      dockerfile: Dockerfile
+    restart: always
+    # IMPORTANTE: En Coolify deberás añadir estas variables de entorno en la sección del servicio
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
