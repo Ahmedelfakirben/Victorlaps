@@ -7,9 +7,9 @@ export default function StorefrontAbout() {
 
   return (
     <main style={{ minHeight: '80vh', padding: '6rem 0 0 0' }}>
-      <div style={{ background: 'linear-gradient(135deg, rgba(22, 28, 45, 0.4) 0%, rgba(9, 13, 22, 0.6) 100%)', color: 'white', padding: '6rem 2rem', textAlign: 'center', borderBottom: '1px solid var(--sf-border-glass)' }}>
+      <div className="sf-page-header">
         <h1 style={{ fontSize: '3rem', fontWeight: 900, marginBottom: '1rem' }}>Sobre {agency.name}</h1>
-        <p style={{ fontSize: '1.25rem', color: 'var(--sf-primary)' }}>Nuestra historia y valores</p>
+        <p style={{ fontSize: '1.25rem', color: 'var(--sf-primary)', margin: 0 }}>Nuestra historia y valores</p>
       </div>
 
       <div className="sf-container" style={{ padding: '4rem 0' }}>
