@@ -196,33 +196,67 @@ const ClientDetail = () => {
   const c = client;
   const calculatedRentals = history.length;
   const calculatedSpent = history.reduce((sum, contract) => sum + (contract.total_ttc || 0), 0);
+  const averageSpent = calculatedRentals > 0 ? Math.round(calculatedSpent / calculatedRentals) : 0;
+
+  // Calculate loyalty level
+  let loyaltyTier = 'Bronze';
+  let nextTier = 'Silver';
+  let rentalsToNext = 3 - calculatedRentals;
+  let progressPct = Math.min((calculatedRentals / 3) * 100, 100);
+
+  if (calculatedRentals >= 10) {
+    loyaltyTier = 'VIP Platinum';
+    nextTier = 'Max';
+    rentalsToNext = 0;
+    progressPct = 100;
+  } else if (calculatedRentals >= 5) {
+    loyaltyTier = 'Gold Member';
+    nextTier = 'VIP Platinum';
+    rentalsToNext = 10 - calculatedRentals;
+    progressPct = 50 + Math.min(((calculatedRentals - 5) / 5) * 50, 50);
+  } else if (calculatedRentals >= 3) {
+    loyaltyTier = 'Silver Member';
+    nextTier = 'Gold Member';
+    rentalsToNext = 5 - calculatedRentals;
+    progressPct = 30 + Math.min(((calculatedRentals - 3) / 2) * 20, 20);
+  } else {
+    progressPct = Math.min((calculatedRentals / 3) * 30, 30);
+  }
+
+  const isLicenseExpired = c.license_expiry_date ? new Date(c.license_expiry_date) < new Date() : false;
 
   return (
     <>
-      <div className="client-detail-page animate-fade-in">
-        <div className="detail-top-bar">
-          <button className="btn btn-ghost" onClick={() => navigate('/crm')}>
+      <div className="client-detail-page premium-dark-theme animate-fade-in">
+        {/* Glassmorphism Header / Top Bar */}
+        <div className="detail-top-bar glass-header">
+          <button className="btn btn-ghost text-gold" onClick={() => navigate('/crm')}>
             <ArrowLeft size={18} /> {isAr ? 'العودة للعملاء' : 'Retour aux Clients'}
           </button>
           <div className="flex gap-2">
-            <button className="btn btn-outline text-error border-error/50 hover:bg-error/10 hover:border-error" onClick={handleDeleteClient}>
+            <button className="btn btn-outline-danger" onClick={handleDeleteClient}>
               <Trash2 size={16} /> {isAr ? 'حذف' : 'Supprimer'}
             </button>
-            <button className="btn btn-outline" onClick={openEditModal}><Edit size={16} /> {isAr ? 'تعديل' : 'Modifier'}</button>
+            <button className="btn btn-outline-gold" onClick={openEditModal}><Edit size={16} /> {isAr ? 'تعديل' : 'Modifier'}</button>
           </div>
         </div>
 
-        {/* Client Hero */}
-        <div className="client-hero card">
+        {/* Client Hero (Glassmorphism card) */}
+        <div className="client-hero glass-card">
           <div className="client-hero-left">
-            <div className="client-hero-avatar">
-              {(isAr ? (c.full_name_ar || c.full_name) : c.full_name).charAt(0)}
+            <div className="client-hero-avatar-wrapper">
+              <div className="client-hero-avatar">
+                {(isAr ? (c.full_name_ar || c.full_name) : c.full_name).charAt(0)}
+              </div>
+              <span className={`loyalty-badge-mini ${loyaltyTier.toLowerCase().replace(' ', '-')}`}>
+                {loyaltyTier}
+              </span>
             </div>
             <div>
               <div className="flex items-center gap-3 flex-wrap">
-                <h1>{isAr ? (c.full_name_ar || c.full_name) : c.full_name}</h1>
+                <h1 className="hero-client-name">{isAr ? (c.full_name_ar || c.full_name) : c.full_name}</h1>
               </div>
-              <p className="text-secondary">{isAr ? `عميل منذ ${new Date(c.created_at).toLocaleDateString()}` : `Client depuis le ${new Date(c.created_at).toLocaleDateString()}`}</p>
+              <p className="text-secondary-gold">{isAr ? `عميل منذ ${new Date(c.created_at).toLocaleDateString()}` : `Client depuis le ${new Date(c.created_at).toLocaleDateString()}`}</p>
             </div>
           </div>
           <div className="client-hero-stats">
@@ -231,13 +265,12 @@ const ClientDetail = () => {
               <span className="client-stat-label">{isAr ? 'إيجار' : 'Locations'}</span>
             </div>
             <div className="client-stat">
-              <span className="client-stat-number text-success">{(calculatedSpent / 1000).toFixed(1)}k</span>
+              <span className="client-stat-number text-gold">{(calculatedSpent / 1000).toFixed(1)}k</span>
               <span className="client-stat-label">MAD</span>
             </div>
           </div>
         </div>
 
-        {/* Tabs */}
         <div className="tab-bar">
           <button className={`tab ${tab === 'overview' ? 'tab-active' : ''}`} onClick={() => setTab('overview')}>
             <User size={16} /> {isAr ? 'نظرة عامة' : 'Aperçu'}
@@ -253,12 +286,23 @@ const ClientDetail = () => {
         {/* Overview */}
         {tab === 'overview' && (
           <div className="client-overview-grid">
-            <div className="card">
-              <h3 className="mb-4">{isAr ? 'المعلومات الشخصية' : 'Informations Personnelles'}</h3>
+            <div className="glass-card">
+              <h3 className="mb-4 text-gold">{isAr ? 'المعلومات الشخصية' : 'Informations Personnelles'}</h3>
+              
+              {isLicenseExpired && (
+                <div className="danger-alert-banner mb-6">
+                  <Shield size={20} />
+                  <div>
+                    <strong>{isAr ? 'رخصة القيادة منتهية الصلاحية!' : 'Permis de conduire expiré !'}</strong>
+                    <p>{isAr ? 'يرجى تحديث وثائق العميل قبل إجراء أي عقد إيجار جديد.' : 'Veuillez mettre à jour les documents avant de créer un nouveau contrat.'}</p>
+                  </div>
+                </div>
+              )}
+
               <div className="info-rows">
                 <div className="info-row">
                   <span className="info-label flex items-center gap-2"><User size={14} /> {isAr ? 'الإسم' : 'Prénom'}</span>
-                  <span className="info-value font-medium text-primary">{c.first_name || (c.full_name?.split(' ')[0])}</span>
+                  <span className="info-value font-medium text-gold">{c.first_name || (c.full_name?.split(' ')[0])}</span>
                 </div>
                 <div className="info-row">
                   <span className="info-label flex items-center gap-2"><User size={14} className="opacity-0" /> {isAr ? 'النسب' : 'Nom'}</span>
@@ -306,30 +350,93 @@ const ClientDetail = () => {
                 </div>
                 <div className="info-row">
                   <span className="info-label">{isAr ? 'تاريخ الانتهاء' : 'Expire le'}</span>
-                  <span className="info-value font-bold text-error">{c.license_expiry_date || '—'}</span>
+                  <span className={`info-value font-bold ${isLicenseExpired ? 'text-error' : 'text-success'}`}>{c.license_expiry_date || '—'}</span>
                 </div>
               </div>
             </div>
 
-            <div className="card">
-              {/* Recent Activity Summary */}
-              <div>
-                <h3 className="mb-4">{isAr ? 'آخر نشاط' : 'Dernière Activité'}</h3>
-                <div className="recent-items">
-                  {history.length > 0 ? (
-                    <>
-                      <div className="recent-item">
-                        <CalendarDays size={14} className="text-primary" />
-                        <span className="text-sm">{isAr ? 'آخر إيجار' : 'Dernière location'}: {history[0].start_date}</span>
-                      </div>
-                      <div className="recent-item">
-                        <CarFront size={14} className="text-secondary" />
-                        <span className="text-sm">{isAr ? 'آخر سيارة' : 'Dernier véhicule'}: {history[0].vehicles?.brand} {history[0].vehicles?.model}</span>
-                      </div>
-                    </>
-                  ) : (
-                    <p className="text-xs text-secondary italic">{isAr ? 'لا يوجد نشاط مسجل' : 'Aucune activité enregistrée'}</p>
+            <div className="flex-col-gap">
+              {/* Loyalty Club Section */}
+              <div className="glass-card loyalty-card-premium">
+                <div className="loyalty-header">
+                  <Shield size={24} className="text-gold animate-pulse" />
+                  <div>
+                    <h4>Vektorlaps Club</h4>
+                    <span className="loyalty-sub">{loyaltyTier}</span>
+                  </div>
+                </div>
+                <div className="progress-container mt-4">
+                  <div className="progress-bar-premium">
+                    <div className="progress-fill-premium" style={{ width: `${progressPct}%` }}></div>
+                  </div>
+                  <div className="flex justify-between text-xs text-secondary-gold mt-2">
+                    <span>{calculatedRentals} {calculatedRentals === 1 ? 'location' : 'locations'}</span>
+                    {rentalsToNext > 0 ? (
+                      <span>{rentalsToNext} de plus pour {nextTier}</span>
+                    ) : (
+                      <span>Niveau Maximum</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Statistics Card */}
+              <div className="glass-card">
+                <h3 className="mb-4 text-gold">{isAr ? 'تحليلات العميل' : 'Statistiques & Ratios'}</h3>
+                <div className="stats-box-grid">
+                  <div className="stat-box-mini">
+                    <span className="stat-box-title">Dépenses Totales</span>
+                    <span className="stat-box-val">{calculatedSpent.toLocaleString()} MAD</span>
+                  </div>
+                  <div className="stat-box-mini">
+                    <span className="stat-box-title">Panier Moyen / Location</span>
+                    <span className="stat-box-val text-gold">{averageSpent.toLocaleString()} MAD</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Actions */}
+              <div className="glass-card">
+                <h3 className="mb-4 text-gold">{isAr ? 'إجراءات سريعة' : 'Actions Rapides'}</h3>
+                <div className="flex flex-col gap-3">
+                  <button 
+                    onClick={() => navigate(`/contracts/new?client_id=${c.id}`)}
+                    className="btn btn-primary-glow w-full text-center py-3"
+                  >
+                    + Créer un nouveau contrat
+                  </button>
+                  {c.email && (
+                    <a 
+                      href={`mailto:${c.email}?subject=Message de Vektorlaps SAS`}
+                      className="btn btn-outline-gold w-full text-center py-3 block text-sm font-semibold"
+                      style={{ display: 'block', textAlign: 'center' }}
+                    >
+                      Envoyer un e-mail au client
+                    </a>
                   )}
+                </div>
+              </div>
+
+              <div className="glass-card">
+                {/* Recent Activity Summary */}
+                <div>
+                  <h3 className="mb-4 text-gold">{isAr ? 'آخر نشاط' : 'Dernière Activité'}</h3>
+                  <div className="recent-items">
+                    {history.length > 0 ? (
+                      <>
+                        <div className="recent-item">
+                          <CalendarDays size={14} className="text-gold" />
+                          <span className="text-sm">{isAr ? 'آخر إيجار' : 'Dernière location'}: {history[0].start_date}</span>
+                        </div>
+                        <div className="recent-item">
+                          <CarFront size={14} className="text-secondary-gold" />
+                          <span className="text-sm">{isAr ? 'آخر سيارة' : 'Dernier véhicule'}: {history[0].vehicles?.brand} {history[0].vehicles?.model}</span>
+                        </div>
+                      </>
+                    ) : (
+                      <p className="text-xs text-secondary-gold italic">{isAr ? 'لا يوجد نشاط مسجل' : 'Aucune activité enregistrée'}</p>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -379,11 +486,11 @@ const ClientDetail = () => {
           <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             
             {/* CIN */}
-            <div className="card" style={{ padding: 'var(--spacing-6)' }}>
-              <h3 className="mb-4 flex items-center gap-2">
-                <CreditCard size={18} className="text-primary" />
+            <div className="glass-card" style={{ padding: 'var(--spacing-6)' }}>
+              <h3 className="mb-4 flex items-center gap-2 text-gold">
+                <CreditCard size={18} />
                 {isAr ? 'بطاقة الهوية (CIN)' : 'Carte d\'Identité Nationale (CIN)'}
-                <span className="font-mono text-primary ml-auto">{c.cin || '—'}</span>
+                <span className="font-mono text-gold ml-auto">{c.cin || '—'}</span>
               </h3>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 {/* CIN Front */}
@@ -424,11 +531,11 @@ const ClientDetail = () => {
             </div>
 
             {/* Permis de Conduire */}
-            <div className="card" style={{ padding: 'var(--spacing-6)' }}>
-              <h3 className="mb-4 flex items-center gap-2">
-                <Shield size={18} className="text-primary" />
+            <div className="glass-card" style={{ padding: 'var(--spacing-6)' }}>
+              <h3 className="mb-4 flex items-center gap-2 text-gold">
+                <Shield size={18} />
                 {isAr ? 'رخصة السياقة' : 'Permis de Conduire'}
-                <span className="font-mono text-primary ml-auto">{c.driver_license || '—'}</span>
+                <span className="font-mono text-gold ml-auto">{c.driver_license || '—'}</span>
               </h3>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 {/* License Front */}
@@ -469,11 +576,11 @@ const ClientDetail = () => {
             </div>
 
             {/* Passeport */}
-            <div className="card" style={{ padding: 'var(--spacing-6)' }}>
-              <h3 className="mb-4 flex items-center gap-2">
-                <FileText size={18} className="text-primary" />
+            <div className="glass-card" style={{ padding: 'var(--spacing-6)' }}>
+              <h3 className="mb-4 flex items-center gap-2 text-gold">
+                <FileText size={18} />
                 {isAr ? 'جواز السفر' : 'Passeport'}
-                <span className="font-mono text-primary ml-auto">{c.passport || '—'}</span>
+                <span className="font-mono text-gold ml-auto">{c.passport || '—'}</span>
               </h3>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 {/* Passport Front */}

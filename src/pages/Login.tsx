@@ -58,7 +58,8 @@ const Login = () => {
           options: {
             data: { 
               full_name: email.split('@')[0],
-              role: 'admin'
+              role: 'admin',
+              company_name: agencyName || 'My Agency'
             }
           }
         });

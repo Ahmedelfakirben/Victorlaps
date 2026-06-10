@@ -106,57 +106,30 @@ export default function StorefrontLayout() {
   return (
     <div className={`sf-body sf-template-${templateName}`} style={themeStyle}>
       {/* Global Navigation Header */}
-      <header 
-        className={`sf-header ${isScrolled ? 'scrolled' : ''}`} 
-        style={{ 
-          position: 'fixed', 
-          top: 0, 
-          left: 0,
-          right: 0,
-          zIndex: 50, 
-          background: isScrolled ? 'rgba(255,255,255,0.95)' : 'transparent', 
-          backdropFilter: isScrolled ? 'blur(10px)' : 'none', 
-          borderBottom: isScrolled ? '1px solid rgba(0,0,0,0.05)' : 'none',
-          transition: 'all 0.3s ease'
-        }}
-      >
-        <div className="sf-container sf-header-content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: isScrolled ? '1rem 0' : '1.5rem 0', transition: 'padding 0.3s ease' }}>
-          <Link to={`/booking/${slug}`} className="sf-brand" style={{ display: 'flex', alignItems: 'center', gap: '10px', color: isScrolled ? 'var(--sf-secondary)' : 'white', fontSize: '1.5rem', fontWeight: 900, textDecoration: 'none', transition: 'color 0.3s ease' }}>
+      <header className={`sf-header ${isScrolled ? 'scrolled' : ''}`}>
+        <div className="sf-container sf-header-content">
+          <Link to={`/booking/${slug}`} className="sf-brand">
             {agency.logo_url && (
-              <img src={agency.logo_url} alt={agency.name} style={{ height: '40px', width: 'auto', objectFit: 'contain', borderRadius: '4px' }} />
+              <img src={agency.logo_url} alt={agency.name} className="sf-brand-logo" />
             )}
-            <span>{agency.name}</span>
+            <span className="sf-brand-text">{agency.name}</span>
           </Link>
 
           {/* Desktop Nav */}
           <nav className="sf-desktop-nav">
-            <Link to={`/booking/${slug}`} style={{ margin: '0 1rem', color: isScrolled ? '#64748B' : 'rgba(255,255,255,0.9)', fontWeight: 600, textDecoration: 'none', transition: 'color 0.3s ease' }}>Inicio</Link>
-            <Link to={`/booking/${slug}/fleet`} style={{ margin: '0 1rem', color: isScrolled ? '#64748B' : 'rgba(255,255,255,0.9)', fontWeight: 600, textDecoration: 'none', transition: 'color 0.3s ease' }}>Flota</Link>
-            <a href={`/booking/${slug}#nosotros`} style={{ margin: '0 1rem', color: isScrolled ? '#64748B' : 'rgba(255,255,255,0.9)', fontWeight: 600, textDecoration: 'none', transition: 'color 0.3s ease' }}>Nosotros</a>
-            <a href={`/booking/${slug}#contacto`} style={{ margin: '0 1rem', color: isScrolled ? '#64748B' : 'rgba(255,255,255,0.9)', fontWeight: 600, textDecoration: 'none', transition: 'color 0.3s ease' }}>Contacto</a>
+            <Link to={`/booking/${slug}`}>Inicio</Link>
+            <Link to={`/booking/${slug}/fleet`}>Flota</Link>
+            <a href={`/booking/${slug}#nosotros`}>Nosotros</a>
+            <a href={`/booking/${slug}#contacto`}>Contacto</a>
           </nav>
 
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <div className="sf-header-actions">
             {config.whatsapp && (
               <a 
                 href={`https://wa.me/${config.whatsapp.replace(/\+/g, '')}?text=${encodeURIComponent('Hola, me gustaría contactar con ustedes.')}`} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="sf-btn"
-                style={{ 
-                  backgroundColor: isScrolled ? 'var(--sf-primary)' : 'rgba(255,255,255,0.2)', 
-                  color: isScrolled ? 'white' : 'white', 
-                  backdropFilter: isScrolled ? 'none' : 'blur(5px)',
-                  padding: '0.6rem 1.2rem', 
-                  borderRadius: '2rem', 
-                  textDecoration: 'none', 
-                  fontWeight: 600, 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: '0.5rem',
-                  border: isScrolled ? 'none' : '1px solid rgba(255,255,255,0.5)',
-                  transition: 'all 0.3s ease'
-                }}
+                className="sf-btn sf-btn-contact"
               >
                 Contacta
               </a>
@@ -166,7 +139,6 @@ export default function StorefrontLayout() {
             <button 
               className="sf-mobile-menu-btn" 
               onClick={() => setMenuOpen(!menuOpen)}
-              style={{ background: 'none', border: 'none', color: isScrolled ? 'var(--sf-secondary)' : 'white', cursor: 'pointer', display: 'block', transition: 'color 0.3s ease' }}
             >
               {menuOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
@@ -175,11 +147,11 @@ export default function StorefrontLayout() {
 
         {/* Mobile Nav Dropdown */}
         {menuOpen && (
-          <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: 'white', padding: '1rem', borderBottom: '1px solid rgba(0,0,0,0.1)', display: 'flex', flexDirection: 'column', gap: '1rem', zIndex: 49 }}>
-            <Link to={`/booking/${slug}`} style={{ color: 'var(--sf-secondary)', fontWeight: 600, textDecoration: 'none', padding: '0.5rem 0' }}>Inicio</Link>
-            <Link to={`/booking/${slug}/fleet`} style={{ color: 'var(--sf-secondary)', fontWeight: 600, textDecoration: 'none', padding: '0.5rem 0' }}>Flota</Link>
-            <a href={`/booking/${slug}#nosotros`} style={{ color: 'var(--sf-secondary)', fontWeight: 600, textDecoration: 'none', padding: '0.5rem 0' }}>Nosotros</a>
-            <a href={`/booking/${slug}#contacto`} style={{ color: 'var(--sf-secondary)', fontWeight: 600, textDecoration: 'none', padding: '0.5rem 0' }}>Contacto</a>
+          <div className="sf-mobile-nav">
+            <Link to={`/booking/${slug}`}>Inicio</Link>
+            <Link to={`/booking/${slug}/fleet`}>Flota</Link>
+            <a href={`/booking/${slug}#nosotros`}>Nosotros</a>
+            <a href={`/booking/${slug}#contacto`}>Contacto</a>
           </div>
         )}
       </header>

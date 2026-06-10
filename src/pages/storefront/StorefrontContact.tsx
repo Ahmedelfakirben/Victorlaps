@@ -6,69 +6,68 @@ export default function StorefrontContact() {
   const { agency, config } = useOutletContext<any>();
 
   return (
-    <main style={{ minHeight: '80vh', backgroundColor: '#F8FAFC' }}>
-      <div style={{ backgroundColor: 'var(--sf-secondary)', color: 'white', padding: '6rem 2rem', textAlign: 'center' }}>
+    <main style={{ minHeight: '80vh', padding: '6rem 0 0 0' }}>
+      <div style={{ background: 'linear-gradient(135deg, rgba(22, 28, 45, 0.4) 0%, rgba(9, 13, 22, 0.6) 100%)', color: 'white', padding: '6rem 2rem', textAlign: 'center', borderBottom: '1px solid var(--sf-border-glass)' }}>
         <h1 style={{ fontSize: '3rem', fontWeight: 900, marginBottom: '1rem' }}>Contacto</h1>
         <p style={{ fontSize: '1.25rem', color: 'var(--sf-primary)' }}>Estamos aquí para ayudarte</p>
       </div>
 
       <div className="sf-container" style={{ padding: '4rem 0' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+        <div className="sf-contact-grid" style={{ marginTop: 0 }}>
           
-          <div style={{ backgroundColor: 'white', padding: '3rem', borderRadius: '1rem', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.05)', textAlign: 'center' }}>
-            <div style={{ width: '4rem', height: '4rem', backgroundColor: '#F0FDF4', color: '#16A34A', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
+          <div className="sf-contact-card">
+            <div className="sf-contact-icon-wrapper">
               <MessageCircle size={32} />
             </div>
-            <h3 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '1rem', color: '#1E293B' }}>WhatsApp Directo</h3>
-            <p style={{ color: '#64748B', marginBottom: '2rem' }}>La forma más rápida de contactarnos para reservas y disponibilidad.</p>
+            <h3 className="sf-contact-card-title">WhatsApp Directo</h3>
+            <p className="sf-contact-card-desc">La forma más rápida de contactarnos para reservas y disponibilidad.</p>
             {config.whatsapp ? (
               <a 
                 href={`https://wa.me/${config.whatsapp.replace(/\+/g, '')}`} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="sf-btn"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', backgroundColor: '#25D366', color: 'white' }}
+                className="sf-btn sf-btn-whatsapp-direct"
               >
                 <MessageCircle size={20} /> Escríbenos ahora
               </a>
             ) : (
-              <span style={{ color: '#94A3B8' }}>No configurado</span>
+              <span style={{ color: 'var(--sf-text-muted)' }}>No configurado</span>
             )}
           </div>
 
-          <div style={{ backgroundColor: 'white', padding: '3rem', borderRadius: '1rem', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.05)', textAlign: 'center' }}>
-            <div style={{ width: '4rem', height: '4rem', backgroundColor: '#EFF6FF', color: '#3B82F6', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
+          <div className="sf-contact-card">
+            <div className="sf-contact-icon-wrapper secondary-wrapper">
               <Phone size={32} />
             </div>
-            <h3 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '1rem', color: '#1E293B' }}>Llámanos</h3>
-            <p style={{ color: '#64748B', marginBottom: '2rem' }}>Atención telefónica en horario comercial.</p>
+            <h3 className="sf-contact-card-title">Llámanos</h3>
+            <p className="sf-contact-card-desc">Atención telefónica en horario comercial.</p>
             {config.whatsapp ? (
               <a 
                 href={`tel:${config.whatsapp.replace(/\+/g, '')}`} 
                 className="sf-btn"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', backgroundColor: 'var(--sf-secondary)', color: 'white' }}
+                style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
               >
                 <Phone size={20} /> Llamar ahora
               </a>
             ) : (
-              <span style={{ color: '#94A3B8' }}>No configurado</span>
+              <span style={{ color: 'var(--sf-text-muted)' }}>No configurado</span>
             )}
           </div>
 
         </div>
 
-        <div style={{ marginTop: '3rem', backgroundColor: 'white', padding: '3rem', borderRadius: '1rem', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.05)' }}>
-          <h3 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '1.5rem', color: '#1E293B', textAlign: 'center' }}>Ubicación y Horario</h3>
+        <div className="sf-testimonial-card" style={{ marginTop: '3rem', alignItems: 'stretch' }}>
+          <h3 className="sf-contact-card-title" style={{ textAlign: 'center', marginBottom: '2rem' }}>Ubicación y Horario</h3>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem', textAlign: 'center' }}>
             <div>
               <MapPin color="var(--sf-primary)" size={32} style={{ margin: '0 auto 1rem' }} />
-              <h4 style={{ fontWeight: 600, color: '#1E293B' }}>Sede Principal</h4>
-              <p style={{ color: '#64748B' }}>{agency.name}</p>
+              <h4 style={{ fontWeight: 600, color: '#ffffff', marginBottom: '0.5rem' }}>Sede Principal</h4>
+              <p style={{ color: 'var(--sf-text-muted)' }}>{agency.name}</p>
             </div>
             <div>
               <Clock color="var(--sf-primary)" size={32} style={{ margin: '0 auto 1rem' }} />
-              <h4 style={{ fontWeight: 600, color: '#1E293B' }}>Horario</h4>
-              <p style={{ color: '#64748B' }}>
+              <h4 style={{ fontWeight: 600, color: '#ffffff', marginBottom: '0.5rem' }}>Horario</h4>
+              <p style={{ color: 'var(--sf-text-muted)', lineHeight: '1.6' }}>
                 Lunes - Viernes: 09:00 - 20:00<br />
                 Sábados: 10:00 - 14:00
               </p>

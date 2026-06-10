@@ -64,48 +64,90 @@ export default function StorefrontHome() {
         </div>
       </section>
 
-      <main>
-        <div className="sf-values">
+      <main className="sf-main-content">
+        {/* Core Values Section */}
+        <section className="sf-values">
           <div className="sf-container">
             <div className="sf-values-grid">
               <div className="sf-value-item">
                 <div className="sf-value-icon">
                   <ShieldCheck size={32} />
                 </div>
-                <h4 className="sf-value-title">Seguro a Todo Riesgo</h4>
-                <p className="sf-value-text">Viaja con total tranquilidad gracias a nuestra cobertura premium incluida.</p>
+                <h4 className="sf-value-title">Seguro Premium</h4>
+                <p className="sf-value-text">Viaja con total tranquilidad gracias a nuestra cobertura a todo riesgo premium incluida.</p>
               </div>
               <div className="sf-value-item">
                 <div className="sf-value-icon">
                   <Clock size={32} />
                 </div>
-                <h4 className="sf-value-title">Soporte 24/7</h4>
-                <p className="sf-value-text">Asistencia en carretera y atención al cliente a cualquier hora del día.</p>
+                <h4 className="sf-value-title">Soporte 24/7 Activo</h4>
+                <p className="sf-value-text">Asistencia en carretera y atención al cliente dedicada en cualquier momento de tu viaje.</p>
               </div>
               <div className="sf-value-item">
                 <div className="sf-value-icon">
                   <MapPin size={32} />
                 </div>
-                <h4 className="sf-value-title">Múltiples Ubicaciones</h4>
-                <p className="sf-value-text">Recoge y devuelve tu vehículo en cualquiera de nuestras sucursales o aeropuerto.</p>
+                <h4 className="sf-value-title">Entrega Flexible</h4>
+                <p className="sf-value-text">Recogida y devolución a medida en aeropuerto, hotel o cualquiera de nuestras oficinas.</p>
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
-        {config.aboutText && (
-          <div className="sf-about" id="nosotros">
-            <div className="sf-container">
-              <h3 className="sf-about-title">Sobre Nosotros</h3>
-              <div className="sf-divider"></div>
-              <p className="sf-about-text">
-                {config.aboutText}
-              </p>
+        {/* Enriched Stats Section */}
+        <section className="sf-stats-section">
+          <div className="sf-container">
+            <div className="sf-stats-grid">
+              <div className="sf-stat-card">
+                <span className="sf-stat-number">50+</span>
+                <span className="sf-stat-label">Vehículos Premium</span>
+              </div>
+              <div className="sf-stat-card">
+                <span className="sf-stat-number">10k+</span>
+                <span className="sf-stat-label">Clientes Satisfechos</span>
+              </div>
+              <div className="sf-stat-card">
+                <span className="sf-stat-number">99%</span>
+                <span className="sf-stat-label">Valoración Positiva</span>
+              </div>
+              <div className="sf-stat-card">
+                <span className="sf-stat-number">24h</span>
+                <span className="sf-stat-label">Soporte Express</span>
+              </div>
             </div>
           </div>
-        )}
+        </section>
 
-        <div className="sf-fleet">
+        {/* How it Works / Process Section */}
+        <section className="sf-process-section">
+          <div className="sf-container">
+            <div className="sf-section-header">
+              <h3 className="sf-section-title-center">Cómo Alquilar en 3 Pasos</h3>
+              <p className="sf-section-subtitle-center">Nuestro proceso es rápido, transparente y 100% digital</p>
+            </div>
+            
+            <div className="sf-process-grid">
+              <div className="sf-process-step">
+                <div className="sf-step-badge">1</div>
+                <h4 className="sf-step-title">Elige tu Vehículo</h4>
+                <p className="sf-step-desc">Explora nuestra colección y selecciona el coche que mejor se adapte a tus necesidades y presupuesto.</p>
+              </div>
+              <div className="sf-process-step">
+                <div className="sf-step-badge">2</div>
+                <h4 className="sf-step-title">Define Fechas y Reserva</h4>
+                <p className="sf-step-desc">Elige los días de recogida y devolución. Mándanos una solicitud instantánea vía WhatsApp sin compromiso.</p>
+              </div>
+              <div className="sf-process-step">
+                <div className="sf-step-badge">3</div>
+                <h4 className="sf-step-title">Recoge y Disfruta</h4>
+                <p className="sf-step-desc">Preparamos el contrato rápido y te entregamos el coche impecable para que empieces a disfrutar de tu viaje.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Fleet Section */}
+        <section className="sf-fleet">
           <div className="sf-container">
             <h3 className="sf-section-title">
               <Car size={36} />
@@ -159,46 +201,146 @@ export default function StorefrontHome() {
               </div>
             )}
           </div>
-        </div>
+        </section>
+
+        {/* About Section */}
+        {config.aboutText && (
+          <section className="sf-about" id="nosotros">
+            <div className="sf-container">
+              <h3 className="sf-about-title">Sobre Nosotros</h3>
+              <div className="sf-divider"></div>
+              <p className="sf-about-text">
+                {config.aboutText}
+              </p>
+            </div>
+          </section>
+        )}
+
+        {/* Testimonials Section */}
+        <section className="sf-testimonials-section">
+          <div className="sf-container">
+            <div className="sf-section-header">
+              <h3 className="sf-section-title-center">Opiniones de Nuestros Clientes</h3>
+              <p className="sf-section-subtitle-center">Lo que dicen los viajeros que confían en nosotros</p>
+            </div>
+
+            <div className="sf-testimonials-grid">
+              <div className="sf-testimonial-card">
+                <div className="sf-stars">★★★★★</div>
+                <p className="sf-testimonial-text">"Excelente servicio. Reservé a través de WhatsApp en pocos minutos y el coche estaba listo y limpísimo en el aeropuerto. Totalmente recomendado."</p>
+                <div className="sf-testimonial-author">
+                  <div className="sf-author-avatar">Y.B.</div>
+                  <div>
+                    <h5 className="sf-author-name">Yassine B.</h5>
+                    <span className="sf-author-role">Cliente Verificado</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="sf-testimonial-card">
+                <div className="sf-stars">★★★★★</div>
+                <p className="sf-testimonial-text">"Trato muy profesional e inmejorable relación calidad-precio. Tuvimos un pequeño contratiempo con nuestro vuelo y nos esperaron sin ningún cargo extra."</p>
+                <div className="sf-testimonial-author">
+                  <div className="sf-author-avatar">M.D.</div>
+                  <div>
+                    <h5 className="sf-author-name">Marie D.</h5>
+                    <span className="sf-author-role">Cliente de Negocios</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="sf-testimonial-card">
+                <div className="sf-stars">★★★★★</div>
+                <p className="sf-testimonial-text">"El coche estaba en perfectas condiciones y el seguro a todo riesgo nos dio mucha tranquilidad para recorrer el país. Repetiremos sin duda."</p>
+                <div className="sf-testimonial-author">
+                  <div className="sf-author-avatar">A.K.</div>
+                  <div>
+                    <h5 className="sf-author-name">Ahmed K.</h5>
+                    <span className="sf-author-role">Viajero Frecuente</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQs Section */}
+        <section className="sf-faqs-section">
+          <div className="sf-container">
+            <div className="sf-section-header">
+              <h3 className="sf-section-title-center">Preguntas Frecuentes</h3>
+              <p className="sf-section-subtitle-center">Todo lo que necesitas saber antes de tu alquiler</p>
+            </div>
+
+            <div className="sf-faqs-list">
+              <details className="sf-faq-item">
+                <summary className="sf-faq-question">¿Qué documentos necesito para recoger el vehículo?</summary>
+                <div className="sf-faq-answer">
+                  <p>Necesitarás presentar tu documento de identidad (DNI o Pasaporte) en vigor, un permiso de conducir válido y vigente, y una tarjeta de crédito/débito a nombre del conductor principal.</p>
+                </div>
+              </details>
+
+              <details className="sf-faq-item">
+                <summary className="sf-faq-question">¿El seguro a todo riesgo tiene franquicia?</summary>
+                <div className="sf-faq-answer">
+                  <p>Nuestra tarifa premium incluye cobertura a todo riesgo. Dependiendo del coche seleccionado, puede existir una franquicia mínima garantizada que se detalla en el momento de la confirmación de la reserva.</p>
+                </div>
+              </details>
+
+              <details className="sf-faq-item">
+                <summary className="sf-faq-question">¿Puedo cancelar o modificar mi reserva?</summary>
+                <div className="sf-faq-answer">
+                  <p>¡Sí! Las cancelaciones y modificaciones son totalmente gratuitas si se avisa con al menos 24 horas de antelación. Simplemente ponte en contacto con nosotros a través de WhatsApp o llamada telefónica.</p>
+                </div>
+              </details>
+
+              <details className="sf-faq-item">
+                <summary className="sf-faq-question">¿Cómo se realiza el pago del alquiler?</summary>
+                <div className="sf-faq-answer">
+                  <p>El pago se realiza cómodamente en el momento de la recogida del vehículo, ya sea en efectivo, con tarjeta de crédito o mediante transferencia garantizada.</p>
+                </div>
+              </details>
+            </div>
+          </div>
+        </section>
 
         {/* Contacto Section */}
-        <div id="contacto" style={{ padding: '5rem 0', backgroundColor: '#F8FAFC' }}>
+        <section id="contacto" className="sf-contact-section">
           <div className="sf-container">
             <h3 className="sf-section-title">
               <MessageCircle /> Contacto Directo
             </h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', marginTop: '3rem' }}>
-              <div style={{ backgroundColor: 'white', padding: '3rem', borderRadius: '1rem', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.05)', textAlign: 'center' }}>
-                <div style={{ width: '4rem', height: '4rem', backgroundColor: '#F0FDF4', color: '#16A34A', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
+            <div className="sf-contact-grid">
+              <div className="sf-contact-card">
+                <div className="sf-contact-icon-wrapper">
                   <MessageCircle size={32} />
                 </div>
-                <h4 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '1rem', color: '#1E293B' }}>WhatsApp</h4>
-                <p style={{ color: '#64748B', marginBottom: '2rem' }}>Reserva rápida y directa.</p>
+                <h4 className="sf-contact-card-title">WhatsApp</h4>
+                <p className="sf-contact-card-desc">Reserva rápida y directa directamente con nuestro equipo.</p>
                 {config.whatsapp && (
                   <a 
                     href={`https://wa.me/${config.whatsapp.replace(/\+/g, '')}?text=${encodeURIComponent('Hola, me gustaría recibir información.')}`}
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="sf-btn"
-                    style={{ backgroundColor: '#25D366', color: 'white', width: '100%', display: 'flex', justifyContent: 'center' }}
+                    className="sf-btn sf-btn-whatsapp-direct"
                   >
                     Escríbenos ahora
                   </a>
                 )}
               </div>
-              <div style={{ backgroundColor: 'white', padding: '3rem', borderRadius: '1rem', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.05)', textAlign: 'center' }}>
-                <div style={{ width: '4rem', height: '4rem', backgroundColor: '#EFF6FF', color: '#3B82F6', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
+              <div className="sf-contact-card">
+                <div className="sf-contact-icon-wrapper secondary-wrapper">
                   <MapPin size={32} />
                 </div>
-                <h4 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '1rem', color: '#1E293B' }}>Ubicación</h4>
-                <p style={{ color: '#64748B', marginBottom: '2rem' }}>{agency.name}</p>
-                <div className="sf-btn" style={{ backgroundColor: 'var(--sf-secondary)', width: '100%', display: 'flex', justifyContent: 'center', cursor: 'default' }}>
+                <h4 className="sf-contact-card-title">Ubicación</h4>
+                <p className="sf-contact-card-desc">{agency.name}</p>
+                <div className="sf-btn sf-btn-location-direct">
                   Sede Principal
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </section>
       </main>
     </>
   );

@@ -32,7 +32,8 @@ const Register = () => {
         options: {
           data: {
             full_name: fullName,
-            role: 'admin'
+            role: 'admin',
+            company_name: companyName
           }
         }
       });

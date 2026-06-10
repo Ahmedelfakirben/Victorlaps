@@ -40,7 +40,7 @@ export default function StorefrontFleet() {
   }
 
   return (
-    <main style={{ padding: '4rem 0', backgroundColor: '#F8FAFC', minHeight: '80vh' }}>
+    <main style={{ padding: '6rem 0 4rem 0', minHeight: '80vh' }}>
       <div className="sf-container">
         <h2 className="sf-section-title" style={{ justifyContent: 'flex-start', marginBottom: '3rem' }}>
           <Car /> Nuestra Colección Completa

@@ -6,19 +6,19 @@ export default function StorefrontAbout() {
   const { agency, config } = useOutletContext<any>();
 
   return (
-    <main style={{ minHeight: '80vh', backgroundColor: '#F8FAFC' }}>
-      <div style={{ backgroundColor: 'var(--sf-secondary)', color: 'white', padding: '6rem 2rem', textAlign: 'center' }}>
+    <main style={{ minHeight: '80vh', padding: '6rem 0 0 0' }}>
+      <div style={{ background: 'linear-gradient(135deg, rgba(22, 28, 45, 0.4) 0%, rgba(9, 13, 22, 0.6) 100%)', color: 'white', padding: '6rem 2rem', textAlign: 'center', borderBottom: '1px solid var(--sf-border-glass)' }}>
         <h1 style={{ fontSize: '3rem', fontWeight: 900, marginBottom: '1rem' }}>Sobre {agency.name}</h1>
         <p style={{ fontSize: '1.25rem', color: 'var(--sf-primary)' }}>Nuestra historia y valores</p>
       </div>
 
       <div className="sf-container" style={{ padding: '4rem 0' }}>
-        <div style={{ backgroundColor: 'white', padding: '3rem', borderRadius: '1rem', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.05)', maxWidth: '800px', margin: '0 auto' }}>
-          <h2 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--sf-secondary)', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <div className="sf-value-item" style={{ maxWidth: '800px', margin: '0 auto', alignItems: 'stretch', textAlign: 'left' }}>
+          <h2 style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--sf-primary)', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Users color="var(--sf-primary)" /> Quiénes Somos
           </h2>
           
-          <div style={{ fontSize: '1.1rem', lineHeight: 1.8, color: '#475569' }}>
+          <div style={{ fontSize: '1.1rem', lineHeight: 1.8, color: 'var(--sf-text-muted)' }}>
             {config.aboutText ? (
               <p style={{ whiteSpace: 'pre-wrap' }}>{config.aboutText}</p>
             ) : (
