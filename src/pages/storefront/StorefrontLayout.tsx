@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, Outlet, Link, useLocation } from 'react-router-dom';
+import { useParams, Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { Loader2, Menu, X, ExternalLink, Phone } from 'lucide-react';
 import './Storefront.css';
@@ -7,6 +7,7 @@ import './Storefront.css';
 export default function StorefrontLayout() {
   const { slug } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const [agency, setAgency] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -103,6 +104,17 @@ export default function StorefrontLayout() {
     '--sf-secondary': themeSecondary
   } as React.CSSProperties;
 
+  const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, anchorId: string) => {
+    if (location.pathname !== `/booking/${slug}`) {
+      e.preventDefault();
+      navigate(`/booking/${slug}`);
+      setTimeout(() => {
+        const el = document.getElementById(anchorId);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 200);
+    }
+  };
+
   return (
     <div className={`sf-body sf-template-${templateName}`} style={themeStyle}>
       {/* Global Navigation Header */}
@@ -119,8 +131,8 @@ export default function StorefrontLayout() {
           <nav className="sf-desktop-nav">
             <Link to={`/booking/${slug}`}>Inicio</Link>
             <Link to={`/booking/${slug}/fleet`}>Flota</Link>
-            <a href={`/booking/${slug}#nosotros`}>Nosotros</a>
-            <a href={`/booking/${slug}#contacto`}>Contacto</a>
+            <a href={`/booking/${slug}#nosotros`} onClick={(e) => handleAnchorClick(e, 'nosotros')}>Nosotros</a>
+            <a href={`/booking/${slug}#contacto`} onClick={(e) => handleAnchorClick(e, 'contacto')}>Contacto</a>
           </nav>
 
           <div className="sf-header-actions">
@@ -150,8 +162,8 @@ export default function StorefrontLayout() {
           <div className="sf-mobile-nav">
             <Link to={`/booking/${slug}`}>Inicio</Link>
             <Link to={`/booking/${slug}/fleet`}>Flota</Link>
-            <a href={`/booking/${slug}#nosotros`}>Nosotros</a>
-            <a href={`/booking/${slug}#contacto`}>Contacto</a>
+            <a href={`/booking/${slug}#nosotros`} onClick={(e) => { handleAnchorClick(e, 'nosotros'); setMenuOpen(false); }}>Nosotros</a>
+            <a href={`/booking/${slug}#contacto`} onClick={(e) => { handleAnchorClick(e, 'contacto'); setMenuOpen(false); }}>Contacto</a>
           </div>
         )}
       </header>

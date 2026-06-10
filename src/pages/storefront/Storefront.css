@@ -1,14 +1,14 @@
 /* Storefront Global Variables */
 :root {
   --sf-primary: #10b981;
-  --sf-primary-glow: rgba(16, 185, 129, 0.15);
+  --sf-primary-glow: rgba(16, 185, 129, 0.2);
   --sf-secondary: #0F172A;
   --sf-text-dark: #F8FAFC;
-  --sf-text-muted: #94A3B8;
+  --sf-text-muted: #CBD5E1;
   --sf-text-light: #F8FAFC;
   --sf-bg-dark: #090D16;
-  --sf-bg-card: rgba(22, 28, 45, 0.6);
-  --sf-border-glass: rgba(255, 255, 255, 0.08);
+  --sf-bg-card: rgba(255, 255, 255, 0.06);
+  --sf-border-glass: rgba(255, 255, 255, 0.14);
 }
 
 /* Base Styles */
