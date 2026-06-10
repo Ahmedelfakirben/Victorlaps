@@ -69,6 +69,7 @@ export default function StorefrontHome() {
   const config = agency.storefront_config || {};
   const themePrimary = config.themeColor || '#10b981';
   const themeSecondary = config.themeSecondary || '#0F172A';
+  const templateName = config.template || 'modern';
 
   // Inject CSS variables
   const themeStyle = {
@@ -77,7 +78,7 @@ export default function StorefrontHome() {
   } as React.CSSProperties;
 
   return (
-    <div className="sf-body" style={themeStyle}>
+    <div className={`sf-body sf-template-${templateName}`} style={themeStyle}>
       {/* Header Público */}
       <header className="sf-header">
         <div className="sf-container sf-header-content">

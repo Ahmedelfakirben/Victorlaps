@@ -14,6 +14,7 @@ export default function WebsiteBuilder() {
 
   const [formData, setFormData] = useState({
     slug: '',
+    template: 'modern',
     themeColor: '#10b981',
     themeSecondary: '#0F172A',
     whatsapp: '',
@@ -162,6 +163,35 @@ export default function WebsiteBuilder() {
                   {t('website_builder.basic_config')}
                 </h2>
                 <div className="wb-form-row">
+                  <div className="wb-form-group" style={{ width: '100%' }}>
+                    <label className="wb-label">Estilo de Plantilla</label>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                      <div 
+                        onClick={() => setFormData({...formData, template: 'modern'})}
+                        style={{ 
+                          border: formData.template === 'modern' ? '2px solid #3B82F6' : '1px solid #E2E8F0',
+                          borderRadius: '0.75rem', padding: '1rem', cursor: 'pointer', textAlign: 'center',
+                          backgroundColor: formData.template === 'modern' ? '#EFF6FF' : 'white'
+                        }}
+                      >
+                        <strong style={{ display: 'block', marginBottom: '0.5rem', color: '#1E293B' }}>Modern Premium</strong>
+                        <span style={{ fontSize: '0.8rem', color: '#64748B' }}>Cabeceras oscuras y transparencias (Glassmorphism)</span>
+                      </div>
+                      <div 
+                        onClick={() => setFormData({...formData, template: 'classic'})}
+                        style={{ 
+                          border: formData.template === 'classic' ? '2px solid #3B82F6' : '1px solid #E2E8F0',
+                          borderRadius: '0.75rem', padding: '1rem', cursor: 'pointer', textAlign: 'center',
+                          backgroundColor: formData.template === 'classic' ? '#EFF6FF' : 'white'
+                        }}
+                      >
+                        <strong style={{ display: 'block', marginBottom: '0.5rem', color: '#1E293B' }}>Classic Light</strong>
+                        <span style={{ fontSize: '0.8rem', color: '#64748B' }}>Diseño minimalista en blanco, limpio y espacioso</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="wb-form-row">
                   <div className="wb-form-group">
                     <label className="wb-label">{t('website_builder.slug_label')}</label>
                     <div className="wb-input-wrapper">
@@ -294,43 +324,95 @@ export default function WebsiteBuilder() {
             
             <div className="wb-phone-frame" style={{ borderColor: formData.themeSecondary }}>
               <div className="wb-phone-notch" style={{ backgroundColor: formData.themeSecondary }}></div>
-              
-              <div className="wb-phone-screen">
-                <div className="wb-phone-nav" style={{ backgroundColor: formData.themeSecondary, borderBottom: 'none' }}>
-                  <div className="wb-phone-logo" style={{ backgroundColor: formData.themeColor }}></div>
-                  <div className="wb-phone-menu">
-                    <span style={{ backgroundColor: '#ffffff' }}></span>
-                    <span style={{ backgroundColor: '#ffffff' }}></span>
-                  </div>
-                </div>
-
-                <div className="wb-phone-body">
-                  <div className="wb-phone-hero" style={{ backgroundColor: formData.themeSecondary, color: 'white' }}>
-                    <h2>{formData.heroTitle || 'Título...'}</h2>
-                    <p style={{ color: formData.themeColor }}>{formData.heroSubtitle || 'Subtítulo...'}</p>
-                  </div>
-
-                  {formData.aboutText && (
-                    <div className="wb-phone-about">
-                      <div className="wb-phone-about-line"></div>
-                      <p>{formData.aboutText}</p>
-                    </div>
-                  )}
-
-                  <div className="wb-phone-fleet">
-                    <h4>{t('website_builder.preview_fleet')}</h4>
-                    <div className="wb-phone-card">
-                      <div className="wb-phone-card-img">📸</div>
-                      <div className="wb-phone-card-info">
-                        <div className="wb-phone-card-title"></div>
-                        <div className="wb-phone-card-subtitle"></div>
-                        <div className="wb-phone-card-btn" style={{ backgroundColor: formData.themeColor }}>
-                          {t('website_builder.preview_details')}
-                        </div>
+              <div className="wb-phone-screen" style={{ backgroundColor: '#F8FAFC', overflowY: 'auto', display: 'block' }}>
+                
+                {/* Realistic Mobile Preview - Modern Template */}
+                {formData.template === 'modern' && (
+                  <>
+                    <div style={{ backgroundColor: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(10px)', padding: '10px 15px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, zIndex: 10, borderBottom: '1px solid #E2E8F0' }}>
+                      <span style={{ fontWeight: 800, color: formData.themePrimary || formData.themeColor, fontSize: '0.9rem' }}>Logo</span>
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        <div style={{ width: 24, height: 24, borderRadius: '50%', backgroundColor: formData.themeSecondary, opacity: 0.1 }}></div>
+                        <div style={{ width: 24, height: 24, borderRadius: '50%', backgroundColor: formData.themeSecondary, opacity: 0.1 }}></div>
                       </div>
                     </div>
-                  </div>
-                </div>
+                    
+                    <div style={{ backgroundColor: formData.themeSecondary, padding: '40px 20px', textAlign: 'center', color: 'white' }}>
+                      <h2 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '10px', lineHeight: 1.2 }}>{formData.heroTitle || 'Alquiler de Vehículos'}</h2>
+                      <p style={{ color: formData.themePrimary || formData.themeColor, fontSize: '0.9rem' }}>{formData.heroSubtitle || 'La mejor flota'}</p>
+                    </div>
+
+                    <div style={{ padding: '20px 15px' }}>
+                      {formData.aboutText && (
+                        <div style={{ backgroundColor: 'white', padding: '15px', borderRadius: '12px', marginBottom: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+                          <h4 style={{ fontSize: '0.9rem', fontWeight: 700, color: formData.themeSecondary, marginBottom: '8px' }}>Sobre Nosotros</h4>
+                          <div style={{ width: '30px', height: '3px', backgroundColor: formData.themeColor, marginBottom: '10px' }}></div>
+                          <p style={{ fontSize: '0.75rem', color: '#64748B', lineHeight: 1.5 }}>{formData.aboutText.substring(0, 100)}...</p>
+                        </div>
+                      )}
+
+                      <h4 style={{ fontSize: '1rem', fontWeight: 800, color: formData.themeSecondary, marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                        <span style={{ color: formData.themeColor }}>■</span> Nuestra Flota
+                      </h4>
+                      
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                        {[1, 2].map(i => (
+                          <div key={i} style={{ backgroundColor: 'white', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
+                            <div style={{ height: '120px', backgroundColor: '#E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                              <span style={{ fontSize: '2rem' }}>📸</span>
+                              <div style={{ position: 'absolute', top: '10px', right: '10px', backgroundColor: 'white', padding: '4px 8px', borderRadius: '12px', fontSize: '0.7rem', fontWeight: 800 }}>300 MAD</div>
+                            </div>
+                            <div style={{ padding: '12px' }}>
+                              <h5 style={{ margin: 0, fontSize: '0.9rem', fontWeight: 800 }}>Audi A3</h5>
+                              <p style={{ margin: '0 0 10px 0', fontSize: '0.7rem', color: '#64748B' }}>Automático • Diesel</p>
+                              <div style={{ backgroundColor: formData.themeColor, color: 'white', textAlign: 'center', padding: '8px', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 700 }}>
+                                Ver Detalles
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {/* Realistic Mobile Preview - Classic Template */}
+                {formData.template === 'classic' && (
+                  <>
+                    <div style={{ backgroundColor: 'white', padding: '15px', textAlign: 'center', borderBottom: '1px solid #E2E8F0' }}>
+                      <span style={{ fontWeight: 800, color: '#1E293B', fontSize: '1.2rem', letterSpacing: '2px', textTransform: 'uppercase' }}>Logo</span>
+                    </div>
+                    
+                    <div style={{ backgroundColor: 'white', padding: '50px 20px', textAlign: 'center' }}>
+                      <h2 style={{ fontSize: '1.8rem', fontWeight: 300, marginBottom: '10px', color: '#1E293B' }}>{formData.heroTitle || 'Alquiler Premium'}</h2>
+                      <p style={{ color: '#64748B', fontSize: '0.9rem', letterSpacing: '1px' }}>{formData.heroSubtitle || 'EXPERIENCIA ÚNICA'}</p>
+                      <div style={{ width: '40px', height: '2px', backgroundColor: formData.themeColor, margin: '20px auto 0' }}></div>
+                    </div>
+
+                    <div style={{ padding: '20px 15px', backgroundColor: '#F8FAFC' }}>
+                      <h4 style={{ fontSize: '1rem', fontWeight: 600, color: '#1E293B', marginBottom: '20px', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                        Colección
+                      </h4>
+                      
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                        {[1].map(i => (
+                          <div key={i} style={{ backgroundColor: 'white', overflow: 'hidden' }}>
+                            <div style={{ height: '180px', backgroundColor: '#E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                              <span style={{ fontSize: '2rem' }}>📸</span>
+                            </div>
+                            <div style={{ padding: '15px', textAlign: 'center' }}>
+                              <h5 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 400, color: '#1E293B' }}>Range Rover Velar</h5>
+                              <div style={{ margin: '10px 0', fontSize: '0.9rem', fontWeight: 600, color: formData.themeColor }}>800 MAD / día</div>
+                              <div style={{ border: `1px solid ${formData.themeColor}`, color: formData.themeColor, textAlign: 'center', padding: '8px', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                                Descubrir
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>

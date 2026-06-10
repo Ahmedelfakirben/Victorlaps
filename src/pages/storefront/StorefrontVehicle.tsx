@@ -76,6 +76,7 @@ export default function StorefrontVehicle() {
   const config = agency.storefront_config || {};
   const themePrimary = config.themeColor || '#10b981';
   const themeSecondary = config.themeSecondary || '#0F172A';
+  const templateName = config.template || 'modern';
 
   const themeStyle = {
     '--sf-primary': themePrimary,
@@ -88,7 +89,7 @@ export default function StorefrontVehicle() {
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 
   return (
-    <div className="sf-body" style={themeStyle}>
+    <div className={`sf-body sf-template-${templateName}`} style={themeStyle}>
       {/* Simple Header */}
       <header className="sf-header">
         <div className="sf-container sf-header-content">
