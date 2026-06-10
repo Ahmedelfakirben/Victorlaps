@@ -17,6 +17,9 @@ import Pricing from './pages/public/Pricing';
 import Blog from './pages/public/Blog';
 import Tutorials from './pages/public/Tutorials';
 import ApiDocs from './pages/public/ApiDocs';
+import WebsiteBuilder from './pages/WebsiteBuilder';
+import StorefrontHome from './pages/storefront/StorefrontHome';
+import StorefrontVehicle from './pages/storefront/StorefrontVehicle';
 import Dashboard from './pages/Dashboard';
 import Fleet from './pages/Fleet';
 import VehicleDetail from './pages/VehicleDetail';
@@ -82,9 +85,14 @@ function App() {
             <Route path="/morocco" element={<Morocco />} />
             <Route path="/alerts" element={<Alerts />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/website-builder" element={<WebsiteBuilder />} />
             <Route path="/reports" element={<Reports />} />
           </Route>
         </Route>
+
+        {/* Public Storefront Routes (Outside of normal layout) */}
+        <Route path="/booking/:slug" element={<StorefrontHome />} />
+        <Route path="/booking/:slug/vehicle/:id" element={<StorefrontVehicle />} />
 
         {/* Global Blocked Page */}
         <Route path="/expired" element={<Expired />} />

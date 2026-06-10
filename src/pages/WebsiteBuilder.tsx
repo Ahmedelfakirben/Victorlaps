@@ -1,0 +1,329 @@
+import React, { useState, useEffect } from 'react';
+import { supabase } from '../lib/supabase';
+import { Layout, Globe, Palette, Phone, Save, AlertCircle } from 'lucide-react';
+import './WebsiteBuilder.css';
+
+export default function WebsiteBuilder() {
+  const [session, setSession] = useState<any>(null);
+  const [companyId, setCompanyId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  const [formData, setFormData] = useState({
+    slug: '',
+    themeColor: '#10b981',
+    whatsapp: '',
+    instagram: '',
+    facebook: '',
+    aboutText: '',
+    heroTitle: 'Alquiler de Vehículos',
+    heroSubtitle: 'La mejor flota al mejor precio'
+  });
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      if (session) {
+        loadSettings(session.user.id);
+      } else {
+        setLoading(false);
+      }
+    });
+  }, []);
+
+  async function loadSettings(userId: string) {
+    try {
+      // Get the correct company ID (check impersonation first)
+      const impId = localStorage.getItem('impersonated_company_id');
+      let targetCompanyId = impId;
+      
+      if (!targetCompanyId) {
+        const { data: prof } = await supabase
+          .from('profiles')
+          .select('company_id')
+          .eq('id', userId)
+          .single();
+        targetCompanyId = prof?.company_id;
+      }
+
+      if (!targetCompanyId) {
+        throw new Error('No tienes asignada una agencia (company_id).');
+      }
+
+      setCompanyId(targetCompanyId);
+
+      const { data, error } = await supabase
+        .from('companies')
+        .select('slug, storefront_config')
+        .eq('id', targetCompanyId)
+        .single();
+
+      if (error) throw error;
+      
+      if (data) {
+        setFormData({
+          slug: data.slug || '',
+          ...(data.storefront_config || {})
+        });
+      }
+    } catch (err: any) {
+      console.error('Error loading settings:', err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setSaving(true);
+    setError('');
+    setSuccess('');
+
+    try {
+      if (!companyId) throw new Error('No se pudo determinar el ID de tu agencia.');
+
+      const { slug, ...config } = formData;
+      
+      // Clean slug: lowercase, no spaces
+      const cleanSlug = slug.toLowerCase().replace(/[^a-z0-9-]/g, '-');
+
+      const { error } = await supabase
+        .from('companies')
+        .update({
+          slug: cleanSlug,
+          storefront_config: config
+        })
+        .eq('id', companyId);
+
+      if (error) {
+        if (error.code === '23505') { // Unique violation
+          throw new Error('Ese enlace ya está siendo usado por otra agencia. Elige uno diferente.');
+        }
+        throw error;
+      }
+
+      setSuccess('¡Sitio web actualizado correctamente!');
+      setFormData(prev => ({ ...prev, slug: cleanSlug }));
+    } catch (err: any) {
+      setError(err.message || 'Error al guardar los cambios');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  if (loading) {
+    return <div style={{ padding: '2rem', textAlign: 'center', color: '#64748b' }}>Cargando constructor...</div>;
+  }
+
+  const publicUrl = formData.slug ? `${window.location.origin}/booking/${formData.slug}` : '';
+
+  return (
+    <div className="wb-page-container">
+      <div className="wb-wrapper">
+        
+        <div className="wb-header">
+          <div className="wb-header-bg"></div>
+          <div className="wb-header-content">
+            <h1 className="wb-title">Website Builder</h1>
+            <p className="wb-subtitle">Diseña y configura tu escaparate público en tiempo real.</p>
+          </div>
+          {publicUrl && (
+            <a href={publicUrl} target="_blank" rel="noopener noreferrer" className="wb-visit-btn">
+              <Globe size={18} />
+              <span>Visitar mi Web</span>
+            </a>
+          )}
+        </div>
+
+        {error && (
+          <div className="wb-alert-error">
+            <AlertCircle size={20} />
+            <span>{error}</span>
+          </div>
+        )}
+
+        {success && (
+          <div className="wb-alert-success">
+            <span>{success}</span>
+          </div>
+        )}
+
+        <div className="wb-grid">
+          
+          <div className="wb-form-col">
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+              
+              <div className="wb-card">
+                <h2 className="wb-card-title">
+                  <Layout size={24} color="#3B82F6" />
+                  Configuración Básica
+                </h2>
+                <div className="wb-form-row">
+                  <div className="wb-form-group">
+                    <label className="wb-label">Enlace Público (Slug)</label>
+                    <div className="wb-input-wrapper">
+                      <span className="wb-input-prefix">/booking/</span>
+                      <input
+                        type="text"
+                        required
+                        value={formData.slug}
+                        onChange={e => setFormData({...formData, slug: e.target.value})}
+                        className="wb-input"
+                        placeholder="mi-agencia"
+                      />
+                    </div>
+                  </div>
+                  <div className="wb-form-group">
+                    <label className="wb-label">Color Principal</label>
+                    <div className="wb-color-picker">
+                      <input
+                        type="color"
+                        value={formData.themeColor}
+                        onChange={e => setFormData({...formData, themeColor: e.target.value})}
+                      />
+                      <span className="wb-color-hex">{formData.themeColor}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="wb-card">
+                <h2 className="wb-card-title">
+                  <Palette size={24} color="#10B981" />
+                  Textos y Apariencia
+                </h2>
+                <div className="wb-form-group">
+                  <label className="wb-label">Título de Bienvenida</label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.heroTitle}
+                    onChange={e => setFormData({...formData, heroTitle: e.target.value})}
+                    className="wb-input"
+                  />
+                </div>
+                <div className="wb-form-group">
+                  <label className="wb-label">Subtítulo</label>
+                  <input
+                    type="text"
+                    value={formData.heroSubtitle}
+                    onChange={e => setFormData({...formData, heroSubtitle: e.target.value})}
+                    className="wb-input"
+                  />
+                </div>
+                <div className="wb-form-group">
+                  <label className="wb-label">Sobre Nosotros</label>
+                  <textarea
+                    rows={4}
+                    value={formData.aboutText}
+                    onChange={e => setFormData({...formData, aboutText: e.target.value})}
+                    className="wb-input"
+                    placeholder="Escribe algo sobre la historia de tu agencia o tus valores..."
+                  />
+                </div>
+              </div>
+
+              <div className="wb-card">
+                <h2 className="wb-card-title">
+                  <Phone size={24} color="#8B5CF6" />
+                  Contacto y Redes Sociales
+                </h2>
+                <div className="wb-form-row">
+                  <div className="wb-form-group">
+                    <label className="wb-label">WhatsApp</label>
+                    <input
+                      type="text"
+                      value={formData.whatsapp}
+                      onChange={e => setFormData({...formData, whatsapp: e.target.value})}
+                      className="wb-input"
+                      placeholder="+34600000000"
+                    />
+                  </div>
+                  <div className="wb-form-group">
+                    <label className="wb-label">Instagram</label>
+                    <div className="wb-input-wrapper">
+                      <span className="wb-input-prefix">@</span>
+                      <input
+                        type="text"
+                        value={formData.instagram}
+                        onChange={e => setFormData({...formData, instagram: e.target.value})}
+                        className="wb-input"
+                        placeholder="tu_cuenta"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="wb-form-group">
+                  <label className="wb-label">Facebook</label>
+                  <input
+                    type="url"
+                    value={formData.facebook}
+                    onChange={e => setFormData({...formData, facebook: e.target.value})}
+                    className="wb-input"
+                    placeholder="https://facebook.com/..."
+                  />
+                </div>
+              </div>
+
+              <button type="submit" disabled={saving} className="wb-save-btn">
+                <Save size={20} />
+                {saving ? 'Guardando...' : 'Guardar y Publicar'}
+              </button>
+            </form>
+          </div>
+
+          <div className="wb-preview-col">
+            <div className="wb-preview-header">
+              <span className="wb-dot"></span>
+              Vista Previa en Vivo
+            </div>
+            
+            <div className="wb-phone-frame">
+              <div className="wb-phone-notch"></div>
+              
+              <div className="wb-phone-screen">
+                <div className="wb-phone-nav">
+                  <div className="wb-phone-logo" style={{ backgroundColor: formData.themeColor, opacity: 0.3 }}></div>
+                  <div className="wb-phone-menu">
+                    <span></span><span></span>
+                  </div>
+                </div>
+
+                <div className="wb-phone-body">
+                  <div className="wb-phone-hero" style={{ backgroundColor: formData.themeColor }}>
+                    <h2>{formData.heroTitle || 'Título...'}</h2>
+                    <p>{formData.heroSubtitle || 'Subtítulo...'}</p>
+                  </div>
+
+                  {formData.aboutText && (
+                    <div className="wb-phone-about">
+                      <div className="wb-phone-about-line"></div>
+                      <p>{formData.aboutText}</p>
+                    </div>
+                  )}
+
+                  <div className="wb-phone-fleet">
+                    <h4>Flota Disponible</h4>
+                    <div className="wb-phone-card">
+                      <div className="wb-phone-card-img">📸</div>
+                      <div className="wb-phone-card-info">
+                        <div className="wb-phone-card-title"></div>
+                        <div className="wb-phone-card-subtitle"></div>
+                        <div className="wb-phone-card-btn" style={{ backgroundColor: formData.themeColor }}>
+                          Ver Detalles
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { LayoutDashboard, CarFront, FileText, Users, DollarSign, Flag, Settings as SettingsIcon, Bell, LogOut, Menu, X, CalendarDays, ChevronUp, Activity, ShieldCheck } from 'lucide-react';
+import { LayoutDashboard, CarFront, FileText, Users, DollarSign, Flag, Settings as SettingsIcon, Bell, LogOut, Menu, X, CalendarDays, ChevronUp, Activity, ShieldCheck, Globe } from 'lucide-react';
 import Logo201M from './Logo201M';
 import { supabase } from '../../lib/supabase';
 import { fetchAppNotifications } from '../../lib/notifications';
@@ -139,6 +139,10 @@ const Layout = () => {
           <NavLink to="/contracts" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>
             <div className="sidebar-icon"><FileText size={20} /></div>
             <span>{t('sidebar.contracts')}</span>
+          </NavLink>
+          <NavLink to="/website-builder" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}>
+            <div className="sidebar-icon"><Globe size={20} /></div>
+            <span>Website Builder</span>
           </NavLink>
 
           <div className="sidebar-separator" />
