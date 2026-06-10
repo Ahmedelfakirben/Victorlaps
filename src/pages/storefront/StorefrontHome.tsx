@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
-import { MessageCircle, Car, Loader2 } from 'lucide-react';
+import { MessageCircle, Car, Loader2, Users, Fuel, Settings } from 'lucide-react';
+import './Storefront.css';
 
 export default function StorefrontHome() {
   const { slug } = useParams();
@@ -13,7 +14,6 @@ export default function StorefrontHome() {
   useEffect(() => {
     async function loadStorefront() {
       try {
-        // 1. Fetch agency by slug
         const { data: companies, error: agencyError } = await supabase
           .from('companies')
           .select('*')
@@ -27,7 +27,6 @@ export default function StorefrontHome() {
         const currentAgency = companies[0];
         setAgency(currentAgency);
 
-        // 2. Fetch available vehicles for this agency
         const { data: fleet, error: fleetError } = await supabase
           .from('vehicles')
           .select('*')
@@ -50,48 +49,55 @@ export default function StorefrontHome() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
+      <div className="sf-body" style={{ alignItems: 'center', justifyContent: 'center' }}>
+        <Loader2 size={48} className="animate-spin" color="#10b981" />
       </div>
     );
   }
 
   if (error || !agency) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">Oops!</h1>
-          <p className="text-gray-600">{error || 'Página no encontrada'}</p>
+      <div className="sf-body" style={{ alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ textAlign: 'center' }}>
+          <h1 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Oops!</h1>
+          <p>{error || 'Página no encontrada'}</p>
         </div>
       </div>
     );
   }
 
   const config = agency.storefront_config || {};
-  const themeColor = config.themeColor || '#10b981';
+  const themePrimary = config.themeColor || '#10b981';
+  const themeSecondary = config.themeSecondary || '#0F172A';
+
+  // Inject CSS variables
+  const themeStyle = {
+    '--sf-primary': themePrimary,
+    '--sf-secondary': themeSecondary
+  } as React.CSSProperties;
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans">
+    <div className="sf-body" style={themeStyle}>
       {/* Header Público */}
-      <header className="bg-white shadow-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold" style={{ color: themeColor }}>
+      <header className="sf-header">
+        <div className="sf-container sf-header-content">
+          <Link to={`/booking/${slug}`} className="sf-brand">
             {agency.name}
-          </h1>
-          <div className="flex space-x-4">
+          </Link>
+          <div className="sf-nav-social">
             {config.whatsapp && (
-              <a href={`https://wa.me/${config.whatsapp.replace(/\+/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-green-500">
-                <MessageCircle className="w-6 h-6" />
+              <a href={`https://wa.me/${config.whatsapp.replace(/\+/g, '')}`} target="_blank" rel="noopener noreferrer" className="sf-social-icon">
+                <MessageCircle size={20} />
               </a>
             )}
             {config.instagram && (
-              <a href={`https://instagram.com/${config.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-pink-600">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+              <a href={`https://instagram.com/${config.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="sf-social-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
               </a>
             )}
             {config.facebook && (
-              <a href={config.facebook} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-600">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+              <a href={config.facebook} target="_blank" rel="noopener noreferrer" className="sf-social-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
               </a>
             )}
           </div>
@@ -99,98 +105,135 @@ export default function StorefrontHome() {
       </header>
 
       {/* Hero Section */}
-      <div 
-        className="relative py-24 px-4 sm:px-6 lg:px-8 text-center text-white"
-        style={{ backgroundColor: themeColor }}
-      >
-        <div className="relative max-w-3xl mx-auto">
-          <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4">
+      <div className="sf-hero">
+        <div className="sf-container sf-hero-content">
+          <h2 className="sf-hero-title">
             {config.heroTitle || 'Alquiler de Vehículos'}
           </h2>
-          <p className="text-xl sm:text-2xl text-white/90">
+          <p className="sf-hero-subtitle">
             {config.heroSubtitle || 'La mejor flota al mejor precio'}
           </p>
         </div>
       </div>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main>
         {/* About Section */}
         {config.aboutText && (
-          <div className="mb-16 max-w-3xl mx-auto text-center">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Sobre Nosotros</h3>
-            <p className="text-lg text-gray-600 leading-relaxed">
-              {config.aboutText}
-            </p>
+          <div className="sf-about">
+            <div className="sf-container">
+              <h3 className="sf-about-title">Sobre Nosotros</h3>
+              <div className="sf-divider"></div>
+              <p className="sf-about-text">
+                {config.aboutText}
+              </p>
+            </div>
           </div>
         )}
 
         {/* Fleet Section */}
-        <div className="mb-8">
-          <h3 className="text-3xl font-bold text-gray-900 mb-8 flex items-center">
-            <Car className="w-8 h-8 mr-3" style={{ color: themeColor }} />
-            Nuestra Flota Disponible
-          </h3>
-          
-          {vehicles.length === 0 ? (
-            <div className="text-center py-12 bg-white rounded-xl border border-gray-200">
-              <p className="text-gray-500 text-lg">No hay vehículos disponibles en este momento.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {vehicles.map(vehicle => (
-                <div key={vehicle.id} className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow flex flex-col">
-                  <div className="h-48 bg-gray-100 flex items-center justify-center relative">
-                    {vehicle.image_url ? (
-                      <img src={vehicle.image_url} alt={`${vehicle.brand} ${vehicle.model}`} className="w-full h-full object-cover" />
-                    ) : (
-                      <Car className="w-16 h-16 text-gray-300" />
-                    )}
-                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-bold shadow-sm text-gray-900">
-                      {vehicle.daily_rate} MAD <span className="text-gray-500 text-xs font-normal">/día</span>
-                    </div>
-                  </div>
-                  <div className="p-6 flex flex-col flex-grow">
-                    <div className="flex justify-between items-start mb-4">
-                      <div>
-                        <h4 className="text-xl font-bold text-gray-900">{vehicle.brand} {vehicle.model}</h4>
-                        <p className="text-gray-500">{vehicle.year}</p>
+        <div className="sf-fleet">
+          <div className="sf-container">
+            <h3 className="sf-section-title">
+              <Car size={36} />
+              Nuestra Flota Disponible
+            </h3>
+            
+            {vehicles.length === 0 ? (
+              <div className="sf-empty">
+                <Car size={48} />
+                <p>No hay vehículos disponibles en este momento.</p>
+              </div>
+            ) : (
+              <div className="sf-grid">
+                {vehicles.map(vehicle => (
+                  <div key={vehicle.id} className="sf-card">
+                    <div className="sf-card-image">
+                      {vehicle.image_url ? (
+                        <img src={vehicle.image_url} alt={`${vehicle.brand} ${vehicle.model}`} />
+                      ) : (
+                        <Car size={64} color="#CBD5E1" />
+                      )}
+                      <div className="sf-card-price">
+                        {vehicle.daily_rate} MAD <span>/día</span>
                       </div>
                     </div>
-                    
-                    <div className="grid grid-cols-2 gap-4 mb-6 text-sm text-gray-600 flex-grow">
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 rounded-full mr-2" style={{ backgroundColor: themeColor }}></div>
-                        {vehicle.transmission}
+                    <div className="sf-card-content">
+                      <h4 className="sf-card-title">{vehicle.brand} {vehicle.model}</h4>
+                      <p className="sf-card-subtitle">Año {vehicle.year}</p>
+                      
+                      <div className="sf-card-specs">
+                        <div className="sf-spec">
+                          <Settings size={16} />
+                          {vehicle.transmission}
+                        </div>
+                        <div className="sf-spec">
+                          <Fuel size={16} />
+                          {vehicle.fuel}
+                        </div>
+                        <div className="sf-spec">
+                          <Users size={16} />
+                          {vehicle.seats || 5} Plazas
+                        </div>
                       </div>
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 rounded-full mr-2" style={{ backgroundColor: themeColor }}></div>
-                        {vehicle.fuel}
-                      </div>
-                      <div className="flex items-center">
-                        <div className="w-2 h-2 rounded-full mr-2" style={{ backgroundColor: themeColor }}></div>
-                        {vehicle.seats} Plazas
-                      </div>
-                    </div>
 
-                    <Link 
-                      to={`/booking/${slug}/vehicle/${vehicle.id}`}
-                      className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white transition-colors"
-                      style={{ backgroundColor: themeColor }}
-                    >
-                      Ver Detalles y Reservar
-                    </Link>
+                      <Link to={`/booking/${slug}/vehicle/${vehicle.id}`} className="sf-btn">
+                        Ver Detalles
+                      </Link>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </main>
 
-      <footer className="bg-gray-900 text-white py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-gray-400">© {new Date().getFullYear()} {agency.name}. Todos los derechos reservados.</p>
-          <p className="text-gray-600 text-sm mt-2">Powered by Vektorlaps OS</p>
+      {/* Modern Premium Footer */}
+      <footer className="sf-footer">
+        <div className="sf-container">
+          <div className="sf-footer-grid">
+            <div className="sf-footer-col">
+              <h4>{agency.name}</h4>
+              <p style={{ lineHeight: '1.6', fontSize: '0.9rem' }}>
+                {config.heroSubtitle || 'La mejor flota al mejor precio.'} Tu agencia de confianza para el alquiler de vehículos.
+              </p>
+            </div>
+            
+            <div className="sf-footer-col">
+              <h4>Contacto Rápidoy Redes</h4>
+              <div className="sf-footer-links">
+                {config.whatsapp && (
+                  <a href={`https://wa.me/${config.whatsapp.replace(/\+/g, '')}`} target="_blank" rel="noopener noreferrer" className="sf-footer-link">
+                    <MessageCircle size={18} /> WhatsApp
+                  </a>
+                )}
+                {config.instagram && (
+                  <a href={`https://instagram.com/${config.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="sf-footer-link">
+                    Instagram
+                  </a>
+                )}
+                {config.facebook && (
+                  <a href={config.facebook} target="_blank" rel="noopener noreferrer" className="sf-footer-link">
+                    Facebook
+                  </a>
+                )}
+              </div>
+            </div>
+
+            <div className="sf-footer-col">
+              <h4>Horario</h4>
+              <div className="sf-footer-links">
+                <div className="sf-footer-link">Lunes a Viernes: 09:00 - 19:00</div>
+                <div className="sf-footer-link">Sábado: 09:00 - 14:00</div>
+                <div className="sf-footer-link">Domingo: Cerrado</div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="sf-footer-bottom">
+            <div>&copy; {new Date().getFullYear()} {agency.name}. Todos los derechos reservados.</div>
+            <div style={{ color: 'var(--sf-primary)' }}>Powered by Vektorlaps OS</div>
+          </div>
         </div>
       </footer>
     </div>

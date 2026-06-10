@@ -15,6 +15,7 @@ export default function WebsiteBuilder() {
   const [formData, setFormData] = useState({
     slug: '',
     themeColor: '#10b981',
+    themeSecondary: '#0F172A',
     whatsapp: '',
     instagram: '',
     facebook: '',
@@ -176,7 +177,7 @@ export default function WebsiteBuilder() {
                     </div>
                   </div>
                   <div className="wb-form-group">
-                    <label className="wb-label">{t('website_builder.theme_color')}</label>
+                    <label className="wb-label">{t('website_builder.theme_primary') || 'Color Principal'}</label>
                     <div className="wb-color-picker">
                       <input
                         type="color"
@@ -184,6 +185,17 @@ export default function WebsiteBuilder() {
                         onChange={e => setFormData({...formData, themeColor: e.target.value})}
                       />
                       <span className="wb-color-hex">{formData.themeColor}</span>
+                    </div>
+                  </div>
+                  <div className="wb-form-group">
+                    <label className="wb-label">{t('website_builder.theme_secondary') || 'Color Secundario'}</label>
+                    <div className="wb-color-picker">
+                      <input
+                        type="color"
+                        value={formData.themeSecondary}
+                        onChange={e => setFormData({...formData, themeSecondary: e.target.value})}
+                      />
+                      <span className="wb-color-hex">{formData.themeSecondary}</span>
                     </div>
                   </div>
                 </div>
@@ -280,21 +292,22 @@ export default function WebsiteBuilder() {
               {t('website_builder.live_preview')}
             </div>
             
-            <div className="wb-phone-frame">
-              <div className="wb-phone-notch"></div>
+            <div className="wb-phone-frame" style={{ borderColor: formData.themeSecondary }}>
+              <div className="wb-phone-notch" style={{ backgroundColor: formData.themeSecondary }}></div>
               
               <div className="wb-phone-screen">
-                <div className="wb-phone-nav">
-                  <div className="wb-phone-logo" style={{ backgroundColor: formData.themeColor, opacity: 0.3 }}></div>
+                <div className="wb-phone-nav" style={{ backgroundColor: formData.themeSecondary, borderBottom: 'none' }}>
+                  <div className="wb-phone-logo" style={{ backgroundColor: formData.themeColor }}></div>
                   <div className="wb-phone-menu">
-                    <span></span><span></span>
+                    <span style={{ backgroundColor: '#ffffff' }}></span>
+                    <span style={{ backgroundColor: '#ffffff' }}></span>
                   </div>
                 </div>
 
                 <div className="wb-phone-body">
-                  <div className="wb-phone-hero" style={{ backgroundColor: formData.themeColor }}>
+                  <div className="wb-phone-hero" style={{ backgroundColor: formData.themeSecondary, color: 'white' }}>
                     <h2>{formData.heroTitle || 'Título...'}</h2>
-                    <p>{formData.heroSubtitle || 'Subtítulo...'}</p>
+                    <p style={{ color: formData.themeColor }}>{formData.heroSubtitle || 'Subtítulo...'}</p>
                   </div>
 
                   {formData.aboutText && (
