@@ -117,8 +117,8 @@ export default function StorefrontLayout() {
     '--sf-primary-glow-strong': hexToRgba(themePrimary, 0.4),
     '--sf-primary-glow-card': hexToRgba(themePrimary, 0.25),
     '--sf-primary-glow-btn': hexToRgba(themePrimary, 0.6),
-    '--sf-primary-glow-header': hexToRgba(themePrimary, 0.08),
-    '--sf-primary-glow-footer': hexToRgba(themePrimary, 0.03),
+    '--sf-primary-glow-header': hexToRgba(themePrimary, 0.14),
+    '--sf-primary-glow-footer': hexToRgba(themePrimary, 0.12),
   } as React.CSSProperties;
 
   const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, anchorId: string) => {
