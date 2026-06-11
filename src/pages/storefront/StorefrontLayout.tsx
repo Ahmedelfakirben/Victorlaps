@@ -4,6 +4,15 @@ import { supabase } from '../../lib/supabase';
 import { Loader2, Menu, X, ExternalLink, Phone } from 'lucide-react';
 import './Storefront.css';
 
+function hexToRgba(hex: string, alpha: number): string {
+  const cleanHex = hex.replace('#', '');
+  const num = parseInt(cleanHex, 16);
+  const r = (num >> 16) & 255;
+  const g = (num >> 8) & 255;
+  const b = num & 255;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
 export default function StorefrontLayout() {
   const { slug } = useParams();
   const location = useLocation();
@@ -101,7 +110,15 @@ export default function StorefrontLayout() {
 
   const themeStyle = {
     '--sf-primary': themePrimary,
-    '--sf-secondary': themeSecondary
+    '--sf-secondary': themeSecondary,
+    '--sf-primary-glow': hexToRgba(themePrimary, 0.2),
+    '--sf-primary-glow-light': hexToRgba(themePrimary, 0.1),
+    '--sf-primary-glow-medium': hexToRgba(themePrimary, 0.3),
+    '--sf-primary-glow-strong': hexToRgba(themePrimary, 0.4),
+    '--sf-primary-glow-card': hexToRgba(themePrimary, 0.25),
+    '--sf-primary-glow-btn': hexToRgba(themePrimary, 0.6),
+    '--sf-primary-glow-header': hexToRgba(themePrimary, 0.08),
+    '--sf-primary-glow-footer': hexToRgba(themePrimary, 0.03),
   } as React.CSSProperties;
 
   const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, anchorId: string) => {
