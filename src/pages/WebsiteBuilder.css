@@ -97,44 +97,39 @@
   }
 }
 
-/* Tabs */
-.wb-tabs {
-  display: flex;
-  gap: 0.5rem;
-  background: white;
-  padding: 0.5rem;
-  border-radius: 1rem;
-  border: 1px solid #E2E8F0;
-  margin-bottom: 1.5rem;
-  overflow-x: auto;
-}
-
-.wb-tab-btn {
-  flex: 1;
+/* Accordion Headers */
+.wb-accordion-header {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  background: transparent;
-  border: none;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  color: #64748B;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1rem;
+  background: white;
+  border: 1px solid #E2E8F0;
+  border-radius: 0.75rem;
+  margin-bottom: 0.5rem;
   cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-
-.wb-tab-btn:hover {
-  background: #F1F5F9;
+  font-weight: 600;
   color: #0F172A;
+  transition: all 0.2s;
+}
+.wb-accordion-header:hover {
+  background: #F8FAFC;
+}
+.wb-accordion-header.active {
+  background: #EFF6FF;
+  border-color: #BFDBFE;
+  color: #2563EB;
+  margin-bottom: 1rem;
 }
 
-.wb-tab-btn.active {
-  background: #EFF6FF;
-  color: #3B82F6;
-  box-shadow: inset 0 0 0 1px rgba(59, 130, 246, 0.2);
+.wb-chevron {
+  transition: transform 0.3s;
+  color: #64748B;
+}
+.wb-chevron.open {
+  transform: rotate(180deg);
+  color: #2563EB;
 }
 
 .wb-tab-content {
@@ -592,4 +587,23 @@ input:checked + .wb-slider:before {
   border: 1px solid #D1FAE5;
   font-weight: 500;
   margin-bottom: 1rem;
+}
+
+/* Inline Editable Elements */
+.wb-editable {
+  position: relative;
+  transition: all 0.2s;
+  border-radius: 4px;
+}
+
+.wb-editable:hover {
+  outline: 2px dashed rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.05);
+  cursor: text;
+}
+
+.wb-editable:focus {
+  outline: 2px solid #3B82F6;
+  background: rgba(255, 255, 255, 0.1);
+  cursor: text;
 }

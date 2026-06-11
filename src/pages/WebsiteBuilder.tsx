@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { Layout, Globe, Palette, Phone, Save, AlertCircle, Image as ImageIcon, Type, Sparkles, Box, CheckCircle2, Monitor, Smartphone } from 'lucide-react';
+import { Layout, Globe, Palette, Phone, Save, AlertCircle, Image as ImageIcon, Type, Sparkles, Box, CheckCircle2, Monitor, Smartphone, ChevronDown } from 'lucide-react';
 import ImageUpload from '../components/common/ImageUpload';
 import './WebsiteBuilder.css';
 
@@ -47,6 +47,14 @@ export default function WebsiteBuilder() {
     showTestimonials: true,
     showFaq: true,
     
+    // Cards Content
+    value1Title: 'Seguro Premium',
+    value1Text: 'Viaja con total tranquilidad gracias a nuestra cobertura a todo riesgo premium incluida.',
+    value2Title: 'Soporte 24/7 Activo',
+    value2Text: 'Asistencia en carretera y atención al cliente dedicada en cualquier momento de tu viaje.',
+    value3Title: 'Entrega Flexible',
+    value3Text: 'Recogida y devolución a medida en aeropuerto, hotel o cualquiera de nuestras oficinas.',
+    
     // SEO & Branding
     metaTitle: '',
     metaDescription: '',
@@ -56,6 +64,15 @@ export default function WebsiteBuilder() {
     whatsapp: '',
     instagram: '',
     facebook: '',
+    // Stats content
+    stat1Number: '50+',
+    stat1Label: 'Vehículos Premium',
+    stat2Number: '10k+',
+    stat2Label: 'Clientes Satisfechos',
+    stat3Number: '99%',
+    stat3Label: 'Valoración Positiva',
+    stat4Number: '24h',
+    stat4Label: 'Soporte Express',
   });
 
   useEffect(() => {
@@ -159,13 +176,16 @@ export default function WebsiteBuilder() {
     }
   }
 
-  const renderTabButton = (id: string, label: string, icon: React.ReactNode) => (
+  const renderAccordionHeader = (id: string, label: string, icon: React.ReactNode) => (
     <button 
       type="button"
-      className={`wb-tab-btn ${activeTab === id ? 'active' : ''}`}
-      onClick={() => setActiveTab(id)}
+      className={`wb-accordion-header ${activeTab === id ? 'active' : ''}`}
+      onClick={() => setActiveTab(activeTab === id ? '' : id)}
     >
-      {icon} {label}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        {icon} <span>{label}</span>
+      </div>
+      <ChevronDown className={`wb-chevron ${activeTab === id ? 'open' : ''}`} size={18} />
     </button>
   );
 
@@ -216,14 +236,8 @@ export default function WebsiteBuilder() {
           <div className="wb-form-col">
             <form onSubmit={handleSubmit}>
               
-              <div className="wb-tabs">
-                {renderTabButton('design', 'Diseño y Fondos', <Palette size={18} />)}
-                {renderTabButton('structure', 'Estructura', <Layout size={18} />)}
-                {renderTabButton('content', 'Contenido', <Type size={18} />)}
-                {renderTabButton('seo', 'SEO & Contacto', <Globe size={18} />)}
-              </div>
-
-              {/* DESIGN TAB */}
+              {/* DESIGN ACCORDION */}
+              {renderAccordionHeader('design', 'Diseño y Fondos', <Palette size={18} />)}
               <div className={`wb-tab-content ${activeTab === 'design' ? 'active' : ''}`}>
                 <div className="wb-card">
                   <h2 className="wb-card-title"><Palette size={20} color="#3B82F6"/> Colores Base</h2>
@@ -346,7 +360,8 @@ export default function WebsiteBuilder() {
                 </div>
               </div>
 
-              {/* STRUCTURE TAB */}
+              {/* STRUCTURE ACCORDION */}
+              {renderAccordionHeader('structure', 'Estructura', <Layout size={18} />)}
               <div className={`wb-tab-content ${activeTab === 'structure' ? 'active' : ''}`}>
                 <div className="wb-card">
                   <h2 className="wb-card-title"><Layout size={20} color="#3B82F6"/> Mostrar / Ocultar Secciones</h2>
@@ -411,7 +426,8 @@ export default function WebsiteBuilder() {
                 </div>
               </div>
 
-              {/* CONTENT TAB */}
+              {/* CONTENT ACCORDION */}
+              {renderAccordionHeader('content', 'Contenido', <Type size={18} />)}
               <div className={`wb-tab-content ${activeTab === 'content' ? 'active' : ''}`}>
                 <div className="wb-card">
                   <h2 className="wb-card-title"><ImageIcon size={20} color="#8B5CF6"/> Portada y Hero</h2>
@@ -482,7 +498,8 @@ export default function WebsiteBuilder() {
                 </div>
               </div>
 
-              {/* SEO & CONTACT TAB */}
+              {/* SEO & CONTACT ACCORDION */}
+              {renderAccordionHeader('seo', 'SEO & Contacto', <Globe size={18} />)}
               <div className={`wb-tab-content ${activeTab === 'seo' ? 'active' : ''}`}>
                 <div className="wb-card">
                   <h2 className="wb-card-title"><Globe size={20} color="#F97316"/> Enlace y SEO</h2>
@@ -583,8 +600,24 @@ export default function WebsiteBuilder() {
                 <div style={{ backgroundColor: '#090D16', backgroundImage: formData.heroBackgroundImage ? `url(${formData.heroBackgroundImage})` : 'none', backgroundSize: 'cover', backgroundPosition: 'center', padding: previewMode === 'desktop' ? '100px 40px' : '50px 20px', textAlign: 'center', color: 'white', position: 'relative' }}>
                   <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(9, 13, 22, 0.4) 0%, rgba(9, 13, 22, 0.95) 100%)', zIndex: 1 }}></div>
                   <div style={{ position: 'relative', zIndex: 2 }}>
-                    <h2 style={{ fontFamily: `"${formData.themeFontHeading}", sans-serif`, fontSize: previewMode === 'desktop' ? '3rem' : '1.6rem', fontWeight: 800, marginBottom: '10px', lineHeight: 1.2, color: '#ffffff' }}>{formData.heroTitle || 'Alquiler de Vehículos'}</h2>
-                    <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: previewMode === 'desktop' ? '1.1rem' : '0.85rem' }}>{formData.heroSubtitle || 'La mejor flota'}</p>
+                    <h2 
+                      className="wb-editable"
+                      contentEditable
+                      suppressContentEditableWarning
+                      onBlur={(e) => setFormData({...formData, heroTitle: e.currentTarget.textContent || ''})}
+                      style={{ fontFamily: `"${formData.themeFontHeading}", sans-serif`, fontSize: previewMode === 'desktop' ? '3rem' : '1.6rem', fontWeight: 800, marginBottom: '10px', lineHeight: 1.2, color: '#ffffff' }}
+                    >
+                      {formData.heroTitle || 'Alquiler de Vehículos'}
+                    </h2>
+                    <p 
+                      className="wb-editable"
+                      contentEditable
+                      suppressContentEditableWarning
+                      onBlur={(e) => setFormData({...formData, heroSubtitle: e.currentTarget.textContent || ''})}
+                      style={{ color: 'rgba(255,255,255,0.8)', fontSize: previewMode === 'desktop' ? '1.1rem' : '0.85rem' }}
+                    >
+                      {formData.heroSubtitle || 'La mejor flota'}
+                    </p>
                     <div style={{ marginTop: previewMode === 'desktop' ? '30px' : '20px' }}>
                       <span style={{ 
                         backgroundColor: primaryColor, 
@@ -606,15 +639,41 @@ export default function WebsiteBuilder() {
                     <div className={previewMode === 'desktop' ? 'canvas-grid' : ''} style={previewMode === 'mobile' ? { marginBottom: '25px', display: 'flex', gap: '10px', overflowX: 'auto', paddingBottom: '10px' } : { marginBottom: '40px' }}>
                       <div style={{ minWidth: '120px', backgroundColor: formData.cardColor || primaryColor, padding: '20px', borderRadius: '12px', color: '#090D16' }}>
                         <div style={{ width: 30, height: 30, backgroundColor: 'rgba(9, 13, 22, 0.1)', borderRadius: '8px', marginBottom: '10px' }}></div>
-                        <strong style={{ fontSize: '0.85rem', display: 'block', fontFamily: `"${formData.themeFontHeading}", sans-serif` }}>Seguro Todo Riesgo</strong>
+                        <strong 
+                          className="wb-editable" contentEditable suppressContentEditableWarning onBlur={(e) => setFormData({...formData, value1Title: e.currentTarget.textContent || ''})}
+                          style={{ fontSize: '0.85rem', display: 'block', fontFamily: `"${formData.themeFontHeading}", sans-serif` }}
+                        >{formData.value1Title || 'Seguro Premium'}</strong>
                       </div>
                       <div style={{ minWidth: '120px', backgroundColor: formData.cardColor || primaryColor, padding: '20px', borderRadius: '12px', color: '#090D16' }}>
                         <div style={{ width: 30, height: 30, backgroundColor: 'rgba(9, 13, 22, 0.1)', borderRadius: '8px', marginBottom: '10px' }}></div>
-                        <strong style={{ fontSize: '0.85rem', display: 'block', fontFamily: `"${formData.themeFontHeading}", sans-serif` }}>Asistencia 24h</strong>
+                        <strong 
+                          className="wb-editable" contentEditable suppressContentEditableWarning onBlur={(e) => setFormData({...formData, value2Title: e.currentTarget.textContent || ''})}
+                          style={{ fontSize: '0.85rem', display: 'block', fontFamily: `"${formData.themeFontHeading}", sans-serif` }}
+                        >{formData.value2Title || 'Soporte 24/7 Activo'}</strong>
                       </div>
                       <div style={{ minWidth: '120px', backgroundColor: formData.cardColor || primaryColor, padding: '20px', borderRadius: '12px', color: '#090D16', display: previewMode === 'desktop' ? 'block' : 'none' }}>
                         <div style={{ width: 30, height: 30, backgroundColor: 'rgba(9, 13, 22, 0.1)', borderRadius: '8px', marginBottom: '10px' }}></div>
-                        <strong style={{ fontSize: '0.85rem', display: 'block', fontFamily: `"${formData.themeFontHeading}", sans-serif` }}>Entrega Flexible</strong>
+                        <strong 
+                          className="wb-editable" contentEditable suppressContentEditableWarning onBlur={(e) => setFormData({...formData, value3Title: e.currentTarget.textContent || ''})}
+                          style={{ fontSize: '0.85rem', display: 'block', fontFamily: `"${formData.themeFontHeading}", sans-serif` }}
+                        >{formData.value3Title || 'Entrega Flexible'}</strong>
+                      </div>
+                    </div>
+                  )}
+
+                  {formData.showStats && (
+                    <div className={previewMode === 'desktop' ? 'canvas-grid' : ''} style={previewMode === 'mobile' ? { marginBottom: '25px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' } : { marginBottom: '40px' }}>
+                      <div style={{ backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)', padding: '15px', borderRadius: '12px', textAlign: 'center' }}>
+                        <div className="wb-editable" contentEditable suppressContentEditableWarning onBlur={(e) => setFormData({...formData, stat1Number: e.currentTarget.textContent || ''})} style={{ fontSize: '1.5rem', fontWeight: 800, color: formData.themeColor || primaryColor }}>{formData.stat1Number || '50+'}</div>
+                        <div className="wb-editable" contentEditable suppressContentEditableWarning onBlur={(e) => setFormData({...formData, stat1Label: e.currentTarget.textContent || ''})} style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.7)', marginTop: '5px' }}>{formData.stat1Label || 'Vehículos Premium'}</div>
+                      </div>
+                      <div style={{ backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)', padding: '15px', borderRadius: '12px', textAlign: 'center' }}>
+                        <div className="wb-editable" contentEditable suppressContentEditableWarning onBlur={(e) => setFormData({...formData, stat2Number: e.currentTarget.textContent || ''})} style={{ fontSize: '1.5rem', fontWeight: 800, color: formData.themeColor || primaryColor }}>{formData.stat2Number || '10k+'}</div>
+                        <div className="wb-editable" contentEditable suppressContentEditableWarning onBlur={(e) => setFormData({...formData, stat2Label: e.currentTarget.textContent || ''})} style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.7)', marginTop: '5px' }}>{formData.stat2Label || 'Clientes Satisfechos'}</div>
+                      </div>
+                      <div style={{ backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)', padding: '15px', borderRadius: '12px', textAlign: 'center', display: previewMode === 'desktop' ? 'block' : 'none' }}>
+                        <div className="wb-editable" contentEditable suppressContentEditableWarning onBlur={(e) => setFormData({...formData, stat3Number: e.currentTarget.textContent || ''})} style={{ fontSize: '1.5rem', fontWeight: 800, color: formData.themeColor || primaryColor }}>{formData.stat3Number || '99%'}</div>
+                        <div className="wb-editable" contentEditable suppressContentEditableWarning onBlur={(e) => setFormData({...formData, stat3Label: e.currentTarget.textContent || ''})} style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.7)', marginTop: '5px' }}>{formData.stat3Label || 'Valoración Positiva'}</div>
                       </div>
                     </div>
                   )}
@@ -623,12 +682,18 @@ export default function WebsiteBuilder() {
                     <div style={{ padding: previewMode === 'desktop' ? '30px' : '15px', borderRadius: '12px', marginBottom: previewMode === 'desktop' ? '40px' : '25px', backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}>
                       <h4 style={{ fontSize: previewMode === 'desktop' ? '1.5rem' : '0.9rem', fontWeight: 800, color: '#ffffff', marginBottom: '8px', fontFamily: `"${formData.themeFontHeading}", sans-serif` }}>Sobre Nosotros</h4>
                       <div style={{ width: '30px', height: '3px', backgroundColor: primaryColor, marginBottom: '15px' }}></div>
-                      <p style={{ fontSize: previewMode === 'desktop' ? '0.95rem' : '0.75rem', color: 'rgba(255, 255, 255, 0.7)', fontWeight: 400, lineHeight: 1.6 }}>{formData.aboutText.substring(0, 150)}...</p>
+                      <p 
+                        className="wb-editable" contentEditable suppressContentEditableWarning onBlur={(e) => setFormData({...formData, aboutText: e.currentTarget.textContent || ''})}
+                        style={{ fontSize: previewMode === 'desktop' ? '0.95rem' : '0.75rem', color: 'rgba(255, 255, 255, 0.7)', fontWeight: 400, lineHeight: 1.6 }}
+                      >
+                        {formData.aboutText}
+                      </p>
                     </div>
                   )}
 
                   <h4 style={{ fontSize: previewMode === 'desktop' ? '1.8rem' : '1.1rem', fontWeight: 800, color: '#ffffff', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px', fontFamily: `"${formData.themeFontHeading}", sans-serif` }}>
-                    <span style={{ color: primaryColor }}>■</span> {formData.fleetTitle}
+                    <span style={{ color: primaryColor }}>■</span> 
+                    <span className="wb-editable" contentEditable suppressContentEditableWarning onBlur={(e) => setFormData({...formData, fleetTitle: e.currentTarget.textContent || ''})}>{formData.fleetTitle || 'Nuestra Flota'}</span>
                   </h4>
                   
                   <div className="canvas-grid" style={{ display: 'grid' }}>

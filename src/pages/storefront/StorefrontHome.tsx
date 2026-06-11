@@ -106,22 +106,22 @@ export default function StorefrontHome() {
                   <div className="sf-value-icon">
                     <ShieldCheck size={32} />
                   </div>
-                  <h4 className="sf-value-title">Seguro Premium</h4>
-                  <p className="sf-value-text">Viaja con total tranquilidad gracias a nuestra cobertura a todo riesgo premium incluida.</p>
+                  <h4 className="sf-value-title">{config.value1Title || 'Seguro Premium'}</h4>
+                  <p className="sf-value-text">{config.value1Text || 'Viaja con total tranquilidad gracias a nuestra cobertura a todo riesgo premium incluida.'}</p>
                 </div>
                 <div className="sf-value-item">
                   <div className="sf-value-icon">
                     <Clock size={32} />
                   </div>
-                  <h4 className="sf-value-title">Soporte 24/7 Activo</h4>
-                  <p className="sf-value-text">Asistencia en carretera y atención al cliente dedicada en cualquier momento de tu viaje.</p>
+                  <h4 className="sf-value-title">{config.value2Title || 'Soporte 24/7 Activo'}</h4>
+                  <p className="sf-value-text">{config.value2Text || 'Asistencia en carretera y atención al cliente dedicada en cualquier momento de tu viaje.'}</p>
                 </div>
                 <div className="sf-value-item">
                   <div className="sf-value-icon">
                     <MapPin size={32} />
                   </div>
-                  <h4 className="sf-value-title">Entrega Flexible</h4>
-                  <p className="sf-value-text">Recogida y devolución a medida en aeropuerto, hotel o cualquiera de nuestras oficinas.</p>
+                  <h4 className="sf-value-title">{config.value3Title || 'Entrega Flexible'}</h4>
+                  <p className="sf-value-text">{config.value3Text || 'Recogida y devolución a medida en aeropuerto, hotel o cualquiera de nuestras oficinas.'}</p>
                 </div>
               </div>
             </div>
@@ -134,20 +134,20 @@ export default function StorefrontHome() {
             <div className="sf-container">
               <div className="sf-stats-grid">
                 <div className="sf-stat-card">
-                  <span className="sf-stat-number">50+</span>
-                  <span className="sf-stat-label">Vehículos Premium</span>
+                  <span className="sf-stat-number">{config.stat1Number || '50+'}</span>
+                  <span className="sf-stat-label">{config.stat1Label || 'Vehículos Premium'}</span>
                 </div>
                 <div className="sf-stat-card">
-                  <span className="sf-stat-number">10k+</span>
-                  <span className="sf-stat-label">Clientes Satisfechos</span>
+                  <span className="sf-stat-number">{config.stat2Number || '10k+'}</span>
+                  <span className="sf-stat-label">{config.stat2Label || 'Clientes Satisfechos'}</span>
                 </div>
                 <div className="sf-stat-card">
-                  <span className="sf-stat-number">99%</span>
-                  <span className="sf-stat-label">Valoración Positiva</span>
+                  <span className="sf-stat-number">{config.stat3Number || '99%'}</span>
+                  <span className="sf-stat-label">{config.stat3Label || 'Valoración Positiva'}</span>
                 </div>
                 <div className="sf-stat-card">
-                  <span className="sf-stat-number">24h</span>
-                  <span className="sf-stat-label">Soporte Express</span>
+                  <span className="sf-stat-number">{config.stat4Number || '24h'}</span>
+                  <span className="sf-stat-label">{config.stat4Label || 'Soporte Express'}</span>
                 </div>
               </div>
             </div>
