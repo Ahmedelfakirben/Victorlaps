@@ -20,6 +20,10 @@ html {
   --sf-bg-dark: #0e1726;
   --sf-bg-card: rgba(255, 255, 255, 0.12);
   --sf-border-glass: rgba(255, 255, 255, 0.22);
+  --sf-card-bg: linear-gradient(135deg, var(--sf-primary) 0%, color-mix(in srgb, var(--sf-primary) 65%, #000000 35%) 100%);
+  --sf-card-bg-hover: linear-gradient(135deg, color-mix(in srgb, var(--sf-primary) 90%, #ffffff 10%) 0%, color-mix(in srgb, var(--sf-primary) 55%, #000000 45%) 100%);
+  --sf-card-text: color-mix(in srgb, var(--sf-primary) 5%, #090D16 95%);
+  --sf-card-text-muted: color-mix(in srgb, var(--sf-primary) 12%, rgba(9, 13, 22, 0.75) 88%);
 }
 
 /* Scroll Reveal Transitions */
@@ -325,7 +329,7 @@ html {
 }
 
 .sf-value-item {
-  background: var(--sf-primary) !important;
+  background: var(--sf-card-bg) !important;
   border: none !important;
   border-radius: 1.25rem;
   padding: 2.5rem 2rem;
@@ -334,12 +338,12 @@ html {
   align-items: center;
   text-align: center;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  color: #090D16 !important;
+  color: var(--sf-card-text) !important;
 }
 
 .sf-value-item:hover {
   transform: translateY(-6px);
-  background: var(--sf-primary) !important;
+  background: var(--sf-card-bg-hover) !important;
   box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.3) !important;
 }
 
@@ -367,12 +371,12 @@ html {
 .sf-value-title {
   font-size: 1.25rem;
   font-weight: 800;
-  color: #090D16 !important;
+  color: var(--sf-card-text) !important;
   margin-bottom: 0.75rem;
 }
 
 .sf-value-text {
-  color: rgba(9, 13, 22, 0.8) !important;
+  color: var(--sf-card-text-muted) !important;
   line-height: 1.6;
   margin: 0;
   font-size: 0.95rem;
@@ -391,12 +395,12 @@ html {
 }
 
 .sf-stat-card {
-  background: var(--sf-primary) !important;
+  background: var(--sf-card-bg) !important;
   border: none !important;
   border-radius: 1rem;
   padding: 2rem;
   text-align: center;
-  color: #090D16 !important;
+  color: var(--sf-card-text) !important;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3) !important;
 }
 
@@ -404,7 +408,7 @@ html {
   display: block;
   font-size: 3rem;
   font-weight: 900;
-  color: #090D16 !important;
+  color: var(--sf-card-text) !important;
   margin-bottom: 0.25rem;
   letter-spacing: -0.02em;
 }
@@ -412,7 +416,7 @@ html {
 .sf-stat-label {
   font-size: 0.9rem;
   font-weight: 700;
-  color: rgba(9, 13, 22, 0.8) !important;
+  color: var(--sf-card-text-muted) !important;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -567,7 +571,7 @@ html {
 
 /* Vehicle Card */
 .sf-card {
-  background: var(--sf-primary) !important;
+  background: var(--sf-card-bg) !important;
   border-radius: 1.5rem;
   overflow: hidden;
   box-shadow: 0 15px 35px -15px rgba(0, 0, 0, 0.5);
@@ -579,6 +583,7 @@ html {
 
 .sf-card:hover {
   transform: translateY(-8px);
+  background: var(--sf-card-bg-hover) !important;
   box-shadow: 0 25px 45px -15px rgba(0,0,0,0.4) !important;
 }
 
@@ -655,7 +660,7 @@ html {
   align-items: center;
   gap: 0.35rem;
   font-size: 0.75rem;
-  color: rgba(9, 13, 22, 0.8) !important;
+  color: var(--sf-card-text-muted) !important;
   font-weight: 600;
   background: rgba(9, 13, 22, 0.06) !important;
   padding: 0.5rem;
@@ -664,7 +669,7 @@ html {
 }
 
 .sf-spec svg {
-  color: #090D16 !important;
+  color: var(--sf-card-text) !important;
 }
 
 .sf-btn {
@@ -716,7 +721,7 @@ html {
 }
 
 .sf-testimonial-card {
-  background: var(--sf-primary) !important;
+  background: var(--sf-card-bg) !important;
   border: none !important;
   border-radius: 1.5rem;
   padding: 2.5rem;
@@ -733,7 +738,7 @@ html {
 }
 
 .sf-testimonial-text {
-  color: rgba(9, 13, 22, 0.8) !important;
+  color: var(--sf-card-text-muted) !important;
   line-height: 1.7;
   font-style: italic;
   font-size: 0.95rem;
@@ -751,7 +756,7 @@ html {
   height: 2.8rem;
   border-radius: 50%;
   background: rgba(9, 13, 22, 0.08) !important;
-  color: #090D16 !important;
+  color: var(--sf-card-text) !important;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -763,13 +768,13 @@ html {
 .sf-author-name {
   font-size: 0.95rem;
   font-weight: 700;
-  color: #090D16 !important;
+  color: var(--sf-card-text) !important;
   margin: 0;
 }
 
 .sf-author-role {
   font-size: 0.8rem;
-  color: rgba(9, 13, 22, 0.75) !important;
+  color: var(--sf-card-text-muted) !important;
 }
 
 /* FAQs Section */
@@ -787,7 +792,7 @@ html {
 }
 
 .sf-faq-item {
-  background: var(--sf-primary) !important;
+  background: var(--sf-card-bg) !important;
   border: none !important;
   border-radius: 1rem;
   padding: 1.25rem 1.75rem;
@@ -802,7 +807,7 @@ html {
 .sf-faq-question {
   font-weight: 700;
   font-size: 1.1rem;
-  color: #090D16 !important;
+  color: var(--sf-card-text) !important;
   cursor: pointer;
   user-select: none;
   outline: none;
@@ -811,7 +816,7 @@ html {
 
 .sf-faq-answer {
   margin-top: 1rem;
-  color: rgba(9, 13, 22, 0.8) !important;
+  color: var(--sf-card-text-muted) !important;
   line-height: 1.6;
   font-size: 0.95rem;
 }
@@ -833,7 +838,7 @@ html {
 }
 
 .sf-contact-card {
-  background: var(--sf-primary) !important;
+  background: var(--sf-card-bg) !important;
   padding: 3.5rem 2.5rem;
   border-radius: 1.5rem;
   border: none !important;
@@ -844,6 +849,7 @@ html {
 
 .sf-contact-card:hover {
   transform: translateY(-5px);
+  background: var(--sf-card-bg-hover) !important;
 }
 
 .sf-contact-icon-wrapper {
@@ -870,11 +876,11 @@ html {
   font-size: 1.5rem;
   font-weight: 800;
   margin-bottom: 0.75rem;
-  color: #090D16 !important;
+  color: var(--sf-card-text) !important;
 }
 
 .sf-contact-card-desc {
-  color: rgba(9, 13, 22, 0.8) !important;
+  color: var(--sf-card-text-muted) !important;
   margin-bottom: 2.5rem;
   font-size: 0.95rem;
 }
@@ -973,7 +979,7 @@ html {
 }
 
 .sf-detail-image {
-  background: var(--sf-primary) !important;
+  background: var(--sf-card-bg) !important;
   border-radius: 1.5rem;
   overflow: hidden;
   border: none !important;
@@ -991,8 +997,8 @@ html {
 }
 
 .sf-detail-info {
-  background: var(--sf-primary) !important;
-  color: #090D16 !important;
+  background: var(--sf-card-bg) !important;
+  color: var(--sf-card-text) !important;
   border-radius: 1.5rem;
   border: none !important;
   padding: 2.5rem;
@@ -1002,7 +1008,7 @@ html {
 .sf-detail-price {
   font-size: 3rem;
   font-weight: 900;
-  color: #090D16 !important;
+  color: var(--sf-card-text) !important;
   margin-bottom: 2rem;
   display: flex;
   align-items: baseline;
@@ -1011,7 +1017,7 @@ html {
 
 .sf-detail-price span {
   font-size: 1rem;
-  color: rgba(9, 13, 22, 0.7) !important;
+  color: var(--sf-card-text-muted) !important;
   font-weight: 600;
 }
 
@@ -1031,14 +1037,14 @@ html {
   border: 1px solid rgba(9, 13, 22, 0.1) !important;
   border-radius: 0.75rem;
   font-weight: 600;
-  color: #090D16 !important;
+  color: var(--sf-card-text) !important;
 }
 
 .sf-spec-label {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  color: rgba(9, 13, 22, 0.8) !important;
+  color: var(--sf-card-text-muted) !important;
 }
 
 .sf-btn-whatsapp {
