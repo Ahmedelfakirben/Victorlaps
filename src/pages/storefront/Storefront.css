@@ -11,15 +11,15 @@ html {
   --sf-primary-glow-strong: rgba(249, 115, 22, 0.4);
   --sf-primary-glow-card: rgba(249, 115, 22, 0.25);
   --sf-primary-glow-btn: rgba(249, 115, 22, 0.6);
-  --sf-primary-glow-header: rgba(249, 115, 22, 0.08);
-  --sf-primary-glow-footer: rgba(249, 115, 22, 0.03);
+  --sf-primary-glow-header: rgba(249, 115, 22, 0.14);
+  --sf-primary-glow-footer: rgba(249, 115, 22, 0.12);
   --sf-secondary: #0F172A;
   --sf-text-dark: #F8FAFC;
   --sf-text-muted: #CBD5E1;
   --sf-text-light: #F8FAFC;
-  --sf-bg-dark: #090D16;
-  --sf-bg-card: rgba(255, 255, 255, 0.06);
-  --sf-border-glass: rgba(255, 255, 255, 0.14);
+  --sf-bg-dark: #0e1726;
+  --sf-bg-card: rgba(255, 255, 255, 0.12);
+  --sf-border-glass: rgba(255, 255, 255, 0.22);
 }
 
 /* Scroll Reveal Transitions */
@@ -41,9 +41,9 @@ html {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background-color: var(--sf-bg-dark);
   background-image: 
-    radial-gradient(at 0% 0%, var(--sf-primary-glow-light) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(15, 23, 42, 0.8) 0px, transparent 50%),
-    linear-gradient(180deg, #0b0f19 0%, #030712 100%);
+    radial-gradient(at 0% 0%, var(--sf-primary-glow-medium) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(30, 41, 59, 0.8) 0px, transparent 50%),
+    linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
   color: var(--sf-text-dark);
   min-height: 100vh;
   display: flex;
@@ -1331,8 +1331,8 @@ html {
   height: 45vw;
   border-radius: 50%;
   background: var(--sf-primary);
-  opacity: 0.08;
-  filter: blur(120px);
+  opacity: 0.15;
+  filter: blur(140px);
   z-index: -1;
   pointer-events: none;
   will-change: transform, opacity;
@@ -1348,7 +1348,7 @@ html {
   bottom: -15vw;
   right: -10vw;
   background: var(--sf-primary);
-  opacity: 0.05;
+  opacity: 0.12;
   animation: orbDrift2 30s infinite alternate ease-in-out;
 }
 
@@ -1359,37 +1359,37 @@ html {
   width: 35vw;
   height: 35vw;
   background: #3B82F6;
-  opacity: 0.03;
+  opacity: 0.08;
   animation: orbDrift3 28s infinite alternate ease-in-out;
 }
 
 @keyframes orbDrift1 {
   0% {
     transform: translate(0, 0) scale(1);
-    opacity: 0.06;
+    opacity: 0.12;
   }
   50% {
     transform: translate(15vw, 10vh) scale(1.15);
-    opacity: 0.09;
+    opacity: 0.18;
   }
   100% {
     transform: translate(-5vw, 20vh) scale(0.9);
-    opacity: 0.04;
+    opacity: 0.1;
   }
 }
 
 @keyframes orbDrift2 {
   0% {
     transform: translate(0, 0) scale(1.1);
-    opacity: 0.04;
+    opacity: 0.1;
   }
   50% {
     transform: translate(-10vw, -15vh) scale(0.85);
-    opacity: 0.07;
+    opacity: 0.15;
   }
   100% {
     transform: translate(5vw, -5vh) scale(1.15);
-    opacity: 0.03;
+    opacity: 0.08;
   }
 }
 
