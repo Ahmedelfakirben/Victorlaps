@@ -1,42 +1,61 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { useTranslation } from 'react-i18next';
-import { Layout, Globe, Palette, Phone, Save, AlertCircle, Image as ImageIcon } from 'lucide-react';
+import { Layout, Globe, Palette, Phone, Save, AlertCircle, Image as ImageIcon, Type, Sparkles, Box, CheckCircle2, Monitor, Smartphone } from 'lucide-react';
 import ImageUpload from '../components/common/ImageUpload';
 import './WebsiteBuilder.css';
 
-const COLOR_PALETTES = [
-  { name: 'Emerald Night', primary: '#10B981', secondary: '#0F172A' },
-  { name: 'Ocean Blue', primary: '#3B82F6', secondary: '#1E3A8A' },
-  { name: 'Sunset Orange', primary: '#F97316', secondary: '#431407' },
-  { name: 'Royal Purple', primary: '#8B5CF6', secondary: '#2E1065' },
-  { name: 'Ruby Red', primary: '#E11D48', secondary: '#4C0519' },
-  { name: 'Gold & Black', primary: '#EAB308', secondary: '#171717' },
-  { name: 'Mint & Slate', primary: '#14B8A6', secondary: '#334155' },
-  { name: 'Rose & Charcoal', primary: '#F43F5E', secondary: '#18181B' },
-];
-
 export default function WebsiteBuilder() {
-  const { t } = useTranslation();
   const [companyId, setCompanyId] = useState<string | null>(null);
   const [previewVehicles, setPreviewVehicles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [activeTab, setActiveTab] = useState('design');
+  const [previewMode, setPreviewMode] = useState<'desktop' | 'mobile'>('desktop');
 
   const [formData, setFormData] = useState({
     slug: '',
     template: 'modern',
-    themeColor: '#10b981',
+    // Design & Colors
+    themeColor: '#f97316',
     themeSecondary: '#0F172A',
+    themeBgColor: '#0e1726',
+    cardColor: '#f97316',
+    themeFontHeading: 'Inter',
+    themeFontBody: 'Inter',
+    buttonShape: 'rounded',
+    globalBackground: 'mesh',
+    
+    // Content & Hero
     heroBackgroundImage: '',
+    heroTitle: 'Alquiler de Vehículos',
+    heroSubtitle: 'La mejor flota al mejor precio',
+    aboutText: '',
+    
+    // Custom Titles
+    valuesTitle: 'Nuestros Valores',
+    fleetTitle: 'Nuestra Flota',
+    testimonialsTitle: 'Lo que dicen nuestros clientes',
+    faqTitle: 'Preguntas Frecuentes',
+    contactTitle: 'Contacto',
+
+    // Toggles
+    showValues: true,
+    showStats: true,
+    showAbout: true,
+    showTestimonials: true,
+    showFaq: true,
+    
+    // SEO & Branding
+    metaTitle: '',
+    metaDescription: '',
+    faviconUrl: '',
+    
+    // Social
     whatsapp: '',
     instagram: '',
     facebook: '',
-    aboutText: '',
-    heroTitle: 'Alquiler de Vehículos',
-    heroSubtitle: 'La mejor flota al mejor precio'
   });
 
   useEffect(() => {
@@ -51,7 +70,6 @@ export default function WebsiteBuilder() {
 
   async function loadSettings(userId: string) {
     try {
-      // Get the correct company ID (check impersonation first)
       const impId = localStorage.getItem('impersonated_company_id');
       let targetCompanyId = impId;
       
@@ -79,10 +97,11 @@ export default function WebsiteBuilder() {
       if (error) throw error;
       
       if (data) {
-        setFormData({
+        setFormData(prev => ({
+          ...prev,
           slug: data.slug || '',
           ...(data.storefront_config || {})
-        });
+        }));
       }
 
       // Fetch vehicles for the preview
@@ -113,8 +132,6 @@ export default function WebsiteBuilder() {
       if (!companyId) throw new Error('No se pudo determinar el ID de tu agencia.');
 
       const { slug, ...config } = formData;
-      
-      // Clean slug: lowercase, no spaces
       const cleanSlug = slug.toLowerCase().replace(/[^a-z0-9-]/g, '-');
 
       const { error } = await supabase
@@ -126,7 +143,7 @@ export default function WebsiteBuilder() {
         .eq('id', companyId);
 
       if (error) {
-        if (error.code === '23505') { // Unique violation
+        if (error.code === '23505') {
           throw new Error('Ese enlace ya está siendo usado por otra agencia. Elige uno diferente.');
         }
         throw error;
@@ -134,6 +151,7 @@ export default function WebsiteBuilder() {
 
       setSuccess('¡Sitio web actualizado correctamente!');
       setFormData(prev => ({ ...prev, slug: cleanSlug }));
+      setTimeout(() => setSuccess(''), 4000);
     } catch (err: any) {
       setError(err.message || 'Error al guardar los cambios');
     } finally {
@@ -141,26 +159,40 @@ export default function WebsiteBuilder() {
     }
   }
 
+  const renderTabButton = (id: string, label: string, icon: React.ReactNode) => (
+    <button 
+      type="button"
+      className={`wb-tab-btn ${activeTab === id ? 'active' : ''}`}
+      onClick={() => setActiveTab(id)}
+    >
+      {icon} {label}
+    </button>
+  );
+
   if (loading) {
     return <div style={{ padding: '2rem', textAlign: 'center', color: '#64748b' }}>Cargando constructor...</div>;
   }
 
   const publicUrl = formData.slug ? `${window.location.origin}/booking/${formData.slug}` : '';
 
+  // Calculate live preview gradient colors
+  // color-mix(in srgb, var(--sf-primary) 65%, #000000 35%)
+  const primaryColor = formData.themeColor || '#f97316';
+  
   return (
     <div className="wb-page-container">
       <div className="wb-wrapper">
         
         <div className="wb-header">
-          <div className="wb-header-bg"></div>
+          <div className="wb-header-bg" style={{ backgroundColor: primaryColor }}></div>
           <div className="wb-header-content">
-            <h1 className="wb-title">{t('website_builder.title')}</h1>
-            <p className="wb-subtitle">{t('website_builder.subtitle')}</p>
+            <h1 className="wb-title">App Builder 2.0</h1>
+            <p className="wb-subtitle">Personaliza tu tienda de reservas al máximo nivel.</p>
           </div>
           {publicUrl && (
             <a href={publicUrl} target="_blank" rel="noopener noreferrer" className="wb-visit-btn">
               <Globe size={18} />
-              <span>{t('website_builder.visit_website')}</span>
+              <span>Ver Web Pública</span>
             </a>
           )}
         </div>
@@ -174,6 +206,7 @@ export default function WebsiteBuilder() {
 
         {success && (
           <div className="wb-alert-success">
+            <CheckCircle2 size={20} />
             <span>{success}</span>
           </div>
         )}
@@ -181,334 +214,455 @@ export default function WebsiteBuilder() {
         <div className="wb-grid">
           
           <div className="wb-form-col">
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <form onSubmit={handleSubmit}>
               
-              <div className="wb-card">
-                <h2 className="wb-card-title">
-                  <Layout size={24} color="#3B82F6" />
-                  {t('website_builder.basic_config')}
-                </h2>
-                <div className="wb-form-row">
-                  <div className="wb-form-group" style={{ width: '100%' }}>
-                    <label className="wb-label">Estilo de Plantilla</label>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                      <div 
-                        onClick={() => setFormData({...formData, template: 'modern'})}
-                        style={{ 
-                          border: formData.template === 'modern' ? '2px solid #3B82F6' : '1px solid #E2E8F0',
-                          borderRadius: '0.75rem', padding: '1rem', cursor: 'pointer', textAlign: 'center',
-                          backgroundColor: formData.template === 'modern' ? '#EFF6FF' : 'white'
-                        }}
-                      >
-                        <strong style={{ display: 'block', marginBottom: '0.5rem', color: '#1E293B' }}>Modern Premium</strong>
-                        <span style={{ fontSize: '0.8rem', color: '#64748B' }}>Cabeceras oscuras y transparencias (Glassmorphism)</span>
+              <div className="wb-tabs">
+                {renderTabButton('design', 'Diseño y Fondos', <Palette size={18} />)}
+                {renderTabButton('structure', 'Estructura', <Layout size={18} />)}
+                {renderTabButton('content', 'Contenido', <Type size={18} />)}
+                {renderTabButton('seo', 'SEO & Contacto', <Globe size={18} />)}
+              </div>
+
+              {/* DESIGN TAB */}
+              <div className={`wb-tab-content ${activeTab === 'design' ? 'active' : ''}`}>
+                <div className="wb-card">
+                  <h2 className="wb-card-title"><Palette size={20} color="#3B82F6"/> Colores Base</h2>
+                  <div className="wb-form-row">
+                    <div className="wb-form-group">
+                      <label className="wb-label">Color Primario (Énfasis)</label>
+                      <div className="wb-color-picker">
+                        <input 
+                          type="color" 
+                          value={formData.themeColor} 
+                          onChange={(e) => setFormData({...formData, themeColor: e.target.value})}
+                        />
+                        <span className="wb-color-hex">{formData.themeColor}</span>
                       </div>
-                      <div 
-                        onClick={() => setFormData({...formData, template: 'classic'})}
-                        style={{ 
-                          border: formData.template === 'classic' ? '2px solid #3B82F6' : '1px solid #E2E8F0',
-                          borderRadius: '0.75rem', padding: '1rem', cursor: 'pointer', textAlign: 'center',
-                          backgroundColor: formData.template === 'classic' ? '#EFF6FF' : 'white'
-                        }}
-                      >
-                        <strong style={{ display: 'block', marginBottom: '0.5rem', color: '#1E293B' }}>Classic Light</strong>
-                        <span style={{ fontSize: '0.8rem', color: '#64748B' }}>Diseño minimalista en blanco, limpio y espacioso</span>
+                    </div>
+                    <div className="wb-form-group">
+                      <label className="wb-label">Color Secundario (Fondos alternos)</label>
+                      <div className="wb-color-picker">
+                        <input 
+                          type="color" 
+                          value={formData.themeSecondary} 
+                          onChange={(e) => setFormData({...formData, themeSecondary: e.target.value})}
+                        />
+                        <span className="wb-color-hex">{formData.themeSecondary}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="wb-form-row">
+                    <div className="wb-form-group">
+                      <label className="wb-label">Color de Tarjetas (Valores, Estadísticas)</label>
+                      <div className="wb-color-picker">
+                        <input 
+                          type="color" 
+                          value={formData.cardColor} 
+                          onChange={(e) => setFormData({...formData, cardColor: e.target.value})}
+                        />
+                        <span className="wb-color-hex">{formData.cardColor}</span>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="wb-form-row">
+
+                <div className="wb-card">
+                  <h2 className="wb-card-title"><Sparkles size={20} color="#8B5CF6"/> Fondos Vivos Globales</h2>
+                  <p style={{ fontSize: '0.85rem', color: '#64748B', marginBottom: '1rem' }}>
+                    Elige una animación o textura para el fondo de toda tu web pública.
+                  </p>
+                  <div className="wb-options-grid">
+                    <div className={`wb-option-card ${formData.globalBackground === 'solid' ? 'selected' : ''}`} onClick={() => setFormData({...formData, globalBackground: 'solid'})}>
+                      <div className="wb-bg-preview" style={{ background: '#0e1726' }}></div>
+                      <strong>Sólido</strong>
+                      <span>Color oscuro liso</span>
+                    </div>
+                    <div className={`wb-option-card ${formData.globalBackground === 'mesh' ? 'selected' : ''}`} onClick={() => setFormData({...formData, globalBackground: 'mesh'})}>
+                      <div className="wb-bg-preview" style={{ background: `radial-gradient(at 0% 0%, ${primaryColor}40 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(30, 41, 59, 0.8) 0px, transparent 50%), #0e1726` }}></div>
+                      <strong>Malla (Mesh)</strong>
+                      <span>Degradados orgánicos</span>
+                    </div>
+                    <div className={`wb-option-card ${formData.globalBackground === 'aurora' ? 'selected' : ''}`} onClick={() => setFormData({...formData, globalBackground: 'aurora'})}>
+                      <div className="wb-bg-preview" style={{ background: 'linear-gradient(120deg, #0e1726, #1e293b, #0e1726)' }}></div>
+                      <strong>Aurora</strong>
+                      <span>Efecto luces suaves</span>
+                    </div>
+                    <div className={`wb-option-card ${formData.globalBackground === 'orbs' ? 'selected' : ''}`} onClick={() => setFormData({...formData, globalBackground: 'orbs'})}>
+                      <div className="wb-bg-preview" style={{ background: '#0e1726', position: 'relative', overflow: 'hidden' }}>
+                         <div style={{ position: 'absolute', width: '40px', height: '40px', background: primaryColor, borderRadius: '50%', filter: 'blur(10px)', top: '10px', left: '10px', opacity: 0.5 }}></div>
+                      </div>
+                      <strong>Orbes</strong>
+                      <span>Esferas flotantes</span>
+                    </div>
+                    <div className={`wb-option-card ${formData.globalBackground === 'grid' ? 'selected' : ''}`} onClick={() => setFormData({...formData, globalBackground: 'grid'})}>
+                      <div className="wb-bg-preview" style={{ background: '#0e1726', backgroundImage: 'linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '10px 10px' }}></div>
+                      <strong>Grid Neón</strong>
+                      <span>Cuadrícula tecnológica</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="wb-card">
+                  <h2 className="wb-card-title"><Type size={20} color="#10B981"/> Motores Tipográficos</h2>
+                  <div className="wb-form-row">
+                    <div className="wb-form-group">
+                      <label className="wb-label">Fuente de Títulos</label>
+                      <select className="wb-select" value={formData.themeFontHeading} onChange={(e) => setFormData({...formData, themeFontHeading: e.target.value})}>
+                        <option value="Inter">Inter (Moderna/Neutra)</option>
+                        <option value="Montserrat">Montserrat (Geométrica)</option>
+                        <option value="Outfit">Outfit (Tecnológica/Limpia)</option>
+                        <option value="Playfair Display">Playfair Display (Clásica/Lujo)</option>
+                        <option value="Clash Display">Clash Display (Audaz)</option>
+                      </select>
+                    </div>
+                    <div className="wb-form-group">
+                      <label className="wb-label">Fuente de Textos (Body)</label>
+                      <select className="wb-select" value={formData.themeFontBody} onChange={(e) => setFormData({...formData, themeFontBody: e.target.value})}>
+                        <option value="Inter">Inter</option>
+                        <option value="Roboto">Roboto</option>
+                        <option value="Lato">Lato</option>
+                        <option value="Open Sans">Open Sans</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="wb-card">
+                  <h2 className="wb-card-title"><Box size={20} color="#F43F5E"/> Geometría de Botones</h2>
+                  <div className="wb-options-grid">
+                    <div className={`wb-option-card ${formData.buttonShape === 'square' ? 'selected' : ''}`} onClick={() => setFormData({...formData, buttonShape: 'square'})}>
+                      <div style={{ background: primaryColor, color: 'white', padding: '0.5rem 1rem', fontSize: '0.75rem', fontWeight: 600 }}>Botón</div>
+                      <strong>Cuadrado</strong>
+                    </div>
+                    <div className={`wb-option-card ${formData.buttonShape === 'rounded' ? 'selected' : ''}`} onClick={() => setFormData({...formData, buttonShape: 'rounded'})}>
+                      <div style={{ background: primaryColor, color: 'white', padding: '0.5rem 1rem', borderRadius: '0.5rem', fontSize: '0.75rem', fontWeight: 600 }}>Botón</div>
+                      <strong>Esquinas Suaves</strong>
+                    </div>
+                    <div className={`wb-option-card ${formData.buttonShape === 'pill' ? 'selected' : ''}`} onClick={() => setFormData({...formData, buttonShape: 'pill'})}>
+                      <div style={{ background: primaryColor, color: 'white', padding: '0.5rem 1rem', borderRadius: '2rem', fontSize: '0.75rem', fontWeight: 600 }}>Botón</div>
+                      <strong>Píldora</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* STRUCTURE TAB */}
+              <div className={`wb-tab-content ${activeTab === 'structure' ? 'active' : ''}`}>
+                <div className="wb-card">
+                  <h2 className="wb-card-title"><Layout size={20} color="#3B82F6"/> Mostrar / Ocultar Secciones</h2>
+                  <p style={{ fontSize: '0.85rem', color: '#64748B', marginBottom: '1rem' }}>
+                    Controla exactamente qué módulos quieres que vean tus clientes en la tienda.
+                  </p>
+
+                  <div className="wb-toggle-row">
+                    <div className="wb-toggle-info">
+                      <span className="wb-toggle-title">Sección: Valores y Promesas</span>
+                      <span className="wb-toggle-desc">Muestra los puntos fuertes de tu agencia.</span>
+                    </div>
+                    <label className="wb-switch">
+                      <input type="checkbox" checked={formData.showValues} onChange={(e) => setFormData({...formData, showValues: e.target.checked})} />
+                      <span className="wb-slider"></span>
+                    </label>
+                  </div>
+
+                  <div className="wb-toggle-row">
+                    <div className="wb-toggle-info">
+                      <span className="wb-toggle-title">Sección: Estadísticas</span>
+                      <span className="wb-toggle-desc">Muestra números llamativos (clientes felices, coches).</span>
+                    </div>
+                    <label className="wb-switch">
+                      <input type="checkbox" checked={formData.showStats} onChange={(e) => setFormData({...formData, showStats: e.target.checked})} />
+                      <span className="wb-slider"></span>
+                    </label>
+                  </div>
+
+                  <div className="wb-toggle-row">
+                    <div className="wb-toggle-info">
+                      <span className="wb-toggle-title">Sección: Sobre Nosotros</span>
+                      <span className="wb-toggle-desc">Texto explicativo de la historia de la empresa.</span>
+                    </div>
+                    <label className="wb-switch">
+                      <input type="checkbox" checked={formData.showAbout} onChange={(e) => setFormData({...formData, showAbout: e.target.checked})} />
+                      <span className="wb-slider"></span>
+                    </label>
+                  </div>
+
+                  <div className="wb-toggle-row">
+                    <div className="wb-toggle-info">
+                      <span className="wb-toggle-title">Sección: Testimonios</span>
+                      <span className="wb-toggle-desc">Reseñas y opiniones de clientes.</span>
+                    </div>
+                    <label className="wb-switch">
+                      <input type="checkbox" checked={formData.showTestimonials} onChange={(e) => setFormData({...formData, showTestimonials: e.target.checked})} />
+                      <span className="wb-slider"></span>
+                    </label>
+                  </div>
+
+                  <div className="wb-toggle-row">
+                    <div className="wb-toggle-info">
+                      <span className="wb-toggle-title">Sección: Preguntas Frecuentes</span>
+                      <span className="wb-toggle-desc">Acordeón con dudas y requisitos de alquiler.</span>
+                    </div>
+                    <label className="wb-switch">
+                      <input type="checkbox" checked={formData.showFaq} onChange={(e) => setFormData({...formData, showFaq: e.target.checked})} />
+                      <span className="wb-slider"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {/* CONTENT TAB */}
+              <div className={`wb-tab-content ${activeTab === 'content' ? 'active' : ''}`}>
+                <div className="wb-card">
+                  <h2 className="wb-card-title"><ImageIcon size={20} color="#8B5CF6"/> Portada y Hero</h2>
+                  
                   <div className="wb-form-group">
-                    <label className="wb-label">{t('website_builder.slug_label')}</label>
+                    <label className="wb-label">Fondo de Cabecera (Imagen Premium)</label>
+                    <div className="wb-options-grid" style={{ marginBottom: '1rem' }}>
+                      <div className={`wb-option-card ${formData.heroBackgroundImage === '' ? 'selected' : ''}`} onClick={() => setFormData({...formData, heroBackgroundImage: ''})}>
+                        <div className="wb-bg-preview" style={{ background: '#1E293B' }}>Sin Imagen</div>
+                        <strong>Sin Imagen</strong>
+                      </div>
+                      <div className={`wb-option-card ${formData.heroBackgroundImage === '/assets/storefront/contact-bg.jpg' ? 'selected' : ''}`} onClick={() => setFormData({...formData, heroBackgroundImage: '/assets/storefront/contact-bg.jpg'})}>
+                        <div className="wb-bg-preview" style={{ backgroundImage: 'url(/assets/storefront/contact-bg.jpg)' }}></div>
+                        <strong>Lujo Urbano</strong>
+                      </div>
+                      <div className={`wb-option-card ${formData.heroBackgroundImage === '/assets/storefront/flota.png' ? 'selected' : ''}`} onClick={() => setFormData({...formData, heroBackgroundImage: '/assets/storefront/flota.png'})}>
+                        <div className="wb-bg-preview" style={{ backgroundImage: 'url(/assets/storefront/flota.png)' }}></div>
+                        <strong>Garaje Premium</strong>
+                      </div>
+                    </div>
+                    <div style={{ padding: '1rem', backgroundColor: '#F8FAFC', borderRadius: '0.5rem', border: '1px dashed #CBD5E1' }}>
+                      <label className="wb-label" style={{ fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                        <ImageIcon size={14} /> Subir tu propia fotografía
+                      </label>
+                      <ImageUpload bucket="storefront_assets" onUploadComplete={(url: string) => setFormData({ ...formData, heroBackgroundImage: url })} />
+                    </div>
+                  </div>
+
+                  <div className="wb-form-group">
+                    <label className="wb-label">Título Principal (Hero)</label>
+                    <input type="text" className="wb-input" value={formData.heroTitle} onChange={(e) => setFormData({...formData, heroTitle: e.target.value})} />
+                  </div>
+                  <div className="wb-form-group">
+                    <label className="wb-label">Subtítulo (Hero)</label>
+                    <input type="text" className="wb-input" value={formData.heroSubtitle} onChange={(e) => setFormData({...formData, heroSubtitle: e.target.value})} />
+                  </div>
+                </div>
+
+                <div className="wb-card">
+                  <h2 className="wb-card-title"><Type size={20} color="#10B981"/> Títulos de Secciones</h2>
+                  <div className="wb-form-row">
+                    <div className="wb-form-group">
+                      <label className="wb-label">Título de Valores</label>
+                      <input type="text" className="wb-input" value={formData.valuesTitle} onChange={(e) => setFormData({...formData, valuesTitle: e.target.value})} />
+                    </div>
+                    <div className="wb-form-group">
+                      <label className="wb-label">Título de Flota</label>
+                      <input type="text" className="wb-input" value={formData.fleetTitle} onChange={(e) => setFormData({...formData, fleetTitle: e.target.value})} />
+                    </div>
+                    <div className="wb-form-group">
+                      <label className="wb-label">Título de Testimonios</label>
+                      <input type="text" className="wb-input" value={formData.testimonialsTitle} onChange={(e) => setFormData({...formData, testimonialsTitle: e.target.value})} />
+                    </div>
+                    <div className="wb-form-group">
+                      <label className="wb-label">Título de FAQs</label>
+                      <input type="text" className="wb-input" value={formData.faqTitle} onChange={(e) => setFormData({...formData, faqTitle: e.target.value})} />
+                    </div>
+                    <div className="wb-form-group">
+                      <label className="wb-label">Título de Contacto</label>
+                      <input type="text" className="wb-input" value={formData.contactTitle} onChange={(e) => setFormData({...formData, contactTitle: e.target.value})} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="wb-card">
+                  <h2 className="wb-card-title">Texto "Sobre Nosotros"</h2>
+                  <textarea rows={4} className="wb-input" value={formData.aboutText} onChange={(e) => setFormData({...formData, aboutText: e.target.value})} placeholder="Describe tu agencia..."></textarea>
+                </div>
+              </div>
+
+              {/* SEO & CONTACT TAB */}
+              <div className={`wb-tab-content ${activeTab === 'seo' ? 'active' : ''}`}>
+                <div className="wb-card">
+                  <h2 className="wb-card-title"><Globe size={20} color="#F97316"/> Enlace y SEO</h2>
+                  <div className="wb-form-group">
+                    <label className="wb-label">URL de tu tienda pública</label>
                     <div className="wb-input-wrapper">
                       <span className="wb-input-prefix">/booking/</span>
-                      <input
-                        type="text"
-                        required
-                        value={formData.slug}
-                        onChange={e => setFormData({...formData, slug: e.target.value})}
-                        className="wb-input"
-                        placeholder={t('website_builder.slug_placeholder')}
-                      />
+                      <input type="text" required value={formData.slug} onChange={(e) => setFormData({...formData, slug: e.target.value})} className="wb-input" placeholder="mi-agencia" />
                     </div>
                   </div>
-                  <label className="wb-label">{t('website_builder.theme_color')} y Fondo</label>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1rem', marginTop: '0.5rem' }}>
-                    {COLOR_PALETTES.map((palette, idx) => (
-                      <div 
-                        key={idx}
-                        onClick={() => setFormData({ ...formData, themeColor: palette.primary, themeSecondary: palette.secondary })}
-                        style={{ 
-                          cursor: 'pointer', 
-                          border: formData.themeColor === palette.primary ? `2px solid ${palette.primary}` : '1px solid #E2E8F0',
-                          borderRadius: '0.75rem',
-                          padding: '0.5rem',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'center',
-                          gap: '0.5rem',
-                          backgroundColor: formData.themeColor === palette.primary ? '#F8FAFC' : 'white',
-                          transition: 'all 0.2s'
-                        }}
-                      >
-                        <div style={{ display: 'flex', width: '100%', height: '40px', borderRadius: '0.5rem', overflow: 'hidden' }}>
-                          <div style={{ flex: 1, backgroundColor: palette.primary }}></div>
-                          <div style={{ flex: 1, backgroundColor: palette.secondary }}></div>
-                        </div>
-                        <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#475569' }}>{palette.name}</span>
+                  <div className="wb-form-group">
+                    <label className="wb-label">Meta Title (SEO de Google)</label>
+                    <input type="text" className="wb-input" value={formData.metaTitle} onChange={(e) => setFormData({...formData, metaTitle: e.target.value})} placeholder="Ej. Mi Agencia - Alquiler de coches en Madrid" />
+                  </div>
+                  <div className="wb-form-group">
+                    <label className="wb-label">Meta Description (SEO)</label>
+                    <textarea rows={2} className="wb-input" value={formData.metaDescription} onChange={(e) => setFormData({...formData, metaDescription: e.target.value})} placeholder="Breve descripción que aparecerá en los resultados de búsqueda..."></textarea>
+                  </div>
+                </div>
+
+                <div className="wb-card">
+                  <h2 className="wb-card-title"><Phone size={20} color="#3B82F6"/> Redes y Contacto</h2>
+                  <div className="wb-form-row">
+                    <div className="wb-form-group">
+                      <label className="wb-label">WhatsApp (Solo números)</label>
+                      <input type="text" className="wb-input" value={formData.whatsapp} onChange={(e) => setFormData({...formData, whatsapp: e.target.value})} placeholder="+34600000000" />
+                    </div>
+                    <div className="wb-form-group">
+                      <label className="wb-label">Instagram</label>
+                      <div className="wb-input-wrapper">
+                        <span className="wb-input-prefix">@</span>
+                        <input type="text" className="wb-input" value={formData.instagram} onChange={(e) => setFormData({...formData, instagram: e.target.value})} placeholder="usuario" />
                       </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="wb-card">
-                <h2 className="wb-card-title">
-                  <Palette size={24} color="#10B981" />
-                  {t('website_builder.appearance')}
-                </h2>
-                <div className="wb-form-group">
-                  <label className="wb-label">{t('website_builder.hero_title')}</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.heroTitle}
-                    onChange={e => setFormData({...formData, heroTitle: e.target.value})}
-                    className="wb-input"
-                  />
-                </div>
-                <div className="wb-form-group">
-                  <label className="wb-label">{t('website_builder.hero_subtitle')}</label>
-                  <input
-                    type="text"
-                    value={formData.heroSubtitle}
-                    onChange={e => setFormData({...formData, heroSubtitle: e.target.value})}
-                    className="wb-input"
-                    placeholder="Tu agencia de confianza"
-                  />
-                </div>
-
-                <div className="wb-form-group" style={{ marginTop: '1.5rem' }}>
-                  <label className="wb-label">Fondo de Pantalla (Hero)</label>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
-                    <div 
-                      onClick={() => setFormData({...formData, heroBackgroundImage: ''})}
-                      style={{ height: '80px', borderRadius: '0.5rem', cursor: 'pointer', border: formData.heroBackgroundImage === '' ? '2px solid #3B82F6' : '1px solid #E2E8F0', backgroundColor: formData.themeSecondary, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '0.8rem' }}
-                    >
-                      Sin Fondo (Color)
                     </div>
-                    <div 
-                      onClick={() => setFormData({...formData, heroBackgroundImage: '/assets/storefront/contact-bg.jpg'})}
-                      style={{ height: '80px', borderRadius: '0.5rem', cursor: 'pointer', border: formData.heroBackgroundImage === '/assets/storefront/contact-bg.jpg' ? '2px solid #3B82F6' : '1px solid #E2E8F0', backgroundImage: 'url(/assets/storefront/contact-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}
-                    ></div>
-                    <div 
-                      onClick={() => setFormData({...formData, heroBackgroundImage: '/assets/storefront/flota.png'})}
-                      style={{ height: '80px', borderRadius: '0.5rem', cursor: 'pointer', border: formData.heroBackgroundImage === '/assets/storefront/flota.png' ? '2px solid #3B82F6' : '1px solid #E2E8F0', backgroundImage: 'url(/assets/storefront/flota.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
-                    ></div>
-                  </div>
-                  <div style={{ marginTop: '1rem', padding: '1rem', backgroundColor: '#F8FAFC', borderRadius: '0.5rem', border: '1px dashed #CBD5E1' }}>
-                    <label className="wb-label" style={{ fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                      <ImageIcon size={14} /> Subir tu propia foto
-                    </label>
-                    <ImageUpload 
-                      bucket="storefront_assets"
-                      onUploadComplete={(url: string) => setFormData({ ...formData, heroBackgroundImage: url })}
-                    />
-                    {formData.heroBackgroundImage && formData.heroBackgroundImage.includes('supabase') && (
-                      <p style={{ fontSize: '0.75rem', color: '#10B981', marginTop: '0.5rem', marginBottom: 0 }}>✓ Foto cargada exitosamente</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="wb-form-group" style={{ marginTop: '1.5rem' }}>
-                  <label className="wb-label">{t('website_builder.about')}</label>
-                  <textarea
-                    rows={4}
-                    value={formData.aboutText}
-                    onChange={e => setFormData({...formData, aboutText: e.target.value})}
-                    className="wb-input"
-                    placeholder={t('website_builder.about_placeholder')}
-                  />
-                </div>
-              </div>
-
-              <div className="wb-card">
-                <h2 className="wb-card-title">
-                  <Phone size={24} color="#8B5CF6" />
-                  {t('website_builder.contact_social')}
-                </h2>
-                <div className="wb-form-row">
-                  <div className="wb-form-group">
-                    <label className="wb-label">{t('website_builder.whatsapp')}</label>
-                    <input
-                      type="text"
-                      value={formData.whatsapp}
-                      onChange={e => setFormData({...formData, whatsapp: e.target.value})}
-                      className="wb-input"
-                      placeholder="+34600000000"
-                    />
-                  </div>
-                  <div className="wb-form-group">
-                    <label className="wb-label">{t('website_builder.instagram')}</label>
-                    <div className="wb-input-wrapper">
-                      <span className="wb-input-prefix">@</span>
-                      <input
-                        type="text"
-                        value={formData.instagram}
-                        onChange={e => setFormData({...formData, instagram: e.target.value})}
-                        className="wb-input"
-                        placeholder={t('website_builder.instagram_placeholder')}
-                      />
+                    <div className="wb-form-group" style={{ gridColumn: '1 / -1' }}>
+                      <label className="wb-label">Facebook (URL)</label>
+                      <input type="url" className="wb-input" value={formData.facebook} onChange={(e) => setFormData({...formData, facebook: e.target.value})} placeholder="https://facebook.com/..." />
                     </div>
                   </div>
                 </div>
-                <div className="wb-form-group">
-                  <label className="wb-label">{t('website_builder.facebook')}</label>
-                  <input
-                    type="url"
-                    value={formData.facebook}
-                    onChange={e => setFormData({...formData, facebook: e.target.value})}
-                    className="wb-input"
-                    placeholder={t('website_builder.facebook_placeholder')}
-                  />
-                </div>
               </div>
 
-              <button type="submit" disabled={saving} className="wb-save-btn">
-                <Save size={20} />
-                {saving ? t('website_builder.saving') : t('website_builder.save')}
-              </button>
+              <div className="wb-save-wrapper">
+                <button type="submit" disabled={saving} className="wb-save-btn">
+                  <Save size={20} />
+                  {saving ? 'Guardando configuración...' : 'Publicar Sitio Web'}
+                </button>
+              </div>
+
             </form>
           </div>
 
           <div className="wb-preview-col">
-            <div className="wb-preview-header">
-              <span className="wb-dot"></span>
-              {t('website_builder.live_preview')}
+            <div className="wb-preview-toolbar">
+              <button 
+                type="button" 
+                className={`wb-preview-toggle-btn ${previewMode === 'desktop' ? 'active' : ''}`}
+                onClick={() => setPreviewMode('desktop')}
+              >
+                <Monitor size={18} /> Escritorio
+              </button>
+              <button 
+                type="button" 
+                className={`wb-preview-toggle-btn ${previewMode === 'mobile' ? 'active' : ''}`}
+                onClick={() => setPreviewMode('mobile')}
+              >
+                <Smartphone size={18} /> Móvil
+              </button>
             </div>
-            <div className="wb-phone-frame" style={{ borderColor: formData.themeSecondary }}>
-              <div className="wb-phone-notch" style={{ backgroundColor: formData.themeSecondary }}></div>
+            
+            <div className={`wb-preview-canvas ${previewMode}`}>
+              <div className="wb-browser-bar">
+                <div className="wb-browser-dot red"></div>
+                <div className="wb-browser-dot yellow"></div>
+                <div className="wb-browser-dot green"></div>
+              </div>
               <div 
                 className="wb-phone-screen" 
                 style={{ 
-                  backgroundColor: formData.template === 'modern' ? '#090D16' : '#F8FAFC', 
+                  backgroundColor: '#090D16', 
+                  fontFamily: `"${formData.themeFontBody}", sans-serif`,
                   overflowY: 'auto', 
-                  display: 'block' 
+                  display: 'block',
+                  borderRadius: '0'
                 }}
               >
                 
-                {/* Realistic Mobile Preview - Modern Template */}
-                {formData.template === 'modern' && (
-                  <>
-                    <div style={{ backgroundColor: 'rgba(9, 13, 22, 0.85)', backdropFilter: 'blur(10px)', padding: '10px 15px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, zIndex: 10, borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                      <span style={{ fontWeight: 900, color: '#ffffff', fontSize: '0.9rem' }}>Logo</span>
-                      <div style={{ display: 'flex', gap: '8px' }}>
-                        <div style={{ width: 24, height: 24, borderRadius: '50%', backgroundColor: 'white', opacity: 0.1 }}></div>
-                        <div style={{ width: 24, height: 24, borderRadius: '50%', backgroundColor: 'white', opacity: 0.1 }}></div>
+                {/* Simulated Header */}
+                <div style={{ backgroundColor: 'rgba(9, 13, 22, 0.85)', backdropFilter: 'blur(10px)', padding: previewMode === 'desktop' ? '20px 40px' : '15px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, zIndex: 10, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                  <span style={{ fontWeight: 900, color: '#ffffff', fontSize: previewMode === 'desktop' ? '1.2rem' : '0.9rem', fontFamily: `"${formData.themeFontHeading}", sans-serif` }}>LOGO</span>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <div style={{ width: 20, height: 20, borderRadius: '50%', backgroundColor: 'white', opacity: 0.2 }}></div>
+                    <div style={{ width: 20, height: 20, borderRadius: '50%', backgroundColor: 'white', opacity: 0.2 }}></div>
+                  </div>
+                </div>
+                
+                {/* Simulated Hero */}
+                <div style={{ backgroundColor: '#090D16', backgroundImage: formData.heroBackgroundImage ? `url(${formData.heroBackgroundImage})` : 'none', backgroundSize: 'cover', backgroundPosition: 'center', padding: previewMode === 'desktop' ? '100px 40px' : '50px 20px', textAlign: 'center', color: 'white', position: 'relative' }}>
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(9, 13, 22, 0.4) 0%, rgba(9, 13, 22, 0.95) 100%)', zIndex: 1 }}></div>
+                  <div style={{ position: 'relative', zIndex: 2 }}>
+                    <h2 style={{ fontFamily: `"${formData.themeFontHeading}", sans-serif`, fontSize: previewMode === 'desktop' ? '3rem' : '1.6rem', fontWeight: 800, marginBottom: '10px', lineHeight: 1.2, color: '#ffffff' }}>{formData.heroTitle || 'Alquiler de Vehículos'}</h2>
+                    <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: previewMode === 'desktop' ? '1.1rem' : '0.85rem' }}>{formData.heroSubtitle || 'La mejor flota'}</p>
+                    <div style={{ marginTop: previewMode === 'desktop' ? '30px' : '20px' }}>
+                      <span style={{ 
+                        backgroundColor: primaryColor, 
+                        color: '#090D16', 
+                        padding: previewMode === 'desktop' ? '12px 30px' : '10px 20px', 
+                        borderRadius: formData.buttonShape === 'pill' ? '20px' : formData.buttonShape === 'rounded' ? '8px' : '0px', 
+                        fontSize: previewMode === 'desktop' ? '0.95rem' : '0.8rem', 
+                        fontWeight: 800 
+                      }}>
+                        Reservar Ahora
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ padding: previewMode === 'desktop' ? '40px' : '20px 15px', position: 'relative', zIndex: 3 }}>
+                  
+                  {formData.showValues && (
+                    <div className={previewMode === 'desktop' ? 'canvas-grid' : ''} style={previewMode === 'mobile' ? { marginBottom: '25px', display: 'flex', gap: '10px', overflowX: 'auto', paddingBottom: '10px' } : { marginBottom: '40px' }}>
+                      <div style={{ minWidth: '120px', backgroundColor: formData.cardColor || primaryColor, padding: '20px', borderRadius: '12px', color: '#090D16' }}>
+                        <div style={{ width: 30, height: 30, backgroundColor: 'rgba(9, 13, 22, 0.1)', borderRadius: '8px', marginBottom: '10px' }}></div>
+                        <strong style={{ fontSize: '0.85rem', display: 'block', fontFamily: `"${formData.themeFontHeading}", sans-serif` }}>Seguro Todo Riesgo</strong>
+                      </div>
+                      <div style={{ minWidth: '120px', backgroundColor: formData.cardColor || primaryColor, padding: '20px', borderRadius: '12px', color: '#090D16' }}>
+                        <div style={{ width: 30, height: 30, backgroundColor: 'rgba(9, 13, 22, 0.1)', borderRadius: '8px', marginBottom: '10px' }}></div>
+                        <strong style={{ fontSize: '0.85rem', display: 'block', fontFamily: `"${formData.themeFontHeading}", sans-serif` }}>Asistencia 24h</strong>
+                      </div>
+                      <div style={{ minWidth: '120px', backgroundColor: formData.cardColor || primaryColor, padding: '20px', borderRadius: '12px', color: '#090D16', display: previewMode === 'desktop' ? 'block' : 'none' }}>
+                        <div style={{ width: 30, height: 30, backgroundColor: 'rgba(9, 13, 22, 0.1)', borderRadius: '8px', marginBottom: '10px' }}></div>
+                        <strong style={{ fontSize: '0.85rem', display: 'block', fontFamily: `"${formData.themeFontHeading}", sans-serif` }}>Entrega Flexible</strong>
                       </div>
                     </div>
-                    
-                    <div style={{ backgroundColor: '#090D16', backgroundImage: formData.heroBackgroundImage ? `url(${formData.heroBackgroundImage})` : 'none', backgroundSize: 'cover', backgroundPosition: 'center', padding: '40px 20px', textAlign: 'center', color: 'white', position: 'relative' }}>
-                      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(9, 13, 22, 0.4) 0%, rgba(9, 13, 22, 0.95) 100%)', zIndex: 1 }}></div>
-                      <div style={{ position: 'relative', zIndex: 2 }}>
-                        <h2 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '10px', lineHeight: 1.2, color: '#ffffff' }}>{formData.heroTitle || 'Alquiler de Vehículos'}</h2>
-                        <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.85rem' }}>{formData.heroSubtitle || 'La mejor flota'}</p>
-                        <div style={{ marginTop: '15px' }}>
-                          <span style={{ backgroundColor: formData.themeColor, color: 'white', padding: '6px 12px', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 700 }}>
-                            Réservez maintenant
-                          </span>
+                  )}
+
+                  {formData.showAbout && formData.aboutText && (
+                    <div style={{ padding: previewMode === 'desktop' ? '30px' : '15px', borderRadius: '12px', marginBottom: previewMode === 'desktop' ? '40px' : '25px', backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                      <h4 style={{ fontSize: previewMode === 'desktop' ? '1.5rem' : '0.9rem', fontWeight: 800, color: '#ffffff', marginBottom: '8px', fontFamily: `"${formData.themeFontHeading}", sans-serif` }}>Sobre Nosotros</h4>
+                      <div style={{ width: '30px', height: '3px', backgroundColor: primaryColor, marginBottom: '15px' }}></div>
+                      <p style={{ fontSize: previewMode === 'desktop' ? '0.95rem' : '0.75rem', color: 'rgba(255, 255, 255, 0.7)', fontWeight: 400, lineHeight: 1.6 }}>{formData.aboutText.substring(0, 150)}...</p>
+                    </div>
+                  )}
+
+                  <h4 style={{ fontSize: previewMode === 'desktop' ? '1.8rem' : '1.1rem', fontWeight: 800, color: '#ffffff', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px', fontFamily: `"${formData.themeFontHeading}", sans-serif` }}>
+                    <span style={{ color: primaryColor }}>■</span> {formData.fleetTitle}
+                  </h4>
+                  
+                  <div className="canvas-grid" style={{ display: 'grid' }}>
+                    {previewVehicles.length > 0 ? previewVehicles.slice(0, previewMode === 'desktop' ? 3 : 2).map(v => (
+                      <div key={v.id} style={{ backgroundColor: formData.cardColor || primaryColor, borderRadius: '16px', overflow: 'hidden' }}>
+                        <div style={{ height: '160px', backgroundColor: '#111827', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                          {v.image_url ? (
+                            <img src={v.image_url} alt={v.model} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          ) : (
+                            <span style={{ fontSize: '2rem' }}>📸</span>
+                          )}
+                          <div style={{ position: 'absolute', top: '10px', right: '10px', backgroundColor: 'rgba(9, 13, 22, 0.8)', color: '#ffffff', padding: '6px 12px', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 800 }}>{v.daily_rate} MAD</div>
+                        </div>
+                        <div style={{ padding: '15px' }}>
+                          <h5 style={{ margin: 0, fontSize: '1rem', fontWeight: 800, color: '#090D16', fontFamily: `"${formData.themeFontHeading}", sans-serif` }}>{v.brand} {v.model}</h5>
+                          <p style={{ margin: '0 0 15px 0', fontSize: '0.75rem', color: 'rgba(9, 13, 22, 0.7)' }}>Automático • Gasolina</p>
+                          <div style={{ 
+                            backgroundColor: '#090D16', 
+                            color: 'white', 
+                            textAlign: 'center', 
+                            padding: '10px', 
+                            borderRadius: formData.buttonShape === 'pill' ? '20px' : formData.buttonShape === 'rounded' ? '8px' : '0px', 
+                            fontSize: '0.75rem', 
+                            fontWeight: 700 
+                          }}>
+                            Ver Detalles
+                          </div>
                         </div>
                       </div>
-                    </div>
-
-                    <div style={{ padding: '20px 15px' }}>
-                      {formData.aboutText && (
-                        <div style={{ backgroundColor: formData.themeColor, padding: '15px', borderRadius: '12px', marginBottom: '20px', border: '1px solid rgba(255,255,255,0.1)' }}>
-                          <h4 style={{ fontSize: '0.9rem', fontWeight: 800, color: '#090D16', marginBottom: '8px' }}>Sobre Nosotros</h4>
-                          <div style={{ width: '30px', height: '3px', backgroundColor: '#090D16', opacity: 0.3, marginBottom: '10px' }}></div>
-                          <p style={{ fontSize: '0.75rem', color: 'rgba(9, 13, 22, 0.85)', fontWeight: 500, lineHeight: 1.5 }}>{formData.aboutText.substring(0, 100)}...</p>
-                        </div>
-                      )}
-
-                      <h4 style={{ fontSize: '1rem', fontWeight: 800, color: '#ffffff', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                        <span style={{ color: formData.themeColor }}>■</span> Nuestra Flota
-                      </h4>
-                      
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                        {previewVehicles.length > 0 ? previewVehicles.slice(0, 2).map(v => (
-                          <div key={v.id} style={{ backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.14)' }}>
-                            <div style={{ height: '120px', backgroundColor: '#111827', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-                              {v.image_url ? (
-                                <img src={v.image_url} alt={v.model} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                              ) : (
-                                <span style={{ fontSize: '2rem' }}>📸</span>
-                              )}
-                              <div style={{ position: 'absolute', top: '10px', right: '10px', backgroundColor: 'white', color: '#090D16', padding: '4px 8px', borderRadius: '12px', fontSize: '0.7rem', fontWeight: 800 }}>{v.daily_rate} MAD</div>
-                            </div>
-                            <div style={{ padding: '12px' }}>
-                              <h5 style={{ margin: 0, fontSize: '0.9rem', fontWeight: 800, color: '#ffffff' }}>{v.brand} {v.model}</h5>
-                              <p style={{ margin: '0 0 10px 0', fontSize: '0.7rem', color: '#CBD5E1' }}>{v.transmission} • {v.fuel}</p>
-                              <div style={{ backgroundColor: formData.themeColor, color: 'white', textAlign: 'center', padding: '8px', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 700 }}>
-                                Ver Detalles
-                              </div>
-                            </div>
-                          </div>
-                        )) : (
-                          <p style={{ fontSize: '0.8rem', color: '#CBD5E1', textAlign: 'center' }}>No hay vehículos disponibles.</p>
-                        )}
-                      </div>
-                    </div>
-                  </>
-                )}
-
-                {/* Realistic Mobile Preview - Classic Template */}
-                {formData.template === 'classic' && (
-                  <>
-                    <div style={{ backgroundColor: 'white', padding: '15px', textAlign: 'center', borderBottom: '1px solid #E2E8F0' }}>
-                      <span style={{ fontWeight: 800, color: '#1E293B', fontSize: '1.2rem', letterSpacing: '2px', textTransform: 'uppercase' }}>Logo</span>
-                    </div>
-                    
-                    <div style={{ backgroundColor: 'white', padding: '50px 20px', textAlign: 'center', backgroundImage: formData.heroBackgroundImage ? `url(${formData.heroBackgroundImage})` : 'none', backgroundSize: 'cover', backgroundPosition: 'center', position: 'relative' }}>
-                      {formData.heroBackgroundImage && (
-                        <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(255,255,255,0.85)' }}></div>
-                      )}
-                      <div style={{ position: 'relative', zIndex: 2 }}>
-                        <h2 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '10px', color: formData.themeColor }}>{formData.heroTitle || 'Alquiler Premium'}</h2>
-                        <p style={{ color: '#64748B', fontSize: '0.9rem', letterSpacing: '1px' }}>{formData.heroSubtitle || 'EXPERIENCIA ÚNICA'}</p>
-                        <div style={{ width: '40px', height: '2px', backgroundColor: formData.themeColor, margin: '20px auto 0' }}></div>
-                      </div>
-                    </div>
-
-                    <div style={{ padding: '20px 15px', backgroundColor: '#F8FAFC' }}>
-                      <h4 style={{ fontSize: '1rem', fontWeight: 600, color: '#1E293B', marginBottom: '20px', textAlign: 'center', textTransform: 'uppercase', letterSpacing: '1px' }}>
-                        Colección
-                      </h4>
-                      
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                        {previewVehicles.length > 0 ? previewVehicles.slice(0, 1).map(v => (
-                          <div key={v.id} style={{ backgroundColor: 'white', overflow: 'hidden' }}>
-                            <div style={{ height: '180px', backgroundColor: '#E2E8F0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                              {v.image_url ? (
-                                <img src={v.image_url} alt={v.model} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                              ) : (
-                                <span style={{ fontSize: '2rem' }}>📸</span>
-                              )}
-                            </div>
-                            <div style={{ padding: '15px', textAlign: 'center' }}>
-                              <h5 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 400, color: '#1E293B' }}>{v.brand} {v.model}</h5>
-                              <div style={{ margin: '10px 0', fontSize: '0.9rem', fontWeight: 600, color: formData.themeColor }}>{v.daily_rate} MAD / día</div>
-                              <div style={{ border: `1px solid ${formData.themeColor}`, color: formData.themeColor, textAlign: 'center', padding: '8px', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
-                                Descubrir
-                              </div>
-                            </div>
-                          </div>
-                        )) : (
-                          <p style={{ fontSize: '0.8rem', color: '#64748B', textAlign: 'center' }}>Sin vehículos.</p>
-                        )}
-                      </div>
-                    </div>
-                  </>
-                )}
+                    )) : (
+                      <p style={{ fontSize: '0.8rem', color: '#64748B', textAlign: 'center' }}>No hay vehículos disponibles.</p>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           </div>

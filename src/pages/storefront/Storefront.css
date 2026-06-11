@@ -20,10 +20,11 @@ html {
   --sf-bg-dark: #0e1726;
   --sf-bg-card: rgba(255, 255, 255, 0.12);
   --sf-border-glass: rgba(255, 255, 255, 0.22);
-  --sf-card-bg: linear-gradient(135deg, var(--sf-primary) 0%, color-mix(in srgb, var(--sf-primary) 65%, #000000 35%) 100%);
-  --sf-card-bg-hover: linear-gradient(135deg, color-mix(in srgb, var(--sf-primary) 90%, #ffffff 10%) 0%, color-mix(in srgb, var(--sf-primary) 55%, #000000 45%) 100%);
-  --sf-card-text: color-mix(in srgb, var(--sf-primary) 5%, #090D16 95%);
-  --sf-card-text-muted: color-mix(in srgb, var(--sf-primary) 12%, rgba(9, 13, 22, 0.75) 88%);
+  --sf-card-color: var(--sf-primary);
+  --sf-card-bg: linear-gradient(135deg, var(--sf-card-color) 0%, color-mix(in srgb, var(--sf-card-color) 65%, #000000 35%) 100%);
+  --sf-card-bg-hover: linear-gradient(135deg, color-mix(in srgb, var(--sf-card-color) 90%, #ffffff 10%) 0%, color-mix(in srgb, var(--sf-card-color) 55%, #000000 45%) 100%);
+  --sf-card-text: color-mix(in srgb, var(--sf-card-color) 5%, #090D16 95%);
+  --sf-card-text-muted: color-mix(in srgb, var(--sf-card-color) 12%, rgba(9, 13, 22, 0.75) 88%);
 }
 
 /* Scroll Reveal Transitions */
@@ -42,12 +43,9 @@ html {
 /* Base Styles */
 .sf-body {
   margin: 0;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background-color: var(--sf-bg-dark);
-  background-image: 
-    radial-gradient(at 0% 0%, var(--sf-primary-glow-medium) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(30, 41, 59, 0.8) 0px, transparent 50%),
-    linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+  font-family: var(--sf-font-body, 'Inter', system-ui, -apple-system, sans-serif);
+  background-color: transparent; /* Changed to transparent so sf-global-bg shows behind */
+  color: var(--sf-text-dark);
   color: var(--sf-text-dark);
   min-height: 100vh;
   display: flex;
@@ -61,6 +59,11 @@ html {
   padding: 0 1.5rem;
   width: 100%;
   box-sizing: border-box;
+}
+
+/* Headings Typography */
+.sf-brand, .sf-hero-title, .sf-section-title, .sf-section-title-center, .sf-value-title, .sf-stat-number, .sf-step-title, .sf-about-title, .sf-card-title, .sf-contact-card-title, h1, h2, h3, h4, h5, h6 {
+  font-family: var(--sf-font-heading, 'Inter', system-ui, -apple-system, sans-serif);
 }
 
 /* Header (Modern Premium Dark Glassmorphism) */
@@ -680,7 +683,7 @@ html {
   background-color: #090D16 !important;
   color: white !important;
   padding: 0.8rem 1.75rem;
-  border-radius: 2rem;
+  border-radius: var(--sf-btn-radius, 2rem);
   font-weight: 700;
   text-decoration: none;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1412,4 +1415,44 @@ html {
   100% {
     transform: translate(-50%, -50%) translate(8vw, -8vh);
   }
+}
+
+/* Live Global Backgrounds */
+.sf-global-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  pointer-events: none;
+  background-color: var(--sf-bg, #090D16);
+}
+
+.sf-bg-solid {
+  background-color: var(--sf-bg, #090D16);
+}
+
+.sf-bg-mesh {
+  background-color: var(--sf-bg, #090D16);
+  background-image: 
+    radial-gradient(at 0% 0%, var(--sf-primary-glow-strong) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(30, 41, 59, 0.8) 0px, transparent 50%);
+}
+
+.sf-bg-aurora {
+  background-color: var(--sf-bg, #090D16);
+  background-image: linear-gradient(120deg, var(--sf-bg, #090D16), rgba(30, 41, 59, 0.6), var(--sf-bg, #090D16));
+  background-size: 200% 200%;
+  animation: auroraBg 15s ease infinite alternate;
+}
+
+@keyframes auroraBg {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+.sf-bg-grid {
+  background-color: var(--sf-bg, #090D16);
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 30px 30px;
 }

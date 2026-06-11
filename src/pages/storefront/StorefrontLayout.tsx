@@ -81,6 +81,30 @@ export default function StorefrontLayout() {
     };
   }, [agency]);
 
+  // Dynamic Google Fonts Injection
+  useEffect(() => {
+    if (agency && agency.storefront_config) {
+      const { themeFontHeading, themeFontBody } = agency.storefront_config;
+      
+      const loadFont = (fontFamily: string) => {
+        if (!fontFamily || fontFamily === 'Clash Display') return; // Clash is custom/local typically, or handled differently
+        const fontName = fontFamily.replace(/ /g, '+');
+        const linkId = `font-${fontName.toLowerCase()}`;
+        
+        if (!document.getElementById(linkId)) {
+          const link = document.createElement('link');
+          link.id = linkId;
+          link.rel = 'stylesheet';
+          link.href = `https://fonts.googleapis.com/css2?family=${fontName}:wght@400;500;600;700;800;900&display=swap`;
+          document.head.appendChild(link);
+        }
+      };
+
+      if (themeFontHeading) loadFont(themeFontHeading);
+      if (themeFontBody) loadFont(themeFontBody);
+    }
+  }, [agency]);
+
   // Close menu on route change
   useEffect(() => {
     setMenuOpen(false);
@@ -106,11 +130,22 @@ export default function StorefrontLayout() {
   const config = agency.storefront_config || {};
   const themePrimary = config.themeColor || '#f97316';
   const themeSecondary = config.themeSecondary || '#0F172A';
+  const themeBgColor = config.themeBgColor || '#090D16';
+  const themeCardColor = config.cardColor || themePrimary;
+  const themeFontHeading = config.themeFontHeading || 'Inter';
+  const themeFontBody = config.themeFontBody || 'Inter';
+  const buttonShape = config.buttonShape || 'rounded';
+  const globalBackground = config.globalBackground || 'mesh';
   const templateName = config.template || 'modern';
 
   const themeStyle = {
     '--sf-primary': themePrimary,
     '--sf-secondary': themeSecondary,
+    '--sf-bg': themeBgColor,
+    '--sf-card-color': themeCardColor,
+    '--sf-font-heading': `"${themeFontHeading}", sans-serif`,
+    '--sf-font-body': `"${themeFontBody}", sans-serif`,
+    '--sf-btn-radius': buttonShape === 'square' ? '0px' : buttonShape === 'pill' ? '2rem' : '0.75rem',
     '--sf-primary-glow': hexToRgba(themePrimary, 0.2),
     '--sf-primary-glow-light': hexToRgba(themePrimary, 0.1),
     '--sf-primary-glow-medium': hexToRgba(themePrimary, 0.3),
@@ -133,11 +168,18 @@ export default function StorefrontLayout() {
   };
 
   return (
-    <div className={`sf-body sf-template-${templateName}`} style={themeStyle}>
-      {/* Background Animated Glow Orbs */}
-      <div className="sf-bg-glow-orb orb-1"></div>
-      <div className="sf-bg-glow-orb orb-2"></div>
-      <div className="sf-bg-glow-orb orb-3"></div>
+    <div className={`sf-body sf-template-${templateName}`} style={themeStyle} data-bg={globalBackground}>
+      {/* Background Layers */}
+      <div className={`sf-global-bg sf-bg-${globalBackground}`}>
+        {globalBackground === 'orbs' && (
+          <>
+            <div className="sf-bg-glow-orb orb-1"></div>
+            <div className="sf-bg-glow-orb orb-2"></div>
+            <div className="sf-bg-glow-orb orb-3"></div>
+          </>
+        )}
+      </div>
+
       {/* Global Navigation Header */}
       <header className={`sf-header ${isScrolled ? 'scrolled' : ''}`}>
         <div className="sf-container sf-header-content">

@@ -97,57 +97,62 @@ export default function StorefrontHome() {
 
       <main className="sf-main-content">
         {/* Core Values Section */}
-        <section className="sf-values reveal">
-          <div className="sf-container">
-            <div className="sf-values-grid">
-              <div className="sf-value-item">
-                <div className="sf-value-icon">
-                  <ShieldCheck size={32} />
+        {config.showValues !== false && (
+          <section className="sf-values reveal">
+            <div className="sf-container">
+              {config.valuesTitle && <h3 className="sf-section-title-center" style={{ marginBottom: '2rem' }}>{config.valuesTitle}</h3>}
+              <div className="sf-values-grid">
+                <div className="sf-value-item">
+                  <div className="sf-value-icon">
+                    <ShieldCheck size={32} />
+                  </div>
+                  <h4 className="sf-value-title">Seguro Premium</h4>
+                  <p className="sf-value-text">Viaja con total tranquilidad gracias a nuestra cobertura a todo riesgo premium incluida.</p>
                 </div>
-                <h4 className="sf-value-title">Seguro Premium</h4>
-                <p className="sf-value-text">Viaja con total tranquilidad gracias a nuestra cobertura a todo riesgo premium incluida.</p>
-              </div>
-              <div className="sf-value-item">
-                <div className="sf-value-icon">
-                  <Clock size={32} />
+                <div className="sf-value-item">
+                  <div className="sf-value-icon">
+                    <Clock size={32} />
+                  </div>
+                  <h4 className="sf-value-title">Soporte 24/7 Activo</h4>
+                  <p className="sf-value-text">Asistencia en carretera y atención al cliente dedicada en cualquier momento de tu viaje.</p>
                 </div>
-                <h4 className="sf-value-title">Soporte 24/7 Activo</h4>
-                <p className="sf-value-text">Asistencia en carretera y atención al cliente dedicada en cualquier momento de tu viaje.</p>
-              </div>
-              <div className="sf-value-item">
-                <div className="sf-value-icon">
-                  <MapPin size={32} />
+                <div className="sf-value-item">
+                  <div className="sf-value-icon">
+                    <MapPin size={32} />
+                  </div>
+                  <h4 className="sf-value-title">Entrega Flexible</h4>
+                  <p className="sf-value-text">Recogida y devolución a medida en aeropuerto, hotel o cualquiera de nuestras oficinas.</p>
                 </div>
-                <h4 className="sf-value-title">Entrega Flexible</h4>
-                <p className="sf-value-text">Recogida y devolución a medida en aeropuerto, hotel o cualquiera de nuestras oficinas.</p>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* Enriched Stats Section */}
-        <section className="sf-stats-section reveal">
-          <div className="sf-container">
-            <div className="sf-stats-grid">
-              <div className="sf-stat-card">
-                <span className="sf-stat-number">50+</span>
-                <span className="sf-stat-label">Vehículos Premium</span>
-              </div>
-              <div className="sf-stat-card">
-                <span className="sf-stat-number">10k+</span>
-                <span className="sf-stat-label">Clientes Satisfechos</span>
-              </div>
-              <div className="sf-stat-card">
-                <span className="sf-stat-number">99%</span>
-                <span className="sf-stat-label">Valoración Positiva</span>
-              </div>
-              <div className="sf-stat-card">
-                <span className="sf-stat-number">24h</span>
-                <span className="sf-stat-label">Soporte Express</span>
+        {config.showStats !== false && (
+          <section className="sf-stats-section reveal">
+            <div className="sf-container">
+              <div className="sf-stats-grid">
+                <div className="sf-stat-card">
+                  <span className="sf-stat-number">50+</span>
+                  <span className="sf-stat-label">Vehículos Premium</span>
+                </div>
+                <div className="sf-stat-card">
+                  <span className="sf-stat-number">10k+</span>
+                  <span className="sf-stat-label">Clientes Satisfechos</span>
+                </div>
+                <div className="sf-stat-card">
+                  <span className="sf-stat-number">99%</span>
+                  <span className="sf-stat-label">Valoración Positiva</span>
+                </div>
+                <div className="sf-stat-card">
+                  <span className="sf-stat-number">24h</span>
+                  <span className="sf-stat-label">Soporte Express</span>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* How it Works / Process Section */}
         <section className="sf-process-section reveal">
@@ -182,7 +187,7 @@ export default function StorefrontHome() {
           <div className="sf-container">
             <h3 className="sf-section-title">
               <Car size={36} />
-              Nuestra Flota Disponible
+              {config.fleetTitle || 'Nuestra Flota Disponible'}
             </h3>
             
             {vehicles.length === 0 ? (
@@ -235,7 +240,7 @@ export default function StorefrontHome() {
         </section>
 
         {/* About Section */}
-        {config.aboutText && (
+        {config.showAbout !== false && config.aboutText && (
           <section className="sf-about reveal" id="nosotros">
             <div className="sf-container">
               <h3 className="sf-about-title">Sobre Nosotros</h3>
@@ -248,98 +253,102 @@ export default function StorefrontHome() {
         )}
 
         {/* Testimonials Section */}
-        <section className="sf-testimonials-section reveal">
-          <div className="sf-container">
-            <div className="sf-section-header">
-              <h3 className="sf-section-title-center">Opiniones de Nuestros Clientes</h3>
-              <p className="sf-section-subtitle-center">Lo que dicen los viajeros que confían en nosotros</p>
+        {config.showTestimonials !== false && (
+          <section className="sf-testimonials-section reveal">
+            <div className="sf-container">
+              <div className="sf-section-header">
+                <h3 className="sf-section-title-center">{config.testimonialsTitle || 'Opiniones de Nuestros Clientes'}</h3>
+                <p className="sf-section-subtitle-center">Lo que dicen los viajeros que confían en nosotros</p>
+              </div>
+
+              <div className="sf-testimonials-grid">
+                <div className="sf-testimonial-card">
+                  <div className="sf-stars">★★★★★</div>
+                  <p className="sf-testimonial-text">"Excelente servicio. Reservé a través de WhatsApp en pocos minutos y el coche estaba listo y limpísimo en el aeropuerto. Totalmente recomendado."</p>
+                  <div className="sf-testimonial-author">
+                    <div className="sf-author-avatar">Y.B.</div>
+                    <div>
+                      <h5 className="sf-author-name">Yassine B.</h5>
+                      <span className="sf-author-role">Cliente Verificado</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="sf-testimonial-card">
+                  <div className="sf-stars">★★★★★</div>
+                  <p className="sf-testimonial-text">"Trato muy profesional e inmejorable relación calidad-precio. Tuvimos un pequeño contratiempo con nuestro vuelo y nos esperaron sin ningún cargo extra."</p>
+                  <div className="sf-testimonial-author">
+                    <div className="sf-author-avatar">M.D.</div>
+                    <div>
+                      <h5 className="sf-author-name">Marie D.</h5>
+                      <span className="sf-author-role">Cliente de Negocios</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="sf-testimonial-card">
+                  <div className="sf-stars">★★★★★</div>
+                  <p className="sf-testimonial-text">"El coche estaba en perfectas condiciones y el seguro a todo riesgo nos dio mucha tranquilidad para recorrer el país. Repetiremos sin duda."</p>
+                  <div className="sf-testimonial-author">
+                    <div className="sf-author-avatar">A.K.</div>
+                    <div>
+                      <h5 className="sf-author-name">Ahmed K.</h5>
+                      <span className="sf-author-role">Viajero Frecuente</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-
-            <div className="sf-testimonials-grid">
-              <div className="sf-testimonial-card">
-                <div className="sf-stars">★★★★★</div>
-                <p className="sf-testimonial-text">"Excelente servicio. Reservé a través de WhatsApp en pocos minutos y el coche estaba listo y limpísimo en el aeropuerto. Totalmente recomendado."</p>
-                <div className="sf-testimonial-author">
-                  <div className="sf-author-avatar">Y.B.</div>
-                  <div>
-                    <h5 className="sf-author-name">Yassine B.</h5>
-                    <span className="sf-author-role">Cliente Verificado</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="sf-testimonial-card">
-                <div className="sf-stars">★★★★★</div>
-                <p className="sf-testimonial-text">"Trato muy profesional e inmejorable relación calidad-precio. Tuvimos un pequeño contratiempo con nuestro vuelo y nos esperaron sin ningún cargo extra."</p>
-                <div className="sf-testimonial-author">
-                  <div className="sf-author-avatar">M.D.</div>
-                  <div>
-                    <h5 className="sf-author-name">Marie D.</h5>
-                    <span className="sf-author-role">Cliente de Negocios</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="sf-testimonial-card">
-                <div className="sf-stars">★★★★★</div>
-                <p className="sf-testimonial-text">"El coche estaba en perfectas condiciones y el seguro a todo riesgo nos dio mucha tranquilidad para recorrer el país. Repetiremos sin duda."</p>
-                <div className="sf-testimonial-author">
-                  <div className="sf-author-avatar">A.K.</div>
-                  <div>
-                    <h5 className="sf-author-name">Ahmed K.</h5>
-                    <span className="sf-author-role">Viajero Frecuente</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* FAQs Section */}
-        <section className="sf-faqs-section reveal">
-          <div className="sf-container">
-            <div className="sf-section-header">
-              <h3 className="sf-section-title-center">Preguntas Frecuentes</h3>
-              <p className="sf-section-subtitle-center">Todo lo que necesitas saber antes de tu alquiler</p>
+        {config.showFaq !== false && (
+          <section className="sf-faqs-section reveal">
+            <div className="sf-container">
+              <div className="sf-section-header">
+                <h3 className="sf-section-title-center">{config.faqTitle || 'Preguntas Frecuentes'}</h3>
+                <p className="sf-section-subtitle-center">Todo lo que necesitas saber antes de tu alquiler</p>
+              </div>
+
+              <div className="sf-faqs-list">
+                <details className="sf-faq-item">
+                  <summary className="sf-faq-question">¿Qué documentos necesito para recoger el vehículo?</summary>
+                  <div className="sf-faq-answer">
+                    <p>Necesitarás presentar tu documento de identidad (DNI o Pasaporte) en vigor, un permiso de conducir válido y vigente, y una tarjeta de crédito/débito a nombre del conductor principal.</p>
+                  </div>
+                </details>
+
+                <details className="sf-faq-item">
+                  <summary className="sf-faq-question">¿El seguro a todo riesgo tiene franquicia?</summary>
+                  <div className="sf-faq-answer">
+                    <p>Nuestra tarifa premium incluye cobertura a todo riesgo. Dependiendo del coche seleccionado, puede existir una franquicia mínima garantizada que se detalla en el momento de la confirmación de la reserva.</p>
+                  </div>
+                </details>
+
+                <details className="sf-faq-item">
+                  <summary className="sf-faq-question">¿Puedo cancelar o modificar mi reserva?</summary>
+                  <div className="sf-faq-answer">
+                    <p>¡Sí! Las cancelaciones y modificaciones son totalmente gratuitas si se avisa con al menos 24 horas de antelación. Simplemente ponte en contacto con nosotros a través de WhatsApp o llamada telefónica.</p>
+                  </div>
+                </details>
+
+                <details className="sf-faq-item">
+                  <summary className="sf-faq-question">¿Cómo se realiza el pago del alquiler?</summary>
+                  <div className="sf-faq-answer">
+                    <p>El pago se realiza cómodamente en el momento de la recogida del vehículo, ya sea en efectivo, con tarjeta de crédito o mediante transferencia garantizada.</p>
+                  </div>
+                </details>
+              </div>
             </div>
-
-            <div className="sf-faqs-list">
-              <details className="sf-faq-item">
-                <summary className="sf-faq-question">¿Qué documentos necesito para recoger el vehículo?</summary>
-                <div className="sf-faq-answer">
-                  <p>Necesitarás presentar tu documento de identidad (DNI o Pasaporte) en vigor, un permiso de conducir válido y vigente, y una tarjeta de crédito/débito a nombre del conductor principal.</p>
-                </div>
-              </details>
-
-              <details className="sf-faq-item">
-                <summary className="sf-faq-question">¿El seguro a todo riesgo tiene franquicia?</summary>
-                <div className="sf-faq-answer">
-                  <p>Nuestra tarifa premium incluye cobertura a todo riesgo. Dependiendo del coche seleccionado, puede existir una franquicia mínima garantizada que se detalla en el momento de la confirmación de la reserva.</p>
-                </div>
-              </details>
-
-              <details className="sf-faq-item">
-                <summary className="sf-faq-question">¿Puedo cancelar o modificar mi reserva?</summary>
-                <div className="sf-faq-answer">
-                  <p>¡Sí! Las cancelaciones y modificaciones son totalmente gratuitas si se avisa con al menos 24 horas de antelación. Simplemente ponte en contacto con nosotros a través de WhatsApp o llamada telefónica.</p>
-                </div>
-              </details>
-
-              <details className="sf-faq-item">
-                <summary className="sf-faq-question">¿Cómo se realiza el pago del alquiler?</summary>
-                <div className="sf-faq-answer">
-                  <p>El pago se realiza cómodamente en el momento de la recogida del vehículo, ya sea en efectivo, con tarjeta de crédito o mediante transferencia garantizada.</p>
-                </div>
-              </details>
-            </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* Contacto Section */}
         <section id="contacto" className="sf-contact-section reveal">
           <div className="sf-container">
             <h3 className="sf-section-title">
-              <MessageCircle /> Contacto Directo
+              <MessageCircle /> {config.contactTitle || 'Contacto Directo'}
             </h3>
             <div className="sf-contact-grid">
               <div className="sf-contact-card">
