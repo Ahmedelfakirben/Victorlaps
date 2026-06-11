@@ -21,10 +21,6 @@ html {
   --sf-bg-card: rgba(255, 255, 255, 0.12);
   --sf-border-glass: rgba(255, 255, 255, 0.22);
   --sf-card-color: var(--sf-primary);
-  --sf-card-bg: linear-gradient(135deg, var(--sf-card-color) 0%, color-mix(in srgb, var(--sf-card-color) 65%, #000000 35%) 100%);
-  --sf-card-bg-hover: linear-gradient(135deg, color-mix(in srgb, var(--sf-card-color) 90%, #ffffff 10%) 0%, color-mix(in srgb, var(--sf-card-color) 55%, #000000 45%) 100%);
-  --sf-card-text: color-mix(in srgb, var(--sf-card-color) 5%, #090D16 95%);
-  --sf-card-text-muted: color-mix(in srgb, var(--sf-card-color) 12%, rgba(9, 13, 22, 0.75) 88%);
 }
 
 /* Scroll Reveal Transitions */
@@ -40,12 +36,15 @@ html {
   transform: translateY(0);
 }
 
-/* Base Styles */
 .sf-body {
+  --sf-card-bg: linear-gradient(135deg, var(--sf-card-color) 0%, color-mix(in srgb, var(--sf-card-color) 65%, #000000 35%) 100%);
+  --sf-card-bg-hover: linear-gradient(135deg, color-mix(in srgb, var(--sf-card-color) 90%, #ffffff 10%) 0%, color-mix(in srgb, var(--sf-card-color) 55%, #000000 45%) 100%);
+  --sf-card-text: color-mix(in srgb, var(--sf-card-color) 5%, #090D16 95%);
+  --sf-card-text-muted: color-mix(in srgb, var(--sf-card-color) 12%, rgba(9, 13, 22, 0.75) 88%);
+
   margin: 0;
   font-family: var(--sf-font-body, 'Inter', system-ui, -apple-system, sans-serif);
   background-color: transparent; /* Changed to transparent so sf-global-bg shows behind */
-  color: var(--sf-text-dark);
   color: var(--sf-text-dark);
   min-height: 100vh;
   display: flex;
