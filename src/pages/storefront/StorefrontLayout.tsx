@@ -134,6 +134,10 @@ export default function StorefrontLayout() {
 
   return (
     <div className={`sf-body sf-template-${templateName}`} style={themeStyle}>
+      {/* Background Animated Glow Orbs */}
+      <div className="sf-bg-glow-orb orb-1"></div>
+      <div className="sf-bg-glow-orb orb-2"></div>
+      <div className="sf-bg-glow-orb orb-3"></div>
       {/* Global Navigation Header */}
       <header className={`sf-header ${isScrolled ? 'scrolled' : ''}`}>
         <div className="sf-container sf-header-content">
